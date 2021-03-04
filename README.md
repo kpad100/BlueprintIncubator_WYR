@@ -1,4 +1,4 @@
-# BlueprintIncubatorGeneral
+### Study resources
 
 Here is a link to a video for JavaScript:
 https://www.youtube.com/watch?v=hdI2bqOjy3c&ab_channel=TraversyMedia

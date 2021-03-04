@@ -1,5 +1,5 @@
 # BlueprintIncubatorGeneral
- 
+
 Here is a link to a video for JavaScript:
 https://www.youtube.com/watch?v=hdI2bqOjy3c&ab_channel=TraversyMedia
 
@@ -10,3 +10,19 @@ Also here is link to react documentation:
 https://reactjs.org/docs/getting-started.html
 
 Watch these videos and understand the baiscs of react and javascript by 3/10.
+
+### Company to check
+
+---
+
+Groupme
+Monday.com
+LinkedIn
+Reddit
+Ratemyprofessor
+Whatsapp
+Discord
+Slack
+Facebook
+Instagram
+Snapchat

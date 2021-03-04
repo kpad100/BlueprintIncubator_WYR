@@ -11,7 +11,7 @@ https://reactjs.org/docs/getting-started.html
 
 Watch these videos and understand the baiscs of react and javascript by 3/10.
 
-### Company to check
+### Company to check for web dev technology they use
 
 ---
 

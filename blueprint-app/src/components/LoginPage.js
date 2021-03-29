@@ -1,22 +1,27 @@
 import { Link } from 'react-router-dom'
 import { useState } from 'react'
-import { Grid, TextField, Button, Container } from '@material-ui/core'
+import { Grid, TextField, Button, Container, FormHelperText } from '@material-ui/core'
 
 const LoginPage = ( {users} ) => {
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
-    let correctCredentials = false
+    let proceedToWelcome = '';
 
     const onClick = (e) => {
         // users.forEach(user => {
         //     if(user.username === username && user.password === password) {
-        //         correctCredentials = true;
-        //         console.log('correct creds')
+        //         proceedToWelcome='/welcome'
         //     }
-                
         // });
+        if(username === 'admin' && password === 'test') {
+            proceedToWelcome='/welcome' //this doesn't work rn for some reason
+        }
     }
-
+    
+    console.log(username)
+    console.log(password)
+    console.log(proceedToWelcome)
+        
     return (
         <Grid
             container
@@ -33,6 +38,9 @@ const LoginPage = ( {users} ) => {
             />
             <h1>Log In</h1>
             <Container style={{ maxWidth: '600px' }}>
+                {/* {<FormHelperText style={{color: 'red', marginBottom:'7px'}}>
+                    Invalid Username/Password combo. Please try again.
+                </FormHelperText>} */}
                 <TextField 
                     required
                     label='Username' 
@@ -52,9 +60,15 @@ const LoginPage = ( {users} ) => {
                     value={password} 
                     onChange={(e) => setPassword(e.target.value)} 
                 />
-                <Button variant='contained' style={{marginBottom:'7px'}} fullWidth onClick={onClick}>
-                    Sign in
-                    {/* {{correctCredentials} && <Link to='/welcome' /> } */}
+                <Button 
+                    variant='contained' 
+                    style={{marginBottom:'7px' }} 
+                    color='primary' 
+                    href={proceedToWelcome} 
+                    fullWidth 
+                    onClick={onClick}
+                >
+                    Sign In
                 </Button>
             </Container>
             <Link to='/forgotpassword'>Forgot password?</Link>

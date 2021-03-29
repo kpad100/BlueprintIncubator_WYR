@@ -11,16 +11,12 @@ const SignupPage = () => {
     const [confirmPassword, setConfirmPassword] = useState('')
     let passMatch = false;
     let buttonDisabled = true;
-    let buttonColor='secondary'
 
     if(confirmPassword === password && password.length > 0)
         passMatch = true
 
     if(firstName.length>0 && lastName.length>0 && email.length>0 && username.length>0 && passMatch)
         buttonDisabled = false;
-
-    if(!buttonDisabled)
-        buttonColor='primary'
 
     return (
         <Grid
@@ -34,7 +30,7 @@ const SignupPage = () => {
             <h1>Sign Up</h1>
             <Container style={{maxWidth: '600px'}} >
                 {!passMatch && <FormHelperText style={{color: 'red', marginBottom:'7px'}}>
-                        Passwords Do Not Match
+                    Passwords Do Not Match
                 </FormHelperText>}
                 <TextField 
                     required

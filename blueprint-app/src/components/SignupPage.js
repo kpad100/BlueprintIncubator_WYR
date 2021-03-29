@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
 import { useState } from 'react'
-import { Grid, TextField, Button, Container } from '@material-ui/core'
+import { Grid, TextField, Button, Container, FormHelperText } from '@material-ui/core'
 
 const SignupPage = () => {
     const [firstName, setFirstName] = useState('')
@@ -11,7 +11,7 @@ const SignupPage = () => {
     const [confirmPassword, setConfirmPassword] = useState('')
     let passMatch = false;
     let buttonDisabled = true;
-    let passHelpText = ''
+    let buttonColor='secondary'
 
     if(confirmPassword === password && password.length > 0)
         passMatch = true
@@ -19,8 +19,8 @@ const SignupPage = () => {
     if(firstName.length>0 && lastName.length>0 && email.length>0 && username.length>0 && passMatch)
         buttonDisabled = false;
 
-    if(!passMatch)
-        passHelpText = 'Passwords Do Not Match'
+    if(!buttonDisabled)
+        buttonColor='primary'
 
     return (
         <Grid
@@ -31,17 +31,16 @@ const SignupPage = () => {
         justify="center"
         style={{ minHeight: '100vh' }}
         >
-            <img 
-                src='https://se-infra-imageserver2.azureedge.net/clink/images/12e150ea-c835-422a-a07b-8498f3af3d942c70b420-5a42-46c4-8de4-c249585563c9.png?preset=med-sq' 
-                height='80' 
-                style={{marginBottom:'10px'}}
-                alt=''
-            />
-            <Container style={{marginBottom:'10px'}}>
+            <h1>Sign Up</h1>
+            <Container style={{maxWidth: '600px'}} >
+                {!passMatch && <FormHelperText style={{color: 'red', marginBottom:'7px'}}>
+                        Passwords Do Not Match
+                </FormHelperText>}
                 <TextField 
                     required
                     label='First Name' 
                     variant='outlined' 
+                    style={{marginBottom:'7px'}}
                     fullWidth 
                     value={firstName} 
                     onChange={(e) => setFirstName(e.target.value)} 
@@ -50,6 +49,7 @@ const SignupPage = () => {
                     required 
                     label='Last Name' 
                     variant='outlined' 
+                    style={{marginBottom:'7px'}}
                     fullWidth
                     value={lastName} 
                     onChange={(e) => setLastName(e.target.value)}  
@@ -58,6 +58,7 @@ const SignupPage = () => {
                     required 
                     label='Email' 
                     variant='outlined' 
+                    style={{marginBottom:'7px'}}
                     fullWidth 
                     value={email} 
                     onChange={(e) => setEmail(e.target.value)} 
@@ -66,6 +67,7 @@ const SignupPage = () => {
                     required 
                     label='Username' 
                     variant='outlined' 
+                    style={{marginBottom:'7px'}}
                     fullWidth 
                     value={username} 
                     onChange={(e) => setUsername(e.target.value)} 
@@ -75,6 +77,7 @@ const SignupPage = () => {
                     type='password'
                     label='Password' 
                     variant='outlined' 
+                    style={{marginBottom:'7px'}}
                     fullWidth 
                     value={password} 
                     onChange={(e) => setPassword(e.target.value)} 
@@ -84,15 +87,22 @@ const SignupPage = () => {
                     type='password'
                     label='Re-enter Password'  
                     variant='outlined'
+                    style={{marginBottom:'7px'}}
                     fullWidth 
                     value={confirmPassword} 
                     onChange={(e) => setConfirmPassword(e.target.value)} 
-                    helperText={passHelpText}
                 />
+                <Button 
+                    variant='contained' 
+                    style={{marginBottom:'7px' }} 
+                    color='primary' 
+                    href='/welcome' 
+                    fullWidth 
+                    disabled={buttonDisabled} 
+                >
+                    Create
+                </Button>
             </Container>
-            <Button variant='contained' style={{marginBottom:'10px'}} disabled={buttonDisabled} >
-                <Link to='/welcome'>Create</Link>
-            </Button>
             <footer>
                 Already a member? <Link to='/login'>Log in</Link>
             </footer>

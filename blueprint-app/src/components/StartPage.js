@@ -17,12 +17,12 @@ const StartPage = () => {
                 style={{marginBottom:'10px'}}
                 alt=''
             />
-            <ButtonGroup orientation='vertical' size='large'>
+            <ButtonGroup orientation='vertical'>
                 <Button variant='contained'>
-                    <Link to='/login'>Login</Link>
+                    <Link to='/login' style={{textDecoration: 'none'}} >Login</Link>
                 </Button>
                 <Button variant='contained'>
-                    <Link to='/signup'>Sign up</Link>
+                    <Link to='/signup' style={{textDecoration: 'none'}} >Sign up</Link>
                 </Button>
             </ButtonGroup>
         </Grid>

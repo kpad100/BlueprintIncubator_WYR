@@ -1,27 +1,23 @@
 import { Link } from 'react-router-dom'
 import { useState } from 'react'
-import { Grid, TextField, Button, Container, FormHelperText } from '@material-ui/core'
+import { Grid, TextField, Button, FormHelperText, FormControl } from '@material-ui/core'
 
-const LoginPage = ( {users} ) => {
+const LoginPage = ( props ) => {
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
-    let proceedToWelcome = '';
-
-    const onClick = (e) => {
+    
+    const onSubmit = (e) => {
         // users.forEach(user => {
         //     if(user.username === username && user.password === password) {
         //         proceedToWelcome='/welcome'
         //     }
         // });
+        e.preventDefault()
         if(username === 'admin' && password === 'test') {
-            proceedToWelcome='/welcome' //this doesn't work rn for some reason
+            props.history.push('/welcome')
         }
     }
-    
-    console.log(username)
-    console.log(password)
-    console.log(proceedToWelcome)
-        
+   
     return (
         <Grid
             container
@@ -37,40 +33,38 @@ const LoginPage = ( {users} ) => {
                 alt=''
             />
             <h1>Log In</h1>
-            <Container style={{ maxWidth: '600px' }}>
+            <form onSubmit={onSubmit}>
                 {/* {<FormHelperText style={{color: 'red', marginBottom:'7px'}}>
                     Invalid Username/Password combo. Please try again.
                 </FormHelperText>} */}
-                <TextField 
-                    required
-                    label='Username' 
-                    variant='outlined' 
-                    style={{marginBottom:'7px'}}
-                    fullWidth 
-                    value={username} 
-                    onChange={(e) => setUsername(e.target.value)} 
-                />
-                <TextField 
-                    required 
-                    type='password'
-                    label='Password' 
-                    variant='outlined' 
-                    style={{marginBottom:'7px'}}
-                    fullWidth 
-                    value={password} 
-                    onChange={(e) => setPassword(e.target.value)} 
-                />
-                <Button 
-                    variant='contained' 
-                    style={{marginBottom:'7px' }} 
-                    color='primary' 
-                    href={proceedToWelcome} 
-                    fullWidth 
-                    onClick={onClick}
-                >
-                    Sign In
-                </Button>
-            </Container>
+                <FormControl>
+                    <TextField 
+                        required
+                        label='Username' 
+                        variant='outlined' 
+                        style={{marginBottom:'7px'}} 
+                        value={username} 
+                        onChange={(e) => setUsername(e.target.value)} 
+                    />
+                    <TextField 
+                        required 
+                        type='password'
+                        label='Password' 
+                        variant='outlined' 
+                        style={{marginBottom:'7px'}} 
+                        value={password} 
+                        onChange={(e) => setPassword(e.target.value)} 
+                    />
+                    <Button 
+                        variant='contained' 
+                        type='submit'
+                        style={{marginBottom:'7px' }} 
+                        color='primary' 
+                    >
+                        Sign In
+                    </Button>
+                </FormControl>
+            </form>
             <Link to='/forgotpassword'>Forgot password?</Link>
             <footer style={{marginTop:'7px'}}>
                 Not a member? <Link to='/signup'>Sign up</Link>

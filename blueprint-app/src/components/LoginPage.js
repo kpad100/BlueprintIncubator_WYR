@@ -5,6 +5,7 @@ import { Grid, TextField, Button, FormHelperText, FormControl } from '@material-
 const LoginPage = ( props ) => {
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
+    const [help, setHelp] = useState(false)
     
     const onSubmit = (e) => {
         // users.forEach(user => {
@@ -15,6 +16,11 @@ const LoginPage = ( props ) => {
         e.preventDefault()
         if(username === 'admin' && password === 'test') {
             props.history.push('/welcome')
+        } 
+        else{
+            setUsername('')
+            setPassword('')
+            setHelp(true)
         }
     }
    
@@ -33,10 +39,10 @@ const LoginPage = ( props ) => {
                 alt=''
             />
             <h1>Log In</h1>
+            {help && <FormHelperText style={{color: 'red', marginBottom:'7px'}}>
+                Invalid Username/Password combo. Please try again.
+            </FormHelperText>}
             <form onSubmit={onSubmit}>
-                {/* {<FormHelperText style={{color: 'red', marginBottom:'7px'}}>
-                    Invalid Username/Password combo. Please try again.
-                </FormHelperText>} */}
                 <FormControl>
                     <TextField 
                         required

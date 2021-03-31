@@ -18,9 +18,12 @@ const SignupPage = ( props ) => {
     let passMatch = false;
     let buttonDisabled = true;
 
-    if(confirmPassword === password && password.length > 0)
+    if(password.length <= 6){
+        prompt('Password has to be at least six characters')
+    }
+    else if(confirmPassword === password){
         passMatch = true
-
+    }
     if(firstName.length>0 && lastName.length>0 && email.length>0 && username.length>0 && passMatch)
         buttonDisabled = false;
 

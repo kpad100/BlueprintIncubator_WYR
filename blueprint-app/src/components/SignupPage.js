@@ -1,6 +1,12 @@
 import { Link } from 'react-router-dom'
 import { useState } from 'react'
 import { Grid, TextField, Button, FormHelperText, FormControl } from '@material-ui/core'
+// Firebase App (the core Firebase SDK) is always required and
+// must be listed before other Firebase SDKs
+import firebase from "firebase/app";
+
+// Add the Firebase services that you want to use
+import "firebase/auth";
 
 const SignupPage = ( props ) => {
     const [firstName, setFirstName] = useState('')

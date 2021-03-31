@@ -1,3 +1,12 @@
+# Todo list
+
+-write down stuff to be done in the format
+
+**(folder/file_name, problem_to_be_fixed, linenumber)**
+
+* [ ] Task one (replace with actual task)
+* [ ]
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).

@@ -87,4 +87,4 @@ npm install --save firebase
 
 # Resources
 
-* **Firebase authentication: **https://itnext.io/firebase-login-functionality-from-scratch-with-react-redux-2bf316e5820f
+* **Firebase authentication** https://itnext.io/firebase-login-functionality-from-scratch-with-react-redux-2bf316e5820f

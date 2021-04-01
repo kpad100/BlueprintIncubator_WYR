@@ -2,9 +2,10 @@
 
 -write down stuff to be done in the format
 
-**(folder/file_name, problem_to_be_fixed, linenumber)**
+**problem_to_be_fixed: folder/file_name, linenumber**
 
-* [ ] Task one (replace with actual task)
+* [ ] login authetication: components/LoginPage.js
+* [ ] signup & forgot password
 
 # Getting Started with Create React App
 

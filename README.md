@@ -5,7 +5,7 @@
 **problem_to_be_fixed: folder/file_name, linenumber**
 
 * [ ] login authetication: components/LoginPage.js
-      John
+      John and Kedar
 * [ ] signup
       Xiaowei
 * [ ] forgot password

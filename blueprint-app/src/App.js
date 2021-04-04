@@ -6,9 +6,11 @@ import SignupPage from './components/SignupPage'
 import ForgotpassPage from './components/ForgotpassPage';
 import WelcomePage from './components/WelcomePage';
 import { Grid } from '@material-ui/core';
+import { connect } from "react-redux";
+import ProtectedRoute from "./components/ProtectedRoute";
 
-function App() {
-
+function App(props) {
+  const { isAuthenticated, isVerifying } = props;
   return (
     <Router>
       <Grid
@@ -19,18 +21,29 @@ function App() {
         justify="center"
         style={{ minHeight: '100vh' }}
       >
-        <Route path='/' exact render={() => (
+        <Route exact path='/' exact render={() => (
           <>
             {<StartPage />}
           </>
         )}/>
-        <Route path='/login' component={LoginPage} />
-        <Route path='/signup' component={SignupPage} />
-        <Route path='/forgotpassword' component={ForgotpassPage} />
-        <Route path='/welcome' component={WelcomePage} />
+        <Route exact path='/login' component={LoginPage} />
+        <Route exact path='/signup' component={SignupPage} />
+        <Route exact path='/forgotpassword' component={ForgotpassPage} />
+        <ProtectedRoute exact path='/welcome' component={WelcomePage} isAuthenticated={isAuthenticated} isVerifying={isVerifying}/>
       </Grid>
     </Router>
   );
 }
+
+//Currently doesnt work: not sure of the issue
+
+// function mapStateToProps(state) {
+//   return {
+//     isAuthenticated: state.auth.isAuthenticated,
+//     isVerifying: state.auth.isVerifying
+//   };
+// }
+
+// export default connect(mapStateToProps)(App);
 
 export default App;

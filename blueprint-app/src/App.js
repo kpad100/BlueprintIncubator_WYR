@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Route } from 'react-router-dom'
+import { Route, Switch } from 'react-router-dom'
 import { useState, useEffect } from 'react'
 import StartPage from './components/StartPage'
 import LoginPage from './components/LoginPage'
@@ -12,7 +12,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 function App(props) {
   const { isAuthenticated, isVerifying } = props;
   return (
-    <Router>
+    <Switch>
       <Grid
         container
         spacing={0}
@@ -21,6 +21,7 @@ function App(props) {
         justify="center"
         style={{ minHeight: '100vh' }}
       >
+        <ProtectedRoute exact path='/welcome' component={WelcomePage} isAuthenticated={isAuthenticated} isVerifying={isVerifying}/>
         <Route exact path='/' exact render={() => (
           <>
             {<StartPage />}
@@ -29,21 +30,16 @@ function App(props) {
         <Route exact path='/login' component={LoginPage} />
         <Route exact path='/signup' component={SignupPage} />
         <Route exact path='/forgotpassword' component={ForgotpassPage} />
-        <ProtectedRoute exact path='/welcome' component={WelcomePage} isAuthenticated={isAuthenticated} isVerifying={isVerifying}/>
       </Grid>
-    </Router>
+    </Switch>
   );
 }
 
-//Currently doesnt work: not sure of the issue
+function mapStateToProps(state) {
+  return {
+    isAuthenticated: state.auth.isAuthenticated,
+    isVerifying: state.auth.isVerifying
+  };
+}
 
-// function mapStateToProps(state) {
-//   return {
-//     isAuthenticated: state.auth.isAuthenticated,
-//     isVerifying: state.auth.isVerifying
-//   };
-// }
-
-// export default connect(mapStateToProps)(App);
-
-export default App;
+export default connect(mapStateToProps)(App);

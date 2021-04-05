@@ -15,7 +15,7 @@ const LoginPage = ( props ) => {
         // });
         e.preventDefault()
         if(username === 'admin' && password === 'test') {
-            props.history.push('/welcome')
+            props.history.push('/dashboard')
         } 
         else{
             setUsername('')

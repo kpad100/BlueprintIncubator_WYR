@@ -4,7 +4,7 @@ import StartPage from './components/StartPage'
 import LoginPage from './components/LoginPage'
 import SignupPage from './components/SignupPage'
 import ForgotpassPage from './components/ForgotpassPage';
-import WelcomePage from './components/WelcomePage';
+import Dashboard from './components/Dashboard';
 import { Grid } from '@material-ui/core';
 import { connect } from "react-redux";
 import ProtectedRoute from "./components/ProtectedRoute";
@@ -21,7 +21,7 @@ function App(props) {
         justify="center"
         style={{ minHeight: '100vh' }}
       >
-        <ProtectedRoute exact path='/welcome' component={WelcomePage} isAuthenticated={isAuthenticated} isVerifying={isVerifying}/>
+        <ProtectedRoute exact path='/dashboard' component={Dashboard} isAuthenticated={isAuthenticated} isVerifying={isVerifying}/>
         <Route exact path='/' exact render={() => (
           <>
             {<StartPage />}

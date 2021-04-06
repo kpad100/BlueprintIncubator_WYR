@@ -20,7 +20,7 @@ const SignupPage = ( props ) => {
 
     const onSubmit = (e) => {
         e.preventDefault()
-        props.history.push('/welcome')
+        props.history.push('/dashboard')
     }
 
     return (

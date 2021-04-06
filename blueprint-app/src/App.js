@@ -1,5 +1,4 @@
 import { Route, Switch } from 'react-router-dom'
-import { useState, useEffect } from 'react'
 import StartPage from './components/StartPage'
 import LoginPage from './components/LoginPage'
 import SignupPage from './components/SignupPage'

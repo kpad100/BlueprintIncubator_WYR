@@ -1,16 +1,17 @@
-import { BrowserRouter as Router, Route } from 'react-router-dom'
-import { useState, useEffect } from 'react'
+import { Route, Switch } from 'react-router-dom'
 import StartPage from './components/StartPage'
 import LoginPage from './components/LoginPage'
 import SignupPage from './components/SignupPage'
 import ForgotpassPage from './components/ForgotpassPage';
-import WelcomePage from './components/WelcomePage';
+import Dashboard from './components/Dashboard';
 import { Grid } from '@material-ui/core';
+import { connect } from "react-redux";
+import ProtectedRoute from "./components/ProtectedRoute";
 
-function App() {
-
+function App(props) {
+  const { isAuthenticated, isVerifying } = props;
   return (
-    <Router>
+    <Switch>
       <Grid
         container
         spacing={0}
@@ -19,18 +20,25 @@ function App() {
         justify="center"
         style={{ minHeight: '100vh' }}
       >
-        <Route path='/' exact render={() => (
+        <ProtectedRoute exact path='/dashboard' component={Dashboard} isAuthenticated={isAuthenticated} isVerifying={isVerifying}/>
+        <Route exact path='/' exact render={() => (
           <>
             {<StartPage />}
           </>
         )}/>
-        <Route path='/login' component={LoginPage} />
-        <Route path='/signup' component={SignupPage} />
-        <Route path='/forgotpassword' component={ForgotpassPage} />
-        <Route path='/welcome' component={WelcomePage} />
+        <Route exact path='/login' component={LoginPage} />
+        <Route exact path='/signup' component={SignupPage} />
+        <Route exact path='/forgotpassword' component={ForgotpassPage} />
       </Grid>
-    </Router>
+    </Switch>
   );
 }
 
-export default App;
+function mapStateToProps(state) {
+  return {
+    isAuthenticated: state.auth.isAuthenticated,
+    isVerifying: state.auth.isVerifying
+  };
+}
+
+export default connect(mapStateToProps)(App);

@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
 import { useState } from 'react'
-import { Grid, TextField, Button, FormHelperText, FormControl } from '@material-ui/core'
+import { Grid, TextField, Button, FormHelperText, FormControl, Card } from '@material-ui/core'
 
 const SignupPage = ( props ) => {
     const [firstName, setFirstName] = useState('')
@@ -32,12 +32,16 @@ const SignupPage = ( props ) => {
         justify="center"
         style={{ minHeight: '100vh' }}
         >
+        <Card>
+        <Grid
+            container
+            direction="column"
+            alignItems="center"
+            justify="center"
+        >
             <h1>Sign Up</h1>
             <form onSubmit={onSubmit}>
-                {!passMatch && <FormHelperText style={{color: 'red', marginBottom:'7px'}}>
-                    Passwords Do Not Match
-                </FormHelperText>}
-                <FormControl>
+                <FormControl style={{minWidth:'25vw', padding:'15px'}}>
                     <TextField 
                         required
                         label='First Name' 
@@ -88,20 +92,25 @@ const SignupPage = ( props ) => {
                         value={confirmPassword} 
                         onChange={(e) => setConfirmPassword(e.target.value)} 
                     />
+                    {!passMatch && <FormHelperText style={{color: 'red', marginBottom:'7px', alignSelf:'center'}}>
+                        Passwords Do Not Match
+                    </FormHelperText>}
                     <Button 
                         variant='contained' 
                         color='primary' 
                         type='submit'
-                        style={{marginBottom:'7px'}} 
+                        
                         disabled={buttonDisabled} 
                     >
                         Create
                     </Button>
                 </FormControl>
             </form>
-            <footer>
+            <footer style={{marginBottom:'15px'}}>
                 Already a member? <Link to='/login'>Log in</Link>
             </footer>
+        </Grid>
+        </Card>
         </Grid>
     )
 }

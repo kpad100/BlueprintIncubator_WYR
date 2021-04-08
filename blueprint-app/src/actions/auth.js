@@ -1,3 +1,4 @@
+import { useRadioGroup } from "@material-ui/core";
 import { myFirebase } from "../firebase/firebase";
 
 export const LOGIN_REQUEST = "LOGIN_REQUEST";
@@ -97,3 +98,20 @@ export const verifyAuth = () => dispatch => {
     dispatch(verifySuccess());
   });
 };
+
+export const signupWithEmailPassword = (email, password) => {
+  // dispatch(requestLogin());
+  //var user;
+  myFirebase.auth().createUserWithEmailAndPassword(email, password)
+    .then((userCredential) => {
+      var user = userCredential.user
+      user.sendEmailVerification()
+    }) 
+    .catch(error => {
+      //Do something with the error if you want!
+      var errorCode = error.code;
+      var errorMessage = error.errorMessage;
+    })
+
+};
+

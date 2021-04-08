@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
 import { useState } from 'react'
 import { Grid, TextField, Button, FormHelperText, FormControl, Card } from '@material-ui/core'
+import {signupWithEmailPassword} from '../actions/auth'
 
 const SignupPage = ( props ) => {
     const [firstName, setFirstName] = useState('')
@@ -20,6 +21,7 @@ const SignupPage = ( props ) => {
 
     const onSubmit = (e) => {
         e.preventDefault()
+        signupWithEmailPassword(email, password)
         props.history.push('/dashboard')
     }
 

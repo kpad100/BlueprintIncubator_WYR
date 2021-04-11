@@ -115,3 +115,10 @@ export const signupWithEmailPassword = (email, password) => {
 
 };
 
+export const passwordReset = (email) => {
+  myFirebase.auth().sendPasswordResetEmail(email)
+    .then(() => {
+      alert("Please check your email!");
+    })
+};
+

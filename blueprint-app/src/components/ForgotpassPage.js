@@ -13,9 +13,9 @@ const ForgotpassPage = ( props ) => {
 
     const onSubmit = (e) => {
         e.preventDefault();
-        
-        //dispatch(passwordReset(email));
+        passwordReset(email);
     }
+    
 
     return (
         <Grid

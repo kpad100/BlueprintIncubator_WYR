@@ -5,6 +5,7 @@ import LoginPage from './components/LoginPage'
 import SignupPage from './components/SignupPage'
 import ForgotpassPage from './components/ForgotpassPage';
 import WelcomePage from './components/WelcomePage';
+import ReviewPage from './components/ReviewPage';
 import { Grid } from '@material-ui/core';
 
 function App() {
@@ -28,6 +29,7 @@ function App() {
         <Route path='/signup' component={SignupPage} />
         <Route path='/forgotpassword' component={ForgotpassPage} />
         <Route path='/welcome' component={WelcomePage} />
+        <Route path='/reviewpage' component={ReviewPage} />
       </Grid>
     </Router>
   );

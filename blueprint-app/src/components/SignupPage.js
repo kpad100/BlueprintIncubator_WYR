@@ -11,6 +11,7 @@ const SignupPage = ( props ) => {
     const [password, setPassword] = useState('')
     const [confirmPassword, setConfirmPassword] = useState('')
     let passMatch = false;
+    let ruEmail =false;
     let buttonDisabled = true;
 
     if(confirmPassword === password && password.length > 0)
@@ -19,9 +20,15 @@ const SignupPage = ( props ) => {
     if(firstName.length>0 && lastName.length>0 && email.length>0 && username.length>0 && passMatch)
         buttonDisabled = false;
 
+function checkEmail (email){
+if(email.includes("@scarletmail.rutgers.edu",0))
+         return true
+}
     const onSubmit = (e) => {
         e.preventDefault()
+        checkEmail(email)
         signupWithEmailPassword(email, password)
+        
         props.history.push('/dashboard')
     }
 
@@ -68,6 +75,10 @@ const SignupPage = ( props ) => {
                         value={email} 
                         onChange={(e) => setEmail(e.target.value)} 
                     />
+                    {checkEmail(email) &&  <FormHelperText style={{color: 'red', marginBottom:'7px', alignSelf:'center'}}>
+                        Enter Rutgers Email
+                    </FormHelperText>}
+
                     <TextField 
                         required 
                         label='Username' 
@@ -81,6 +92,7 @@ const SignupPage = ( props ) => {
                         type='password'
                         label='Password' 
                         variant='outlined' 
+                        minlength = '9'
                         style={{marginBottom:'7px'}} 
                         value={password} 
                         onChange={(e) => setPassword(e.target.value)} 
@@ -94,7 +106,7 @@ const SignupPage = ( props ) => {
                         value={confirmPassword} 
                         onChange={(e) => setConfirmPassword(e.target.value)} 
                     />
-                    {!passMatch && <FormHelperText style={{color: 'red', marginBottom:'7px', alignSelf:'center'}}>
+                    {!passMatch &&  <FormHelperText style={{color: 'red', marginBottom:'7px', alignSelf:'center'}}>
                         Passwords Do Not Match
                     </FormHelperText>}
                     <Button 

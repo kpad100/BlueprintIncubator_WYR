@@ -97,3 +97,10 @@ export const verifyAuth = () => dispatch => {
     dispatch(verifySuccess());
   });
 };
+
+export const passwordReset = (email) => {
+  myFirebase.auth().sendPasswordResetEmail(email)
+    .then(() => {
+      alert("Please check your email!");
+    })
+};

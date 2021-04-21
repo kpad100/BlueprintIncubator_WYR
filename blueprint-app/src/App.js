@@ -12,24 +12,15 @@ function App(props) {
   const { isAuthenticated, isVerifying } = props;
   return (
     <Switch>
-      <Grid
-        container
-        spacing={0}
-        direction="column"
-        alignItems="center"
-        justify="center"
-        style={{ minHeight: '100vh' }}
-      >
-        <ProtectedRoute exact path='/dashboard' component={Dashboard} isAuthenticated={isAuthenticated} isVerifying={isVerifying}/>
-        <Route exact path='/' exact render={() => (
-          <>
-            {<StartPage />}
-          </>
-        )}/>
-        <Route exact path='/login' component={LoginPage} />
-        <Route exact path='/signup' component={SignupPage} />
-        <Route exact path='/forgotpassword' component={ForgotpassPage} />
-      </Grid>
+      <ProtectedRoute exact path='/dashboard' component={Dashboard} isAuthenticated={isAuthenticated} isVerifying={isVerifying}/>
+      <Route exact path='/' exact render={() => (
+        <>
+          {<StartPage />}
+        </>
+      )}/>
+      <Route exact path='/login' component={LoginPage} />
+      <Route exact path='/signup' component={SignupPage} />
+      <Route exact path='/forgotpassword' component={ForgotpassPage} />
     </Switch>
   );
 }

@@ -100,6 +100,7 @@ export const verifyAuth = () => dispatch => {
   });
 };
 
+
 export const signupWithEmailPassword = (email, password) => {
   // dispatch(requestLogin());
   //var user;
@@ -129,6 +130,7 @@ export const signupWithEmailPassword = (email, password) => {
 
 
 };
+
 
 export const passwordReset = (email) => {
   myFirebase.auth().sendPasswordResetEmail(email)

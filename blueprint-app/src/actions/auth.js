@@ -1,3 +1,5 @@
+import { useRadioGroup } from "@material-ui/core";
+import { Redirect } from "react-router";
 import { myFirebase } from "../firebase/firebase";
 
 export const LOGIN_REQUEST = "LOGIN_REQUEST";
@@ -98,9 +100,42 @@ export const verifyAuth = () => dispatch => {
   });
 };
 
+
+export const signupWithEmailPassword = (email, password) => {
+  // dispatch(requestLogin());
+  //var user;
+  myFirebase.auth().createUserWithEmailAndPassword(email, password)
+    .then((userCredential) => {
+      var user = userCredential.user
+      user.sendEmailVerification()
+    }) 
+    .catch(error => {
+      //Do something with the error if you want!
+      var errorCode = error.code;
+      var errorMessage = error.errorMessage;
+      if(errorCode == 'auth/email-already-in-use')
+      {
+          alert("Email Address is already in use")
+          return <Redirect to='/login' />
+      }
+      else if(errorCode == 'auth/invalid-email')
+      {
+          return errorCode;
+      }
+      else if(errorCode == 'auth/weak-password')
+      {
+          return errorCode;
+      }
+    })
+
+
+};
+
+
 export const passwordReset = (email) => {
   myFirebase.auth().sendPasswordResetEmail(email)
     .then(() => {
       alert("Please check your email!");
     })
 };
+

@@ -60,3 +60,4 @@ const ForgotpassPage = ( props ) => {
 
 
 export default ForgotpassPage
+

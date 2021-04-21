@@ -1,9 +1,9 @@
-import { Avatar, Card, Grid, IconButton, TextField } from "@material-ui/core";
+import { Avatar, Card, Grid, IconButton, Menu, MenuItem, MenuList, TextField } from "@material-ui/core";
 import SearchIcon from '@material-ui/icons/Search';
 import StarIcon from '@material-ui/icons/Star';
 import StarOutlineIcon from '@material-ui/icons/StarOutline';
 import StarHalfIcon from '@material-ui/icons/StarHalf';
-import React, { Component } from "react";
+import { Component } from "react";
 import { connect } from "react-redux";
 import { logoutUser } from "../actions";
 
@@ -13,14 +13,32 @@ class Dashboard extends Component {
     dispatch(logoutUser());
   };
 
+  state = { anchorEl: null }
+
+  handleOpenMenu = (e) => {
+    this.setState({ anchorEl: e.currentTarget })
+  }
+
+  handleCloseMenu = () => {
+    this.setState({ anchorEl: null })
+  }
+
   render() {
     const { isLoggingOut, logoutError } = this.props;
     return (
       <div>
-        <IconButton>
-          <Avatar style={{ float: 'right' }} />
+        <IconButton onClick = {this.handleOpenMenu} aria-controls='menu'>
+          <Avatar/>
         </IconButton>
-        <button onClick={this.handleLogout}>Logout</button>
+
+        <Menu 
+          id='menu' 
+          onClose={this.handleCloseMenu} 
+          anchorEl={this.state.anchorEl} 
+          open={Boolean(this.state.anchorEl)}
+        >
+          <MenuItem onClick={this.handleLogout}>Logout</MenuItem>
+        </Menu>
 
         <Grid
           container

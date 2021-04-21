@@ -1,8 +1,19 @@
 import { Link } from 'react-router-dom'
+<<<<<<< HEAD
 import { useState, useEffect} from 'react'
 import { Grid, TextField, Button, FormHelperText, FormControl, Card } from '@material-ui/core'
 import {signupWithEmailPassword} from '../actions/auth'
 
+=======
+import { useState } from 'react'
+import { Grid, TextField, Button, FormHelperText, FormControl } from '@material-ui/core'
+// Firebase App (the core Firebase SDK) is always required and
+// must be listed before other Firebase SDKs
+import firebase from "firebase/app";
+
+// Add the Firebase services that you want to use
+import "firebase/auth";
+>>>>>>> main
 
 const SignupPage = ( props ) => {
 
@@ -23,6 +34,7 @@ const SignupPage = ( props ) => {
 
 
 
+<<<<<<< HEAD
     function validateForm() {
 
         var pass = true;
@@ -86,6 +98,16 @@ const SignupPage = ( props ) => {
             pass = pass && false;
         }
         return pass;
+=======
+    if(password.length <= 6){
+        prompt('Password has to be at least six characters')
+    }
+    else if(confirmPassword === password){
+        passMatch = true
+    }
+    if(firstName.length>0 && lastName.length>0 && email.length>0 && username.length>0 && passMatch)
+        buttonDisabled = false;
+>>>>>>> main
 
     }
 

@@ -91,7 +91,11 @@ class Login extends Component {
                       Incorrect email or password.
                     </FormHelperText>
                   )}
-                  <Button variant="contained" type="submit" color="primary">
+                  <Button
+                    variant="contained"
+                    type="submit"
+                    style={{ backgroundColor: "orange" }}
+                  >
                     Sign In
                   </Button>
                 </FormControl>

@@ -49,7 +49,7 @@ class StartPage extends Component {
               <Button
                 variant="contained"
                 color="primary"
-                style={{ padding: "15px" }}
+                style={{ padding: "15px", backgroundColor: "orange" }}
                 onClick={this.handleLoginClick}
               >
                 Login
@@ -57,7 +57,7 @@ class StartPage extends Component {
               <Button
                 variant="contained"
                 color="primary"
-                style={{ padding: "15px" }}
+                style={{ padding: "15px", backgroundColor: "orange" }}
                 onClick={this.handleSignupClick}
               >
                 Sign up

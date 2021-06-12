@@ -13,7 +13,7 @@ import { Search, Star, StarOutline, StarHalf } from "@material-ui/icons";
 import { withStyles } from "@material-ui/styles";
 import { Component } from "react";
 import { connect } from "react-redux";
-import { isMobile } from "react-device-detect";
+import { isMobileOnly } from "react-device-detect";
 import { logoutUser } from "../actions";
 
 //CSS styling
@@ -43,8 +43,8 @@ const styles = () => ({
     padding: "20px",
   },
   gridList: {
-    width: "75vw",
-    height: "100vh",
+    width: "90vw",
+    height: "75vh",
     padding: "15px",
   },
 });
@@ -177,10 +177,11 @@ class Dashboard extends Component {
           <GridList
             className={classes.gridList}
             // if user is on mobile then gridList has 1 column, otherwise it has 3 columns
-            cols={isMobile ? 1 : 3}
+            cols={isMobileOnly ? 1 : 3}
           >
             {
               // iterates through list of courses, creates Card/gridListTile, and adds it to gridList
+              // TODO: make Card clickable/link to page with reviews for that course
               this.state.courseList.map((course) => (
                 <GridListTile style={{ height: "auto", padding: "10px" }}>
                   <Card className={classes.courseCard}>

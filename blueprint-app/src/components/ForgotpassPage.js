@@ -3,10 +3,13 @@ import { Grid, TextField, Button, FormHelperText, FormControl } from '@material-
 import {  passwordReset } from '../actions';
 
 
+
 const ForgotpassPage = ( props ) => {
     const [email, setEmail] = useState('')
     let emailMatch = false;
     let buttonDisabled = false;
+
+    
 
     if(setEmail === email && email.length > 0)
         emailMatch = true
@@ -24,20 +27,21 @@ const ForgotpassPage = ( props ) => {
         direction="column"
         alignItems="center"
         justify="center"
-        style={{ minHeight: '100vh' }}
-        >
-            <h1>Forgot Password</h1>
-            <form onSubmit={onSubmit}>
+        style={{ minHeight: '100vh',backgroundColor: " teal",  }}
+        > 
+        <div style={{backgroundColor:"white",borderRadius:'5px'}}>
+        <h1 style={{textAlign:"center"}}>Forgot Password</h1>
+            <form onSubmit={onSubmit}  >
                 {!emailMatch && <FormHelperText style={{color: 'black', marginBottom:'7px'}}>
                     Enter your email
                 </FormHelperText>}
-                <FormControl>
+                <FormControl style={{minWidth: "25vw",  padding: "25px", borderRadius:'25px' }}>
                     <TextField 
                         required 
                         label='Email' 
                         id='email_field'
                         variant='outlined' 
-                        style={{marginBottom:'7px'}} 
+                        style={{marginBottom:'7px',backgroundColor: "#D6EAF8 "}} 
                         value={email} 
                         onChange={(e) => setEmail(e.target.value)} 
                     />
@@ -46,13 +50,15 @@ const ForgotpassPage = ( props ) => {
                         variant='contained' 
                         color='primary' 
                         type='submit'
-                        style={{marginBottom:'7px'}} 
+                        style={{marginBottom:'7px', backgroundColor:'orange'}} 
                         disabled={buttonDisabled} 
                     >
                         Send email
                     </Button>
                 </FormControl>
             </form>
+        </div>
+            
         </Grid>
     )
 }

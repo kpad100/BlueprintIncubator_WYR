@@ -6,6 +6,7 @@ import ForgotpassPage from "./components/ForgotpassPage";
 import Dashboard from "./components/Dashboard";
 import { connect } from "react-redux";
 import ProtectedRoute from "./components/ProtectedRoute";
+import ReviewPage from "./components/ReviewPage";
 
 function App(props) {
   const { isAuthenticated, isVerifying } = props;
@@ -22,6 +23,7 @@ function App(props) {
       <Route exact path='/login' component={LoginPage} />
       <Route exact path='/signup' component={SignupPage} />
       <Route exact path='/forgotpassword' component={ForgotpassPage} />
+      <Route exact path='/reviewpage' component={ReviewPage} />
     </Switch>
   );
 }

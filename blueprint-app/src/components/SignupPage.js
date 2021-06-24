@@ -4,6 +4,7 @@ import { Grid, TextField, Button, FormHelperText, FormControl, Card } from '@mat
 import {signupWithEmailPassword} from '../actions/auth'
 
 
+
 const SignupPage = ( props ) => {
 
     //const email_postfix1 = '@scarletmail.rutgers.edu';
@@ -128,7 +129,7 @@ const SignupPage = ( props ) => {
            direction="column"
            alignItems="center"
            justify="center"
-           style={{ minHeight: '100vh' }}
+           style={{ minHeight: '100vh', backgroundColor:'#E67E22 ' }}
            >
            <Card>
            <Grid
@@ -144,7 +145,7 @@ const SignupPage = ( props ) => {
                            required
                            label='First Name' 
                            variant='outlined' 
-                           style={{marginBottom:'7px'}} 
+                           style={{marginBottom:'7px', backgroundColor: "#D6EAF8 "}} 
                            value={firstName} 
                            onChange={(e) => setFirstName(e.target.value)} 
                        />
@@ -152,7 +153,7 @@ const SignupPage = ( props ) => {
                            required 
                            label='Last Name' 
                            variant='outlined' 
-                           style={{marginBottom:'7px'}}
+                           style={{marginBottom:'7px', backgroundColor: "#D6EAF8 "}}
                            value={lastName} 
                            onChange={(e) => setLastName(e.target.value)}  
                        />
@@ -160,7 +161,7 @@ const SignupPage = ( props ) => {
                            required 
                            label='Email' 
                            variant='outlined' 
-                           style={{marginBottom:'7px'}} 
+                           style={{marginBottom:'7px', backgroundColor: "#D6EAF8 "}} 
                            value={email} 
                            onChange={(e) => setEmail(e.target.value)}
                        />
@@ -174,7 +175,7 @@ const SignupPage = ( props ) => {
                            required 
                            label='Username' 
                            variant='outlined' 
-                           style={{marginBottom:'7px'}} 
+                           style={{marginBottom:'7px', backgroundColor: "#D6EAF8 "}} 
                            value={username} 
                            onChange={(e) => setUsername(e.target.value)} 
                        />
@@ -183,7 +184,7 @@ const SignupPage = ( props ) => {
                            type='password'
                            label='Password' 
                            variant='outlined' 
-                           style={{marginBottom:'7px'}} 
+                           style={{marginBottom:'7px', backgroundColor: "#D6EAF8 "}} 
                            value={password} 
                            onChange={(e) => setPassword(e.target.value)} 
                        />
@@ -201,7 +202,7 @@ const SignupPage = ( props ) => {
                            type='password'
                            label='Re-enter Password'  
                            variant='outlined'
-                           style={{marginBottom:'7px'}} 
+                           style={{marginBottom:'7px', backgroundColor: "#D6EAF8 "}} 
                            value={confirmPassword} 
                            onChange={(e) => setConfirmPassword(e.target.value)} 
                        />
@@ -210,7 +211,7 @@ const SignupPage = ( props ) => {
                        </FormHelperText>}
                        <Button 
                             variant='contained' 
-                           color='primary'
+                            color='primary' 
                            type='submit'
                        >   
                            Create

@@ -43,14 +43,15 @@ class Login extends Component {
           direction="column"
           alignItems="center"
           justify="center"
-          style={{ minHeight: "100vh" }}
+          backgroundColor= "teal" 
+          style={{ minHeight: "100vh", backgroundColor: "teal" }}
         >
           <Card>
             <Grid
               container
               direction="column"
               alignItems="center"
-              justify="center"
+              justify="center" 
             >
               <img
                 src="https://cdn.discordapp.com/attachments/812822571094900746/837106499863969812/wyr_transparent.png"
@@ -60,11 +61,11 @@ class Login extends Component {
               />
               <h1>Log In</h1>
               <form onSubmit={this.handleSubmit}>
-                <FormControl style={{ minWidth: "25vw", padding: "15px" }}>
+                <FormControl style={{ minWidth: "25vw", padding: "15px",}}>
                   <TextField
                     required
                     variant="outlined"
-                    style={{ marginBottom: "7px" }}
+                    style={{ marginBottom: "7px", backgroundColor: "#D6EAF8 "}}
                     id="email"
                     label="Email Address"
                     name="email"
@@ -77,7 +78,7 @@ class Login extends Component {
                     name="password"
                     id="password"
                     variant="outlined"
-                    style={{ marginBottom: "7px" }}
+                    style={{ marginBottom: "7px", backgroundColor: "#D6EAF8 " }}
                     onChange={this.handlePasswordChange}
                   />
                   {loginError && (

@@ -19,11 +19,18 @@ function App(props) {
         isAuthenticated={isAuthenticated}
         isVerifying={isVerifying}
       />
+      <ProtectedRoute
+        exact
+        path='/reviewpage'
+        component={ReviewPage}
+        isAuthenticated={isAuthenticated}
+        isVerifying={isVerifying}
+      />
+
       <Route exact path='/' render={() => <>{<StartPage />}</>} />
       <Route exact path='/login' component={LoginPage} />
       <Route exact path='/signup' component={SignupPage} />
       <Route exact path='/forgotpassword' component={ForgotpassPage} />
-      <Route exact path='/reviewpage' component={ReviewPage} />
     </Switch>
   );
 }

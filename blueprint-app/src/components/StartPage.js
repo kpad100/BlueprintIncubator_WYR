@@ -2,7 +2,6 @@ import { Redirect } from "react-router-dom";
 import { Component } from "react";
 import { Grid, Button, ButtonGroup, Card } from "@material-ui/core";
 
-
 class StartPage extends Component {
   state = { directToLogin: false, directToSignup: false };
 
@@ -26,7 +25,7 @@ class StartPage extends Component {
         direction="column"
         alignItems="center"
         justify="center"
-        style={{ minHeight: "100vh", backgroundColor:'#E67E22' }}
+        style={{ minHeight: "100vh", backgroundColor: "#E67E22" }}
       >
         <Card>
           <Grid

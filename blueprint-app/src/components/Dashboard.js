@@ -15,6 +15,7 @@ import { Component } from "react";
 import { connect } from "react-redux";
 import { isMobileOnly } from "react-device-detect";
 import { logoutUser } from "../actions";
+import { db } from "../firebase/firebase";
 
 //CSS styling
 const styles = () => ({
@@ -68,82 +69,20 @@ class Dashboard extends Component {
 
   state = {
     anchorEl: null, // anchor for menu, closed by default
-    // TODO: remove this list, store/receive data from Firebase instead
-    courseList: [
-      {
-        name: "Probability and Random Processes",
-        code: "14:332:226",
-        avgRating: 3,
-        numOfReviews: 191,
-      },
-      {
-        name: "Multivariable Calculus",
-        code: "14:332:228",
-        avgRating: 3.2,
-        numOfReviews: 211,
-      },
-      {
-        name: "Introduction to Linear Algebra",
-        code: "14:332:224",
-        avgRating: 4.3,
-        numOfReviews: 251,
-      },
-      {
-        name: "Intro to Computers for Engineers",
-        code: "14:332:225",
-        avgRating: 2.5,
-        numOfReviews: 191,
-      },
-      {
-        name: "Class 5",
-        code: "14:332:227",
-        avgRating: 5,
-        numOfReviews: 141,
-      },
-      {
-        name: "Class 6",
-        code: "14:140:226",
-        avgRating: 3.5,
-        numOfReviews: 291,
-      },
-      {
-        name: "Class 7",
-        code: "14:140:227",
-        avgRating: 3,
-        numOfReviews: 345,
-      },
-      {
-        name: "Class 8",
-        code: "14:140:180",
-        avgRating: 3.5,
-        numOfReviews: 424,
-      },
-      {
-        name: "Class 9",
-        code: "14:332:300",
-        avgRating: 2.5,
-        numOfReviews: 227,
-      },
-      {
-        name: "Class 10",
-        code: "14:332:302",
-        avgRating: 3,
-        numOfReviews: 191,
-      },
-      {
-        name: "Class 11",
-        code: "14:332:304",
-        avgRating: 3.5,
-        numOfReviews: 211,
-      },
-      {
-        name: "Class 12",
-        code: "14:332:308",
-        avgRating: 4.5,
-        numOfReviews: 251,
-      },
-    ],
+    courseList: [], // list of courses
   };
+
+  // Called immediately after a component is mounted. Setting state here will trigger re-rendering.
+  componentDidMount() {
+    //receives course data from Firebase and updates courseList in state
+    db.collection("courses").onSnapshot((querySnapshot) => {
+      var courses = [];
+      querySnapshot.forEach((doc) => {
+        courses.push(doc.data());
+      });
+      this.setState({ courseList: courses });
+    });
+  }
 
   render() {
     const { classes, isLoggingOut, logoutError } = this.props;

@@ -20,7 +20,7 @@ const useStyles2 = makeStyles((theme) => ({
     padding: theme.spacing(2),
     textAlign: "center",
     color: theme.palette.text.secondary,
-    backgroundColor: "#e8e8e8",
+    backgroundColor: "#4198b5",
     height: "flex",
   },
 }));
@@ -29,14 +29,22 @@ const ReviewPage = () => {
   const classes2 = useStyles2();
   return (
     <>
+    <header>
+    <img
+              src="https://cdn.discordapp.com/attachments/812822571094900746/837106499863969812/wyr_transparent.png"
+              height="50"
+              style={{ marginTop: "15px", marginBottom: "15px", float:"right" }}
+              alt=""
+            />
+    </header>
       <Card
         style={{
-          backgroundColor: "#D3D3D3",
+          backgroundColor: "#fb9263",
           marginBottom: "15px",
-          marginTop: "45px",
-          marginRight: "5px",
-          marginLeft: "5px",
-          padding: "15px",
+          marginTop: "5px",
+          marginRight: "300px",
+          marginLeft: "300px",
+          padding: "25px",
         }}
       >
         <Grid
@@ -46,16 +54,16 @@ const ReviewPage = () => {
           justify="center"
           zeroMinWidth
         >
-          <h2>Class 2</h2>
-          <StarIcon style={{ marginLeft: "400px" }} />
-          <StarIcon />
-          <StarIcon />
-          <StarHalfIcon />
-          <StarOutlineIcon />
+          <h1 >Class 2</h1>
+          <StarIcon style={{ marginLeft: "100px", fontSize:"40px", alignItems:"center" }} />
+          <StarIcon style={{ marginLeft: "30px", fontSize:"40px", alignItems:"center" }}/>
+          <StarIcon style={{ marginLeft: "30px", fontSize:"40px", alignItems:"center" }}/>
+          <StarHalfIcon style={{ marginLeft: "30px", fontSize:"40px", alignItems:"center" }}/>
+          <StarOutlineIcon style={{ marginLeft: "30px", fontSize:"40px", alignItems:"center" }}/>
           <p style={{ marginLeft: "15px" }}>(191 reviews)</p>
         </Grid>
       </Card>
-
+      <h2 style={{marginLeft: "300px"}}>Reviews</h2>
       <Grid
         container
         direction="row"
@@ -69,7 +77,7 @@ const ReviewPage = () => {
             <Typography variant="subtitle2" align="left" color="textPrimary">
               Username
             </Typography>
-            <Accordion backgroundColor="#add8e6">
+            <Accordion backgroundColor="#4198b5">
               <AccordionSummary
                 expandIcon={<ExpandMoreIcon />}
                 aria-controls="panel1a-content"

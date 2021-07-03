@@ -17,6 +17,7 @@ import { isMobileOnly } from "react-device-detect";
 import { logoutUser } from "../actions";
 import { db } from "../firebase/firebase";
 
+
 //CSS styling
 const styles = () => ({
   "@global": {
@@ -28,18 +29,19 @@ const styles = () => ({
       "-webkit-box-shadow": "inset 0 0 6px rgba(0,0,0,0.00)",
     },
     "*::-webkit-scrollbar-thumb": {
-      backgroundColor: "rgba(0,0,0,.1)",
+      backgroundColor: "#D6EAF8 ",
       outline: "1px solid slategrey",
     },
+
   },
   searchBar: {
-    backgroundColor: "cyan",
+    backgroundColor: "#D6EAF8 ",
     opacity: 0.5,
     borderRadius: 25,
     padding: "10px",
   },
   courseCard: {
-    backgroundColor: "orange",
+    backgroundColor: "#fb9263",
     borderRadius: 25,
     padding: "20px",
   },
@@ -47,6 +49,7 @@ const styles = () => ({
     width: "90vw",
     height: "75vh",
     padding: "15px",
+    backgroundColor:"white",
   },
 });
 
@@ -91,7 +94,13 @@ class Dashboard extends Component {
         <header>
           <IconButton onClick={this.handleOpenMenu} aria-controls="menu">
             <Avatar />
-          </IconButton>
+            </IconButton>
+            <img
+              src="https://cdn.discordapp.com/attachments/812822571094900746/837106499863969812/wyr_transparent.png"
+              height="50"
+              style={{ marginTop: "15px", marginBottom: "15px", float: "right" }}
+              alt=""
+            />
           <Menu
             id="menu"
             onClose={this.handleCloseMenu}
@@ -99,18 +108,20 @@ class Dashboard extends Component {
             open={Boolean(this.state.anchorEl)}
           >
             <MenuItem onClick={this.handleLogout}>Logout</MenuItem>
+            
           </Menu>
+          <h1 style={{textAlign:"center"}}>Classes</h1>
         </header>
 
-        <Grid container direction="column" alignItems="center" justify="center">
-          <h1>Classes</h1>
+        <Grid container direction="column" alignItems="center" justify="center"  >
+        
           <div className={classes.searchBar}>
             <InputBase
               placeholder="Course Name or Code..."
-              style={{ width: "50vw" }}
+              style={{ width: "50vw", }}
               // TODO: make this a functioning search bar
             />
-            <Search style={{ color: "orange" }} />
+            <Search style={{ color: "orange", }} />
           </div>
 
           <GridList
@@ -183,3 +194,4 @@ function mapStateToProps(state) {
 }
 
 export default withStyles(styles)(connect(mapStateToProps)(Dashboard));
+

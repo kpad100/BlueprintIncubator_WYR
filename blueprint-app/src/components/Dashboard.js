@@ -6,17 +6,30 @@ import {
   Menu,
   MenuItem,
   GridList,
+  Typography,
   GridListTile,
   InputBase,
 } from "@material-ui/core";
 import { Search, Star, StarOutline, StarHalf } from "@material-ui/icons";
 import { withStyles } from "@material-ui/styles";
 import { Component } from "react";
+import { createMuiTheme, responsiveFontSizes, ThemeProvider } from '@material-ui/core/styles';
 import { connect } from "react-redux";
 import { isMobileOnly } from "react-device-detect";
 import { logoutUser } from "../actions";
 import { db } from "../firebase/firebase";
 
+const theme = createMuiTheme();
+
+theme.typography.body1 = {
+  fontSize: '0.8rem',
+  '@media (min-width:600px)': {
+    fontSize: '1rem',
+  },
+  [theme.breakpoints.up('md')]: {
+    fontSize: '1.25rem',
+  },
+}; 
 
 //CSS styling
 const styles = () => ({
@@ -44,6 +57,7 @@ const styles = () => ({
     backgroundColor: "#fb9263",
     borderRadius: 25,
     padding: "20px",
+    height: "100px",
   },
   gridList: {
     width: "90vw",
@@ -141,11 +155,15 @@ class Dashboard extends Component {
                       alignItems="center"
                       justify="center"
                     >
-                      <h4 style={{ marginBottom: "0px", marginTop: "0px" }}>
-                        {course.name}
-                      </h4>
-                      <h4>{course.code}</h4>
-                      <div>
+                      <ThemeProvider theme={theme}>
+                         <Typography variant="body1" style={{ marginBottom: "0px", marginTop: "5px" }} >
+                         {course.name}
+                         </Typography>
+                         <Typography variant="body1" style={{ marginBottom: "10px", marginTop: "10px" }}>
+                          {course.code}
+                         </Typography>
+                       </ThemeProvider>
+                      {/* <div>
                         {
                           // displays avgRating(rounded down to nearest whole number) filled stars
                           Array(Math.floor(course.avgRating)).fill(
@@ -170,7 +188,7 @@ class Dashboard extends Component {
                           )
                         }
                         {course.avgRating}/5
-                      </div>
+                      </div> */}
                     </Grid>
                   </Card>
                 </GridListTile>

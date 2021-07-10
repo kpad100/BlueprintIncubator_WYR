@@ -13,23 +13,27 @@ import {
 import { Search, Star, StarOutline, StarHalf } from "@material-ui/icons";
 import { withStyles } from "@material-ui/styles";
 import { Component } from "react";
-import { createMuiTheme, responsiveFontSizes, ThemeProvider } from '@material-ui/core/styles';
+import {
+  createMuiTheme,
+  responsiveFontSizes,
+  ThemeProvider,
+} from "@material-ui/core/styles";
 import { connect } from "react-redux";
+import { Redirect, Link } from "react-router-dom";
 import { isMobileOnly } from "react-device-detect";
 import { logoutUser } from "../actions";
 import { db } from "../firebase/firebase";
 
 const theme = createMuiTheme();
-
 theme.typography.body1 = {
-  fontSize: '0.8rem',
-  '@media (min-width:600px)': {
-    fontSize: '1rem',
+  fontSize: "0.8rem",
+  "@media (min-width:600px)": {
+    fontSize: "1rem",
   },
-  [theme.breakpoints.up('md')]: {
-    fontSize: '1.25rem',
+  [theme.breakpoints.up("md")]: {
+    fontSize: "1.25rem",
   },
-}; 
+};
 
 //CSS styling
 const styles = () => ({
@@ -45,7 +49,6 @@ const styles = () => ({
       backgroundColor: "#D6EAF8 ",
       outline: "1px solid slategrey",
     },
-
   },
   searchBar: {
     backgroundColor: "#D6EAF8 ",
@@ -63,7 +66,7 @@ const styles = () => ({
     width: "90vw",
     height: "75vh",
     padding: "15px",
-    backgroundColor:"white",
+    backgroundColor: "white",
   },
 });
 
@@ -91,7 +94,7 @@ class Dashboard extends Component {
 
   // Called immediately after a component is mounted. Setting state here will trigger re-rendering.
   componentDidMount() {
-    //receives course data from Firebase and updates courseList in state
+    // receives course data from Firebase and updates courseList in state
     db.collection("courses").onSnapshot((querySnapshot) => {
       var courses = [];
       querySnapshot.forEach((doc) => {
@@ -108,13 +111,13 @@ class Dashboard extends Component {
         <header>
           <IconButton onClick={this.handleOpenMenu} aria-controls="menu">
             <Avatar />
-            </IconButton>
-            <img
-              src="https://cdn.discordapp.com/attachments/812822571094900746/837106499863969812/wyr_transparent.png"
-              height="50"
-              style={{ marginTop: "15px", marginBottom: "15px", float: "right" }}
-              alt=""
-            />
+          </IconButton>
+          <img
+            src="https://cdn.discordapp.com/attachments/812822571094900746/837106499863969812/wyr_transparent.png"
+            height="50"
+            style={{ marginTop: "15px", marginBottom: "15px", float: "right" }}
+            alt=""
+          />
           <Menu
             id="menu"
             onClose={this.handleCloseMenu}
@@ -122,20 +125,18 @@ class Dashboard extends Component {
             open={Boolean(this.state.anchorEl)}
           >
             <MenuItem onClick={this.handleLogout}>Logout</MenuItem>
-            
           </Menu>
-          <h1 style={{textAlign:"center"}}>Classes</h1>
+          <h1 style={{ textAlign: "center" }}>Classes</h1>
         </header>
 
-        <Grid container direction="column" alignItems="center" justify="center"  >
-        
+        <Grid container direction="column" alignItems="center" justify="center">
           <div className={classes.searchBar}>
             <InputBase
               placeholder="Course Name or Code..."
-              style={{ width: "50vw", }}
+              style={{ width: "50vw" }}
               // TODO: make this a functioning search bar
             />
-            <Search style={{ color: "orange", }} />
+            <Search style={{ color: "orange" }} />
           </div>
 
           <GridList
@@ -156,13 +157,19 @@ class Dashboard extends Component {
                       justify="center"
                     >
                       <ThemeProvider theme={theme}>
-                         <Typography variant="body1" style={{ marginBottom: "0px", marginTop: "5px" }} >
-                         {course.name}
-                         </Typography>
-                         <Typography variant="body1" style={{ marginBottom: "10px", marginTop: "10px" }}>
+                        <Typography
+                          variant="body1"
+                          style={{ marginBottom: "0px", marginTop: "5px" }}
+                        >
+                          {course.name}
+                        </Typography>
+                        <Typography
+                          variant="body1"
+                          style={{ marginBottom: "10px", marginTop: "10px" }}
+                        >
                           {course.code}
-                         </Typography>
-                       </ThemeProvider>
+                        </Typography>
+                      </ThemeProvider>
                       {/* <div>
                         {
                           // displays avgRating(rounded down to nearest whole number) filled stars
@@ -212,4 +219,3 @@ function mapStateToProps(state) {
 }
 
 export default withStyles(styles)(connect(mapStateToProps)(Dashboard));
-

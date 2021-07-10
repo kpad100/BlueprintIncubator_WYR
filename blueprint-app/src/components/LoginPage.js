@@ -43,7 +43,7 @@ class Login extends Component {
           direction="column"
           alignItems="center"
           justify="center"
-          backgroundColor="teal"
+          backgroundcolor="teal"
           style={{ minHeight: "100vh", backgroundColor: "teal" }}
         >
           <Card>

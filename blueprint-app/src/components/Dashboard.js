@@ -23,6 +23,7 @@ import { Redirect, Link } from "react-router-dom";
 import { isMobileOnly } from "react-device-detect";
 import { logoutUser } from "../actions";
 import { db } from "../firebase/firebase";
+import ReviewPage from "./ReviewPage";
 
 const theme = createMuiTheme();
 theme.typography.body1 = {
@@ -71,6 +72,13 @@ const styles = () => ({
 });
 
 class Dashboard extends Component {
+  state = {
+    anchorEl: null, // anchor for menu, closed by default
+    courseList: [], // list of courses
+    selectedCourse: {}, // course to pass to ReviewPage
+    mountReviewPage: false, // mounts ReviewPage when true
+  };
+
   // logsout user
   handleLogout = () => {
     const { dispatch } = this.props;
@@ -87,9 +95,15 @@ class Dashboard extends Component {
     this.setState({ anchorEl: null });
   };
 
-  state = {
-    anchorEl: null, // anchor for menu, closed by default
-    courseList: [], // list of courses
+  // handles when a course is clicked on
+  onCourseClick = (e) => {
+    const text = e.target.innerText;
+    for (let i = 0; i < this.state.courseList.length; i++) {
+      let course = this.state.courseList[i];
+      if (text.includes(course.name) || text.includes(course.code)) {
+        this.setState({ selectedCourse: course, mountReviewPage: true });
+      }
+    }
   };
 
   // Called immediately after a component is mounted. Setting state here will trigger re-rendering.
@@ -104,73 +118,95 @@ class Dashboard extends Component {
     });
   }
 
+  // componentDidUpdate() {
+  //   console.log(this.state.selectedCourse);
+  // }
+
   render() {
     const { classes, isLoggingOut, logoutError } = this.props;
-    return (
-      <div>
-        <header>
-          <IconButton onClick={this.handleOpenMenu} aria-controls="menu">
-            <Avatar />
-          </IconButton>
-          <img
-            src="https://cdn.discordapp.com/attachments/812822571094900746/837106499863969812/wyr_transparent.png"
-            height="50"
-            style={{ marginTop: "15px", marginBottom: "15px", float: "right" }}
-            alt=""
-          />
-          <Menu
-            id="menu"
-            onClose={this.handleCloseMenu}
-            anchorEl={this.state.anchorEl}
-            open={Boolean(this.state.anchorEl)}
-          >
-            <MenuItem onClick={this.handleLogout}>Logout</MenuItem>
-          </Menu>
-          <h1 style={{ textAlign: "center" }}>Classes</h1>
-        </header>
-
-        <Grid container direction="column" alignItems="center" justify="center">
-          <div className={classes.searchBar}>
-            <InputBase
-              placeholder="Course Name or Code..."
-              style={{ width: "50vw" }}
-              // TODO: make this a functioning search bar
+    if (this.state.mountReviewPage) {
+      return <ReviewPage selectedCourse={this.state.selectedCourse} />;
+    } else {
+      return (
+        <div>
+          <header>
+            <IconButton onClick={this.handleOpenMenu} aria-controls="menu">
+              <Avatar />
+            </IconButton>
+            <img
+              src="https://cdn.discordapp.com/attachments/812822571094900746/837106499863969812/wyr_transparent.png"
+              height="50"
+              style={{
+                marginTop: "15px",
+                marginBottom: "15px",
+                float: "right",
+              }}
+              alt=""
             />
-            <Search style={{ color: "orange" }} />
-          </div>
+            <Menu
+              id="menu"
+              onClose={this.handleCloseMenu}
+              anchorEl={this.state.anchorEl}
+              open={Boolean(this.state.anchorEl)}
+            >
+              <MenuItem onClick={this.handleLogout}>Logout</MenuItem>
+            </Menu>
+            <h1 style={{ textAlign: "center" }}>Classes</h1>
+          </header>
 
-          <GridList
-            className={classes.gridList}
-            // if user is on mobile then gridList has 1 column, otherwise it has 3 columns
-            cols={isMobileOnly ? 1 : 3}
+          <Grid
+            container
+            direction="column"
+            alignItems="center"
+            justify="center"
           >
-            {
-              // iterates through list of courses, creates Card/gridListTile, and adds it to gridList
-              // TODO: make Card clickable/link to page with reviews for that course
-              this.state.courseList.map((course) => (
-                <GridListTile style={{ height: "auto", padding: "10px" }}>
-                  <Card className={classes.courseCard}>
-                    <Grid
-                      container
-                      direction="column"
-                      alignItems="center"
-                      justify="center"
-                    >
-                      <ThemeProvider theme={theme}>
-                        <Typography
-                          variant="body1"
-                          style={{ marginBottom: "0px", marginTop: "5px" }}
-                        >
-                          {course.name}
-                        </Typography>
-                        <Typography
-                          variant="body1"
-                          style={{ marginBottom: "10px", marginTop: "10px" }}
-                        >
-                          {course.code}
-                        </Typography>
-                      </ThemeProvider>
-                      {/* <div>
+            <div className={classes.searchBar}>
+              <InputBase
+                placeholder="Course Name or Code..."
+                style={{ width: "50vw" }}
+                // TODO: make this a functioning search bar
+              />
+              <Search style={{ color: "orange" }} />
+            </div>
+
+            <GridList
+              className={classes.gridList}
+              // if user is on mobile then gridList has 1 column, otherwise it has 3 columns
+              cols={isMobileOnly ? 1 : 3}
+            >
+              {
+                // iterates through list of courses, creates Card/gridListTile, and adds it to gridList
+                // TODO: make Card clickable/link to page with reviews for that course
+                this.state.courseList.map((course) => (
+                  <GridListTile
+                    style={{ height: "auto", padding: "10px" }}
+                    onClick={this.onCourseClick}
+                  >
+                    <Card className={classes.courseCard}>
+                      <Grid
+                        container
+                        direction="column"
+                        alignItems="center"
+                        justify="center"
+                      >
+                        <ThemeProvider theme={theme}>
+                          <Typography
+                            variant="body1"
+                            style={{
+                              marginBottom: "0px",
+                              marginTop: "5px",
+                            }}
+                          >
+                            {course.name}
+                          </Typography>
+                          <Typography
+                            variant="body1"
+                            style={{ marginBottom: "10px", marginTop: "10px" }}
+                          >
+                            {course.code}
+                          </Typography>
+                        </ThemeProvider>
+                        {/* <div>
                         {
                           // displays avgRating(rounded down to nearest whole number) filled stars
                           Array(Math.floor(course.avgRating)).fill(
@@ -196,18 +232,19 @@ class Dashboard extends Component {
                         }
                         {course.avgRating}/5
                       </div> */}
-                    </Grid>
-                  </Card>
-                </GridListTile>
-              ))
-            }
-          </GridList>
-        </Grid>
+                      </Grid>
+                    </Card>
+                  </GridListTile>
+                ))
+              }
+            </GridList>
+          </Grid>
 
-        {isLoggingOut && <p>Logging Out....</p>}
-        {logoutError && <p>Error logging out</p>}
-      </div>
-    );
+          {isLoggingOut && <p>Logging Out....</p>}
+          {logoutError && <p>Error logging out</p>}
+        </div>
+      );
+    }
   }
 }
 

@@ -1,17 +1,24 @@
 import { Component } from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import Paper from "@material-ui/core/Paper";
-import Grid from "@material-ui/core/Grid";
-import Typography from "@material-ui/core/Typography";
-import StarIcon from "@material-ui/icons/Star";
-import StarOutlineIcon from "@material-ui/icons/StarOutline";
-import StarHalfIcon from "@material-ui/icons/StarHalf";
-import Card from "@material-ui/core/Card";
-import Accordion from "@material-ui/core/Accordion";
-import AccordionSummary from "@material-ui/core/AccordionSummary";
-import AccordionDetails from "@material-ui/core/AccordionDetails";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+import {
+  Star,
+  StarOutline,
+  StarHalf,
+  ArrowBackIos,
+  ExpandMore,
+} from "@material-ui/icons";
 import Dashboard from "./Dashboard";
+import { db } from "../firebase/firebase";
+import {
+  IconButton,
+  Paper,
+  Grid,
+  Typography,
+  Card,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
+} from "@material-ui/core";
 
 const useStyles2 = makeStyles((theme) => ({
   root: {
@@ -28,12 +35,30 @@ const useStyles2 = makeStyles((theme) => ({
 
 class ReviewPage extends Component {
   state = {
-    mountDashboard: false,
+    mountDashboard: false, // when true, mounts Dashboard component
+    reviewList: [], // list of reviews
+    avgRating: 0, // avgRating of all reviews for course
   };
 
   handleReturnToDashboard = () => {
     this.setState({ mountDashboard: true });
   };
+
+  // Called immediately after a component is mounted. Setting state here will trigger re-rendering.
+  componentDidMount() {
+    // receives review data from Firebase and updates reviewList and avgRating in state
+    db.collection(
+      "courses/" + this.props.selectedCourseID + "/reviews"
+    ).onSnapshot((querySnapshot) => {
+      var reviews = [];
+      let sum = 0;
+      querySnapshot.forEach((doc) => {
+        reviews.push(doc.data());
+        sum += doc.data().rating;
+      });
+      this.setState({ reviewList: reviews, avgRating: sum / reviews.length });
+    });
+  }
 
   render() {
     const { selectedCourse } = this.props;
@@ -43,6 +68,9 @@ class ReviewPage extends Component {
       return (
         <>
           <header>
+            <IconButton onClick={this.handleReturnToDashboard}>
+              <ArrowBackIos />
+            </IconButton>
             <img
               src="https://cdn.discordapp.com/attachments/812822571094900746/837106499863969812/wyr_transparent.png"
               height="50"
@@ -66,51 +94,45 @@ class ReviewPage extends Component {
           >
             <Grid
               container
-              direction="row"
+              direction="column"
               alignItems="center"
               justify="center"
               zeroMinWidth
             >
               <h1>{selectedCourse.name}</h1>
-              <button onClick={this.handleReturnToDashboard}>Back</button>
-              <StarIcon
-                style={{
-                  marginLeft: "100px",
-                  fontSize: "40px",
-                  alignItems: "center",
-                }}
-              />
-              <StarIcon
-                style={{
-                  marginLeft: "30px",
-                  fontSize: "40px",
-                  alignItems: "center",
-                }}
-              />
-              <StarIcon
-                style={{
-                  marginLeft: "30px",
-                  fontSize: "40px",
-                  alignItems: "center",
-                }}
-              />
-              <StarHalfIcon
-                style={{
-                  marginLeft: "30px",
-                  fontSize: "40px",
-                  alignItems: "center",
-                }}
-              />
-              <StarOutlineIcon
-                style={{
-                  marginLeft: "30px",
-                  fontSize: "40px",
-                  alignItems: "center",
-                }}
-              />
-              <p style={{ marginLeft: "15px" }}>(191 reviews)</p>
+              <h2>{selectedCourse.code}</h2>
+              <div>
+                {
+                  // displays avgRating(rounded down to nearest whole number) filled stars
+                  Array(Math.floor(this.state.avgRating)).fill(
+                    <Star style={{ color: "white" }} />
+                  )
+                }
+                {
+                  // displays half star if avgRating decimal >= 0.25
+                  this.state.avgRating - Math.floor(this.state.avgRating) >=
+                    0.25 && <StarHalf style={{ color: "white" }} />
+                }
+                {
+                  // displays outlined star if avgRating decimal < 0.25
+                  this.state.avgRating - Math.floor(this.state.avgRating) > 0 &&
+                    this.state.avgRating - Math.floor(this.state.avgRating) <
+                      0.25 && <StarOutline />
+                }
+                {
+                  // displays 5 - (avgRating rounded up to nearest whole number) outlined stars
+                  Array(5 - Math.ceil(this.state.avgRating)).fill(
+                    <StarOutline />
+                  )
+                }
+                {this.state.avgRating}/5
+              </div>
+              <p style={{ marginLeft: "15px" }}>
+                ({this.state.reviewList.length} reviews)
+              </p>
             </Grid>
           </Card>
+
           <h2 style={{ marginLeft: "300px" }}>Reviews</h2>
           <Grid
             container
@@ -120,164 +142,54 @@ class ReviewPage extends Component {
             justify="center"
             alignItems="flex-start"
           >
-            <Grid item xs={7} zeroMinWidth>
-              <Paper className={useStyles2.paper}>
-                <Typography
-                  variant="subtitle2"
-                  align="left"
-                  color="textPrimary"
-                >
-                  Username
-                </Typography>
-                <Accordion backgroundcolor="#4198b5">
-                  <AccordionSummary
-                    expandIcon={<ExpandMoreIcon />}
-                    aria-controls="panel1a-content"
-                    id="panel1a-header"
-                  >
-                    <Typography variant="body2">
-                      This is class is xyz and I would reccomend it because
-                      xyz...
-                    </Typography>
-                  </AccordionSummary>
+            {this.state.reviewList.map((review) => (
+              <Grid item xs={7} zeroMinWidth>
+                <Paper className={useStyles2.paper}>
+                  <Accordion backgroundcolor="#4198b5">
+                    <AccordionSummary
+                      expandIcon={<ExpandMore />}
+                      aria-controls="panel1a-content"
+                      id="panel1a-header"
+                    >
+                      <Typography style={{ marginRight: "30px" }}>
+                        Username
+                      </Typography>
+                      <div style={{ marginRight: "30px" }}>
+                        {
+                          // displays avgRating(rounded down to nearest whole number) filled stars
+                          Array(Math.floor(review.rating)).fill(<Star />)
+                        }
+                        {
+                          // displays half star if avgRating decimal >= 0.25
+                          review.rating - Math.floor(review.rating) >= 0.25 && (
+                            <StarHalf />
+                          )
+                        }
+                        {
+                          // displays outlined star if avgRating decimal < 0.25
+                          review.rating - Math.floor(review.rating) > 0 &&
+                            review.rating - Math.floor(review.rating) <
+                              0.25 && <StarOutline />
+                        }
+                        {
+                          // displays 5 - (avgRating rounded up to nearest whole number) outlined stars
+                          Array(5 - Math.ceil(review.rating)).fill(
+                            <StarOutline />
+                          )
+                        }
+                      </div>
+                      <Typography>Professor: {review.prof}</Typography>
+                    </AccordionSummary>
 
-                  <AccordionDetails>
-                    <Typography variant="body2" align="left">
-                      This is a review. This is a review. This is a review. This
-                      is a review. This is a review. This is a review. This is a
-                      review. This is a review. This is a review. This is a
-                      review. This is a review. This is a review. This is a
-                      review. This is a review. This is a review. This is a
-                      review. This is a review. This is a review. This is a
-                      review. This is a review. This is a review. This is a
-                      review. This is a review. This is a review. This is a
-                      review. This is a review. This is a review. This is a
-                      review. This is a review. This is a review. This is a
-                      review. This is a review. This is a review.
-                    </Typography>
-                  </AccordionDetails>
-                </Accordion>
-              </Paper>
-            </Grid>
-
-            <Grid item xs={7} zeroMinWidth>
-              <Paper className={useStyles2.paper}>
-                <Typography
-                  variant="subtitle2"
-                  align="left"
-                  color="textPrimary"
-                >
-                  Username
-                </Typography>
-                <Accordion backgroundcolor="#add8e6">
-                  <AccordionSummary
-                    expandIcon={<ExpandMoreIcon />}
-                    aria-controls="panel1a-content"
-                    id="panel1a-header"
-                  >
-                    <Typography variant="body2">
-                      This is class is xyz and I would reccomend it because
-                      xyz...
-                    </Typography>
-                  </AccordionSummary>
-
-                  <AccordionDetails>
-                    <Typography variant="body2" align="left">
-                      This is a review. This is a review. This is a review. This
-                      is a review. This is a review. This is a review. This is a
-                      review. This is a review. This is a review. This is a
-                      review. This is a review. This is a review. This is a
-                      review. This is a review. This is a review. This is a
-                      review. This is a review. This is a review. This is a
-                      review. This is a review. This is a review. This is a
-                      review. This is a review. This is a review. This is a
-                      review. This is a review. This is a review. This is a
-                      review. This is a review. This is a review. This is a
-                      review. This is a review. This is a review.
-                    </Typography>
-                  </AccordionDetails>
-                </Accordion>
-              </Paper>
-            </Grid>
-
-            <Grid item xs={7} zeroMinWidth>
-              <Paper className={useStyles2.paper}>
-                <Typography
-                  variant="subtitle2"
-                  align="left"
-                  color="textPrimary"
-                >
-                  Username
-                </Typography>
-                <Accordion backgroundcolor="#add8e6">
-                  <AccordionSummary
-                    expandIcon={<ExpandMoreIcon />}
-                    aria-controls="panel1a-content"
-                    id="panel1a-header"
-                  >
-                    <Typography variant="body2">
-                      This is class is xyz and I would reccomend it because
-                      xyz...
-                    </Typography>
-                  </AccordionSummary>
-
-                  <AccordionDetails>
-                    <Typography variant="body2" align="left">
-                      This is a review. This is a review. This is a review. This
-                      is a review. This is a review. This is a review. This is a
-                      review. This is a review. This is a review. This is a
-                      review. This is a review. This is a review. This is a
-                      review. This is a review. This is a review. This is a
-                      review. This is a review. This is a review. This is a
-                      review. This is a review. This is a review. This is a
-                      review. This is a review. This is a review. This is a
-                      review. This is a review. This is a review. This is a
-                      review. This is a review. This is a review. This is a
-                      review. This is a review. This is a review.
-                    </Typography>
-                  </AccordionDetails>
-                </Accordion>
-              </Paper>
-            </Grid>
-            <Grid item xs={7} zeroMinWidth>
-              <Paper className={useStyles2.paper}>
-                <Typography
-                  variant="subtitle2"
-                  align="left"
-                  color="textPrimary"
-                >
-                  Username
-                </Typography>
-                <Accordion backgroundcolor="#add8e6">
-                  <AccordionSummary
-                    expandIcon={<ExpandMoreIcon />}
-                    aria-controls="panel1a-content"
-                    id="panel1a-header"
-                  >
-                    <Typography variant="body2">
-                      This is class is xyz and I would reccomend it because
-                      xyz...
-                    </Typography>
-                  </AccordionSummary>
-
-                  <AccordionDetails>
-                    <Typography variant="body2" align="left">
-                      This is a review. This is a review. This is a review. This
-                      is a review. This is a review. This is a review. This is a
-                      review. This is a review. This is a review. This is a
-                      review. This is a review. This is a review. This is a
-                      review. This is a review. This is a review. This is a
-                      review. This is a review. This is a review. This is a
-                      review. This is a review. This is a review. This is a
-                      review. This is a review. This is a review. This is a
-                      review. This is a review. This is a review. This is a
-                      review. This is a review. This is a review. This is a
-                      review. This is a review. This is a review.
-                    </Typography>
-                  </AccordionDetails>
-                </Accordion>
-              </Paper>
-            </Grid>
+                    <AccordionDetails>
+                      <Typography variant="body2" align="left">
+                        {review.description}
+                      </Typography>
+                    </AccordionDetails>
+                  </Accordion>
+                </Paper>
+              </Grid>
+            ))}
           </Grid>
         </>
       );

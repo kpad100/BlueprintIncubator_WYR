@@ -24,18 +24,18 @@ import { logoutUser } from "../actions";
 import { db } from "../firebase/firebase";
 import ReviewPage from "./ReviewPage";
 
-const theme = createMuiTheme();
-theme.typography.body1 = {
-  fontSize: "0.8rem",
-  "@media (min-width:600px)": {
-    fontSize: "1rem",
-  },
-  [theme.breakpoints.up("md")]: {
-    fontSize: "1.25rem",
-  },
-};
+// const theme = createMuiTheme();
+// theme.typography.body1 = {
+//   fontSize: "0.8rem",
+//   "@media (min-width:600px)": {
+//     fontSize: "1rem",
+//   },
+//   [theme.breakpoints.up("md")]: {
+//     fontSize: "1.25rem",
+//   },
+// };
 
-//CSS styling
+// CSS styling
 const styles = () => ({
   "@global": {
     //makes scrollbar look less intrusive
@@ -51,7 +51,7 @@ const styles = () => ({
     },
   },
   searchBar: {
-    backgroundColor: "#D6EAF8 ",
+    backgroundColor: "#7ae7ff",
     opacity: 0.5,
     borderRadius: 25,
     padding: "10px",
@@ -80,7 +80,7 @@ class Dashboard extends Component {
     mountReviewPage: false, // mounts ReviewPage when true
   };
 
-  // logsout user
+  // handles logout
   handleLogout = () => {
     const { dispatch } = this.props;
     dispatch(logoutUser());
@@ -116,8 +116,8 @@ class Dashboard extends Component {
   componentDidMount() {
     // receives course data from Firebase and updates courseList and courseIDs in state
     db.collection("courses").onSnapshot((querySnapshot) => {
-      var courses = [];
-      var firestoreIDs = [];
+      const courses = [];
+      const firestoreIDs = [];
       querySnapshot.forEach((doc) => {
         courses.push(doc.data());
         firestoreIDs.push(doc.id);
@@ -143,32 +143,32 @@ class Dashboard extends Component {
     } else {
       return (
         <div>
-          <header>
+          <Grid id="topGrid" container>
             <IconButton onClick={this.handleOpenMenu} aria-controls="menu">
               <Avatar />
             </IconButton>
-            <img
-              src="https://cdn.discordapp.com/attachments/812822571094900746/837106499863969812/wyr_transparent.png"
-              height="50"
-              style={{
-                marginTop: "15px",
-                marginBottom: "15px",
-                float: "right",
-              }}
-              alt=""
-            />
             <Menu
               id="menu"
               onClose={this.handleCloseMenu}
               anchorEl={this.state.anchorEl}
               open={Boolean(this.state.anchorEl)}
             >
-              <MenuItem onClick={this.handleLogout}>Logout</MenuItem>
+              <MenuItem key="logoutItem" onClick={this.handleLogout}>
+                Logout
+              </MenuItem>
             </Menu>
-            <h1 style={{ textAlign: "center" }}>Classes</h1>
-          </header>
+
+            <h1 style={{ marginLeft: "auto" }}>Classes</h1>
+            <img
+              src="https://cdn.discordapp.com/attachments/812822571094900746/837106499863969812/wyr_transparent.png"
+              height="50"
+              style={{ marginLeft: "auto" }}
+              alt=""
+            />
+          </Grid>
 
           <Grid
+            id="mainGrid"
             container
             direction="column"
             alignItems="center"
@@ -192,33 +192,27 @@ class Dashboard extends Component {
                 // iterates through list of courses, creates Card/gridListTile, and adds it to gridList
                 this.state.courseList.map((course) => (
                   <GridListTile
+                    key={"GLT" + course.code}
                     style={{ height: "auto", padding: "10px" }}
                     onClick={this.onCourseClick}
                   >
-                    <Card className={classes.courseCard}>
+                    <Card
+                      key={"card" + course.code}
+                      className={classes.courseCard}
+                    >
                       <Grid
+                        key={"cardGrid" + course.code}
                         container
                         direction="column"
                         alignItems="center"
                         justify="center"
                       >
-                        <ThemeProvider theme={theme}>
-                          <Typography
-                            variant="body1"
-                            style={{
-                              marginBottom: "0px",
-                              marginTop: "5px",
-                            }}
-                          >
-                            {course.name}
-                          </Typography>
-                          <Typography
-                            variant="body1"
-                            style={{ marginBottom: "10px", marginTop: "10px" }}
-                          >
-                            {course.code}
-                          </Typography>
-                        </ThemeProvider>
+                        {/* <ThemeProvider theme={theme}> */}
+                        <h3 key={course.name} style={{ marginTop: "auto" }}>
+                          {course.name}
+                        </h3>
+                        <h3 key={course.code}>{course.code}</h3>
+                        {/* </ThemeProvider> */}
                       </Grid>
                     </Card>
                   </GridListTile>

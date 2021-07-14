@@ -64,7 +64,7 @@ const styles = () => ({
   },
   gridList: {
     width: "90vw",
-    height: "75vh",
+    height: "auto",
     padding: "15px",
     backgroundColor: "white",
   },
@@ -78,6 +78,7 @@ class Dashboard extends Component {
     selectedCourse: {}, // course to pass to ReviewPage
     selectedCourseID: "", // Firestore ID of course to pass to ReviewPage
     mountReviewPage: false, // mounts ReviewPage when true
+    searchTerm: "", // value of input to search bar
   };
 
   // handles logout
@@ -127,8 +128,9 @@ class Dashboard extends Component {
   }
 
   // componentDidUpdate() {
-  //   console.log(this.state.selectedCourse);
-  //   console.log(this.state.selectedCourseID);
+  //   // console.log(this.state.selectedCourse);
+  //   // console.log(this.state.selectedCourseID);
+  //   console.log(this.state.searchTerm);
   // }
 
   render() {
@@ -177,8 +179,10 @@ class Dashboard extends Component {
             <div className={classes.searchBar}>
               <InputBase
                 placeholder="Course Name or Code..."
+                onChange={(e) => {
+                  this.setState({ searchTerm: e.target.value });
+                }}
                 style={{ width: "50vw" }}
-                // TODO: make this a functioning search bar
               />
               <Search style={{ color: "orange" }} />
             </div>
@@ -190,33 +194,52 @@ class Dashboard extends Component {
             >
               {
                 // iterates through list of courses, creates Card/gridListTile, and adds it to gridList
-                this.state.courseList.map((course) => (
-                  <GridListTile
-                    key={"GLT" + course.code}
-                    style={{ height: "auto", padding: "10px" }}
-                    onClick={this.onCourseClick}
-                  >
-                    <Card
-                      key={"card" + course.code}
-                      className={classes.courseCard}
+                // filters based on search term
+                this.state.courseList
+                  .filter((course) => {
+                    if (this.state.searchTerm === "") {
+                      return course;
+                    } else if (
+                      course.name
+                        .toLowerCase()
+                        .includes(this.state.searchTerm.toLowerCase())
+                    ) {
+                      return course;
+                    } else if (
+                      course.code
+                        .replaceAll(":", "")
+                        .includes(this.state.searchTerm.replaceAll(":", ""))
+                    ) {
+                      return course;
+                    }
+                  })
+                  .map((course) => (
+                    <GridListTile
+                      key={"GLT" + course.code}
+                      style={{ height: "auto", padding: "10px" }}
                     >
-                      <Grid
-                        key={"cardGrid" + course.code}
-                        container
-                        direction="column"
-                        alignItems="center"
-                        justify="center"
+                      <Card
+                        key={"card" + course.code}
+                        className={classes.courseCard}
+                        onClick={this.onCourseClick}
                       >
-                        {/* <ThemeProvider theme={theme}> */}
-                        <h3 key={course.name} style={{ marginTop: "auto" }}>
-                          {course.name}
-                        </h3>
-                        <h3 key={course.code}>{course.code}</h3>
-                        {/* </ThemeProvider> */}
-                      </Grid>
-                    </Card>
-                  </GridListTile>
-                ))
+                        <Grid
+                          key={"cardGrid" + course.code}
+                          container
+                          direction="column"
+                          alignItems="center"
+                          justify="center"
+                        >
+                          {/* <ThemeProvider theme={theme}> */}
+                          <h3 key={course.name} style={{ marginTop: "auto" }}>
+                            {course.name}
+                          </h3>
+                          <h3 key={course.code}>{course.code}</h3>
+                          {/* </ThemeProvider> */}
+                        </Grid>
+                      </Card>
+                    </GridListTile>
+                  ))
               }
             </GridList>
           </Grid>

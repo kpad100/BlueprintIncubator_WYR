@@ -143,14 +143,17 @@ class ReviewPage extends Component {
               </div>
 
               <div id="right" style={{ marginLeft: "auto" }}>
-                <h1>{this.state.avgRating} / 5</h1>
+                <h1>
+                  {(Math.round(this.state.avgRating * 100) / 100).toFixed(2)} /
+                  5
+                </h1>
                 <h3>Overall Rating</h3>
               </div>
             </Grid>
           </Card>
 
           <h2 style={{ marginLeft: "15vw" }}>Reviews</h2>
-          <Grid id="mainGridRP" container justify="center">
+          <Grid id="reviewsGrid" container justify="center">
             {this.state.reviewList.map((review) => (
               <Accordion
                 defaultExpanded

@@ -110,7 +110,7 @@ closePopUp = () => {
             <img
               src="https://cdn.discordapp.com/attachments/812822571094900746/837106499863969812/wyr_transparent.png"
               height="50"
-              style={{ marginLeft: "auto" }}
+              style={{ marginLeft: "auto", marginRight: "7px", marginTop: "7px"}}
               alt=""
             />
           </Grid>

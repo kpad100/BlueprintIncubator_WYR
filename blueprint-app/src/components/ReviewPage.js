@@ -21,6 +21,9 @@ import {
   AccordionSummary,
   AccordionDetails,
 } from "@material-ui/core";
+import Button from "@material-ui/core/Button";
+import AddReview from "./AddReview";
+import { useState } from "react";
 
 // const useStyles2 = makeStyles((theme) => ({
 //   root: {
@@ -46,14 +49,31 @@ const styles = () => ({
     borderRadius: 25,
   },
 });
+const defaultProps = {
+  bgcolor: "background.paper",
+  borderColor: "text.primary",
+  style: { width: "30rem", height: "2rem", borderRadius: 25 },
+};
 
 class ReviewPage extends Component {
   state = {
     mountDashboard: false, // when true, mounts Dashboard component
     reviewList: [], // list of reviews
     avgRating: 0, // avgRating of all reviews for course
+    buttonPopup: false,
   };
 
+  popUpOn = () => {
+    this.setState((state) => ({
+      buttonPopup: true,
+    }));
+  };
+
+  closePopUp = () => {
+    this.setState((state) => ({
+      buttonPopup: false,
+    }));
+  };
   // handles when back button is clicked
   handleReturnToDashboard = () => {
     this.setState({ mountDashboard: true });
@@ -89,7 +109,11 @@ class ReviewPage extends Component {
             <img
               src="https://cdn.discordapp.com/attachments/812822571094900746/837106499863969812/wyr_transparent.png"
               height="50"
-              style={{ marginLeft: "auto" }}
+              style={{
+                marginLeft: "auto",
+                marginRight: "7px",
+                marginTop: "7px",
+              }}
               alt=""
             />
           </Grid>
@@ -152,8 +176,45 @@ class ReviewPage extends Component {
             </Grid>
           </Card>
 
-          <h2 style={{ marginLeft: "15vw" }}>Reviews</h2>
-          <Grid id="reviewsGrid" container justify="center">
+          {/* Button and Popup for adding reviews */}
+          <Grid container justify="center" style={{ marginTop: "25px" }}>
+            <Button
+              variant="contained"
+              disableElevation
+              {...defaultProps}
+              onClick={this.popUpOn}
+            >
+              Write a Review
+            </Button>
+          </Grid>
+
+          <AddReview
+            trigger={this.state.buttonPopup}
+            setTrigger={this.state.buttonPopUp}
+            closed={this.closePopUp}
+          ></AddReview>
+
+          {/* Reviews text and Sort by in Grids */}
+          <Grid
+            container
+            direction="row"
+            spacing={50}
+            style={{ marginTop: "0px" }}
+            justify="center"
+            alignItems="flex-start"
+          >
+            <Grid item xs={2}></Grid>
+            <Grid item xs={1}>
+              <h1>Reviews</h1>
+            </Grid>
+            <Grid item xs={6}></Grid>
+            <Grid item xs={2}>
+              <h2> Sort By </h2>
+            </Grid>
+            <Grid item xs={1}></Grid>
+          </Grid>
+
+          <Grid id="mainGridRP" container justify="center">
             {this.state.reviewList.map((review) => (
               <Accordion
                 defaultExpanded

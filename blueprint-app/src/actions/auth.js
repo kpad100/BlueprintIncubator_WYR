@@ -1,4 +1,3 @@
-import { useRadioGroup } from "@material-ui/core";
 import { Redirect } from "react-router";
 import { myFirebase } from "../firebase/firebase";
 
@@ -15,68 +14,68 @@ export const VERIFY_SUCCESS = "VERIFY_SUCCESS";
 
 const requestLogin = () => {
   return {
-    type: LOGIN_REQUEST
+    type: LOGIN_REQUEST,
   };
 };
 
-const receiveLogin = user => {
+const receiveLogin = (user) => {
   return {
     type: LOGIN_SUCCESS,
-    user
+    user,
   };
 };
 
 const loginError = () => {
   return {
-    type: LOGIN_FAILURE
+    type: LOGIN_FAILURE,
   };
 };
 
 const requestLogout = () => {
   return {
-    type: LOGOUT_REQUEST
+    type: LOGOUT_REQUEST,
   };
 };
 
 const receiveLogout = () => {
   return {
-    type: LOGOUT_SUCCESS
+    type: LOGOUT_SUCCESS,
   };
 };
 
 const logoutError = () => {
   return {
-    type: LOGOUT_FAILURE
+    type: LOGOUT_FAILURE,
   };
 };
 
 const verifyRequest = () => {
   return {
-    type: VERIFY_REQUEST
+    type: VERIFY_REQUEST,
   };
 };
 
 const verifySuccess = () => {
   return {
-    type: VERIFY_SUCCESS
+    type: VERIFY_SUCCESS,
   };
 };
 
-export const loginUser = (email, password) => dispatch => {
+export const loginUser = (email, password) => (dispatch) => {
   dispatch(requestLogin());
   myFirebase
     .auth()
     .signInWithEmailAndPassword(email, password)
-    .then(user => {
+    .then((user) => {
       dispatch(receiveLogin(user));
     })
-    .catch(error => {
+    .catch((error) => {
       //Do something with the error if you want!
       dispatch(loginError());
     });
 };
 
-export const logoutUser = () => dispatch => {
+export const logoutUser = () => (dispatch) => {
   dispatch(requestLogout());
   myFirebase
     .auth()
@@ -84,15 +83,15 @@ export const logoutUser = () => dispatch => {
     .then(() => {
       dispatch(receiveLogout());
     })
-    .catch(error => {
+    .catch((error) => {
       //Do something with the error if you want!
       dispatch(logoutError());
     });
 };
 
-export const verifyAuth = () => dispatch => {
+export const verifyAuth = () => (dispatch) => {
   dispatch(verifyRequest());
-  myFirebase.auth().onAuthStateChanged(user => {
+  myFirebase.auth().onAuthStateChanged((user) => {
     if (user !== null) {
       dispatch(receiveLogin(user));
     }
@@ -100,42 +99,36 @@ export const verifyAuth = () => dispatch => {
   });
 };
 
-
 export const signupWithEmailPassword = (email, password) => {
   // dispatch(requestLogin());
   //var user;
-  myFirebase.auth().createUserWithEmailAndPassword(email, password)
+  myFirebase
+    .auth()
+    .createUserWithEmailAndPassword(email, password)
     .then((userCredential) => {
-      var user = userCredential.user
-      user.sendEmailVerification()
-    }) 
-    .catch(error => {
+      var user = userCredential.user;
+      user.sendEmailVerification();
+    })
+    .catch((error) => {
       //Do something with the error if you want!
       var errorCode = error.code;
       var errorMessage = error.errorMessage;
-      if(errorCode == 'auth/email-already-in-use')
-      {
-          alert("Email Address is already in use")
-          return <Redirect to='/login' />
+      if (errorCode === "auth/email-already-in-use") {
+        alert("Email Address is already in use");
+        return <Redirect to="/login" />;
+      } else if (errorCode === "auth/invalid-email") {
+        return errorCode;
+      } else if (errorCode === "auth/weak-password") {
+        return errorCode;
       }
-      else if(errorCode == 'auth/invalid-email')
-      {
-          return errorCode;
-      }
-      else if(errorCode == 'auth/weak-password')
-      {
-          return errorCode;
-      }
-    })
-
-
+    });
 };
-
 
 export const passwordReset = (email) => {
-  myFirebase.auth().sendPasswordResetEmail(email)
+  myFirebase
+    .auth()
+    .sendPasswordResetEmail(email)
     .then(() => {
       alert("Please check your email!");
-    })
+    });
 };
-

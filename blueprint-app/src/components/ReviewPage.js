@@ -23,7 +23,6 @@ import {
 } from "@material-ui/core";
 import Button from "@material-ui/core/Button";
 import AddReview from "./AddReview";
-import { useState } from "react";
 
 // const useStyles2 = makeStyles((theme) => ({
 //   root: {
@@ -64,15 +63,11 @@ class ReviewPage extends Component {
   };
 
   popUpOn = () => {
-    this.setState((state) => ({
-      buttonPopup: true,
-    }));
+    this.setState({ buttonPopup: true });
   };
 
   closePopUp = () => {
-    this.setState((state) => ({
-      buttonPopup: false,
-    }));
+    this.setState({ buttonPopup: false });
   };
   // handles when back button is clicked
   handleReturnToDashboard = () => {

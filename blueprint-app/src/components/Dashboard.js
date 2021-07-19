@@ -11,7 +11,7 @@ import {
 } from "@material-ui/core";
 import { Search } from "@material-ui/icons";
 import { withStyles } from "@material-ui/styles";
-import { Component } from "react";
+import { useState, useEffect } from "react";
 import { connect } from "react-redux";
 import { isMobileOnly } from "react-device-detect";
 import { logoutUser } from "../actions";
@@ -52,51 +52,46 @@ const styles = () => ({
   },
 });
 
-class Dashboard extends Component {
-  state = {
-    anchorEl: null, // anchor for menu, closed by default
-    courseList: [], // list of courses
-    courseIDs: [], // list of Firestore IDs for each course
-    selectedCourse: {}, // course to pass to ReviewPage
-    selectedCourseID: "", // Firestore ID of course to pass to ReviewPage
-    mountReviewPage: false, // mounts ReviewPage when true
-    searchTerm: "", // value of input to search bar
-  };
+const Dashboard = (props) => {
+  const [anchorEl, setAnchorEl] = useState(null); // anchor for menu, closed by default
+  const [courseList, setCourseList] = useState([]); // list of courses
+  const [courseIDs, setCourseIDs] = useState([]); // list of Firestore IDs for each course
+  const [selectedCourse, setSelectedCourse] = useState({}); // course to pass to ReviewPage
+  const [selectedCourseID, setSelectedCourseID] = useState(""); // Firestore ID of course to pass to ReviewPage
+  const [mountReviewPage, setMountReviewPage] = useState(false); // mounts ReviewPage when true
+  const [searchTerm, setSearchTerm] = useState(""); // value of input to search bar
+  const { classes, isLoggingOut, logoutError, dispatch } = props;
 
   // handles logout
-  handleLogout = () => {
-    const { dispatch } = this.props;
+  const handleLogout = () => {
     dispatch(logoutUser());
   };
 
   // opens account menu (currently only option in menu is to Logout)
-  handleOpenMenu = (e) => {
-    this.setState({ anchorEl: e.currentTarget });
+  const handleOpenMenu = (e) => {
+    setAnchorEl(e.currentTarget);
   };
 
   // closes account menu
-  handleCloseMenu = () => {
-    this.setState({ anchorEl: null });
+  const handleCloseMenu = () => {
+    setAnchorEl(null);
   };
 
   // handles when a course is clicked on
-  onCourseClick = (e) => {
+  const onCourseClick = (e) => {
     const text = e.target.innerText;
-    for (let i = 0; i < this.state.courseList.length; i++) {
-      let course = this.state.courseList[i];
-      let courseID = this.state.courseIDs[i];
+    for (let i = 0; i < courseList.length; i++) {
+      let course = courseList[i];
+      let courseID = courseIDs[i];
       if (text.includes(course.name) || text.includes(course.code)) {
-        this.setState({
-          selectedCourse: course,
-          selectedCourseID: courseID,
-          mountReviewPage: true,
-        });
+        setSelectedCourse(course);
+        setSelectedCourseID(courseID);
+        setMountReviewPage(true);
       }
     }
   };
 
-  // Called immediately after a component is mounted. Setting state here will trigger re-rendering.
-  componentDidMount() {
+  useEffect(() => {
     // receives course data from Firebase and updates courseList and courseIDs in state
     db.collection("courses").onSnapshot((querySnapshot) => {
       const courses = [];
@@ -105,136 +100,120 @@ class Dashboard extends Component {
         courses.push(doc.data());
         firestoreIDs.push(doc.id);
       });
-      this.setState({ courseList: courses, courseIDs: firestoreIDs });
+      setCourseList(courses);
+      setCourseIDs(firestoreIDs);
     });
-  }
+  }, []);
 
-  // componentDidUpdate() {
-  //   // console.log(this.state.selectedCourse);
-  //   // console.log(this.state.selectedCourseID);
-  //   console.log(this.state.searchTerm);
-  // }
-
-  render() {
-    const { classes, isLoggingOut, logoutError } = this.props;
-    if (this.state.mountReviewPage) {
-      return (
-        <ReviewPage
-          selectedCourse={this.state.selectedCourse}
-          selectedCourseID={this.state.selectedCourseID}
-        />
-      );
-    } else {
-      return (
-        <div>
-          <Grid id="topGrid" container>
-            <IconButton onClick={this.handleOpenMenu} aria-controls="menu">
-              <Avatar />
-            </IconButton>
-            <Menu
-              id="menu"
-              onClose={this.handleCloseMenu}
-              anchorEl={this.state.anchorEl}
-              open={Boolean(this.state.anchorEl)}
-            >
-              <MenuItem key="logoutItem" onClick={this.handleLogout}>
-                Logout
-              </MenuItem>
-            </Menu>
-
-            <h1 style={{ marginLeft: "auto" }}>Classes</h1>
-            <img
-              src="https://cdn.discordapp.com/attachments/812822571094900746/837106499863969812/wyr_transparent.png"
-              height="50"
-              style={{
-                marginLeft: "auto",
-                marginRight: "5px",
-                marginTop: "5px",
-              }}
-              alt=""
-            />
-          </Grid>
-
-          <Grid
-            id="mainGrid"
-            container
-            direction="column"
-            alignItems="center"
-            justify="center"
+  if (mountReviewPage) {
+    return (
+      <ReviewPage
+        selectedCourse={selectedCourse}
+        selectedCourseID={selectedCourseID}
+      />
+    );
+  } else {
+    return (
+      <div>
+        <Grid container>
+          <IconButton onClick={handleOpenMenu} aria-controls="menu">
+            <Avatar />
+          </IconButton>
+          <Menu
+            id="menu"
+            onClose={handleCloseMenu}
+            anchorEl={anchorEl}
+            open={Boolean(anchorEl)}
           >
-            <div className={classes.searchBar}>
-              <InputBase
-                placeholder="Course Name or Code..."
-                onChange={(e) => {
-                  this.setState({ searchTerm: e.target.value });
-                }}
-                style={{ width: "50vw" }}
-              />
-              <Search style={{ color: "orange" }} />
-            </div>
+            <MenuItem key="logoutItem" onClick={handleLogout}>
+              Logout
+            </MenuItem>
+          </Menu>
 
-            <GridList
-              className={classes.gridList}
-              // if user is on mobile then gridList has 1 column, otherwise it has 3 columns
-              cols={isMobileOnly ? 1 : 3}
-            >
-              {
-                // iterates through list of courses, creates Card/gridListTile, and adds it to gridList
-                // filters based on search term
-                this.state.courseList
-                  .filter((course) => {
-                    if (this.state.searchTerm === "") {
-                      return course;
-                    } else if (
-                      course.name
-                        .toLowerCase()
-                        .includes(this.state.searchTerm.toLowerCase())
-                    ) {
-                      return course;
-                    } else if (
-                      course.code
-                        .replaceAll(":", "")
-                        .includes(this.state.searchTerm.replaceAll(":", ""))
-                    ) {
-                      return course;
-                    }
-                  })
-                  .map((course) => (
-                    <GridListTile
-                      key={"GLT" + course.code}
-                      style={{ height: "auto", padding: "10px" }}
+          <h1 style={{ marginLeft: "auto" }}>Classes</h1>
+          <img
+            src="https://cdn.discordapp.com/attachments/812822571094900746/837106499863969812/wyr_transparent.png"
+            height="50"
+            style={{
+              marginLeft: "auto",
+              marginRight: "5px",
+              marginTop: "5px",
+            }}
+            alt=""
+          />
+        </Grid>
+
+        <Grid container direction="column" alignItems="center" justify="center">
+          <div className={classes.searchBar}>
+            <InputBase
+              placeholder="Course Name or Code..."
+              onChange={(e) => {
+                setSearchTerm(e.target.value);
+              }}
+              style={{ width: "50vw" }}
+            />
+            <Search style={{ color: "orange" }} />
+          </div>
+
+          <GridList
+            className={classes.gridList}
+            // if user is on mobile then gridList has 1 column, otherwise it has 3 columns
+            cols={isMobileOnly ? 1 : 3}
+          >
+            {
+              // iterates through list of courses, creates Card/gridListTile, and adds it to gridList
+              // filters based on search term
+              courseList
+                .filter((course) => {
+                  if (searchTerm === "") {
+                    return course;
+                  } else if (
+                    course.name.toLowerCase().includes(searchTerm.toLowerCase())
+                  ) {
+                    return course;
+                  } else if (
+                    course.code
+                      .replaceAll(":", "")
+                      .includes(searchTerm.replaceAll(":", ""))
+                  ) {
+                    return course;
+                  }
+                })
+                .map((course) => (
+                  <GridListTile
+                    key={"GLT" + course.code}
+                    style={{ height: "auto", padding: "10px" }}
+                  >
+                    <Card
+                      key={"card" + course.code}
+                      className={classes.courseCard}
+                      onClick={onCourseClick}
                     >
-                      <Card
-                        key={"card" + course.code}
-                        className={classes.courseCard}
-                        onClick={this.onCourseClick}
+                      <Grid
+                        key={"cardGrid" + course.code}
+                        container
+                        direction="column"
+                        alignItems="center"
+                        justify="center"
                       >
-                        <Grid
-                          key={"cardGrid" + course.code}
-                          container
-                          direction="column"
-                          alignItems="center"
-                          justify="center"
-                        >
-                          <h3 key={course.name} style={{ marginTop: "auto" }}>
-                            {course.name}
-                          </h3>
-                          <h3 key={course.code}>{course.code}</h3>
-                        </Grid>
-                      </Card>
-                    </GridListTile>
-                  ))
-              }
-            </GridList>
-          </Grid>
+                        <h3 key={course.name} style={{ marginTop: "auto" }}>
+                          {course.name}
+                        </h3>
+                        <h3 key={course.code}>{course.code}</h3>
+                      </Grid>
+                    </Card>
+                  </GridListTile>
+                ))
+            }
+          </GridList>
+        </Grid>
 
-          {isLoggingOut && <p>Logging Out....</p>}
-          {logoutError && <p>Error logging out</p>}
-        </div>
-      );
-    }
+        {isLoggingOut && <p>Logging Out....</p>}
+        {logoutError && <p>Error logging out</p>}
+      </div>
+    );
   }
-}
+};
 
 function mapStateToProps(state) {
   return {

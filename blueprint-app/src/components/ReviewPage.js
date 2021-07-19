@@ -1,4 +1,4 @@
-import { Component } from "react";
+import { useState, useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { withStyles } from "@material-ui/styles";
 import {
@@ -56,227 +56,219 @@ const styles = () => ({
   },
 });
 
-class ReviewPage extends Component {
-  state = {
-    mountDashboard: false, // when true, mounts Dashboard component
-    reviewList: [], // list of reviews
-    avgRating: 0, // avgRating of all reviews for course
-    buttonPopup: false,
+const ReviewPage = (props) => {
+  const [mountDashboard, setMountDashboard] = useState(false); // when true, mounts Dashboard component
+  const [reviewList, setReviewList] = useState([]); // list of reviews
+  const [avgRating, setAvgRating] = useState(0); // avgRating of all reviews for course
+  const [buttonPopup, setButtonPopup] = useState(false);
+  const { selectedCourse, selectedCourseID, classes } = props;
+
+  const popUpAddReview = () => {
+    setButtonPopup(true);
   };
 
-  popUpAddReview = () => {
-    this.setState({ buttonPopup: true });
-  };
-
-  closePopUp = () => {
-    this.setState({ buttonPopup: false });
+  const closePopUp = () => {
+    setButtonPopup(false);
   };
 
   // handles when back button is clicked
-  handleReturnToDashboard = () => {
-    this.setState({ mountDashboard: true });
+  const handleReturnToDashboard = () => {
+    setMountDashboard(true);
   };
 
-  // Called immediately after a component is mounted. Setting state here will trigger re-rendering.
-  componentDidMount() {
+  useEffect(() => {
     // receives review data from Firebase and updates reviewList and avgRating in state
-    db.collection(
-      "courses/" + this.props.selectedCourseID + "/reviews"
-    ).onSnapshot((querySnapshot) => {
-      const reviews = [];
-      let sum = 0;
-      querySnapshot.forEach((doc) => {
-        reviews.push(doc.data());
-        sum += doc.data().rating;
-      });
-      this.setState({ reviewList: reviews, avgRating: sum / reviews.length });
-    });
-  }
+    db.collection("courses/" + selectedCourseID + "/reviews").onSnapshot(
+      (querySnapshot) => {
+        const reviews = [];
+        let sum = 0;
+        querySnapshot.forEach((doc) => {
+          reviews.push(doc.data());
+          sum += doc.data().rating;
+        });
+        setReviewList(reviews);
+        setAvgRating(sum / reviews.length);
+      }
+    );
+  }, [selectedCourseID]);
 
-  render() {
-    const { selectedCourse, classes } = this.props;
-    if (this.state.mountDashboard) {
-      return <Dashboard />;
-    } else {
-      return (
-        <div>
-          <Grid id="topGridRP" container>
-            <IconButton onClick={this.handleReturnToDashboard}>
-              <ArrowBackIos />
-            </IconButton>
-            <img
-              src="https://cdn.discordapp.com/attachments/812822571094900746/837106499863969812/wyr_transparent.png"
-              height="50"
+  if (mountDashboard) {
+    return <Dashboard />;
+  } else {
+    return (
+      <div>
+        <Grid container>
+          <IconButton onClick={handleReturnToDashboard}>
+            <ArrowBackIos />
+          </IconButton>
+          <img
+            src="https://cdn.discordapp.com/attachments/812822571094900746/837106499863969812/wyr_transparent.png"
+            height="50"
+            style={{
+              marginLeft: "auto",
+              marginRight: "5px",
+              marginTop: "5px",
+            }}
+            alt=""
+          />
+        </Grid>
+
+        <Card className={classes.summaryCard}>
+          <Grid container alignItems="center">
+            <div id="left">
+              <h2>{selectedCourse.name}</h2>
+              <h3>{selectedCourse.code}</h3>
+            </div>
+
+            <div
+              id="middle"
               style={{
                 marginLeft: "auto",
-                marginRight: "5px",
-                marginTop: "5px",
+                marginRight: "auto",
+                marginTop: "auto",
               }}
-              alt=""
-            />
-          </Grid>
-
-          <Card className={classes.summaryCard}>
-            <Grid id="summaryCardGrid" container alignItems="center">
-              <div id="left">
-                <h2>{selectedCourse.name}</h2>
-                <h3>{selectedCourse.code}</h3>
-              </div>
-
-              <div
-                id="middle"
-                style={{
-                  marginLeft: "auto",
-                  marginRight: "auto",
-                  marginTop: "auto",
-                }}
-              >
-                <div id="overallStars">
-                  {
-                    // displays avgRating(rounded down to nearest whole number) filled stars
-                    Array(Math.floor(this.state.avgRating)).fill(
-                      <Star style={{ color: "white", marginRight: "5px" }} />
-                    )
-                  }
-                  {
-                    // displays half star if avgRating decimal >= 0.25
-                    this.state.avgRating - Math.floor(this.state.avgRating) >=
-                      0.25 && (
-                      <StarHalf
-                        style={{ color: "white", marginRight: "5px" }}
-                      />
-                    )
-                  }
-                  {
-                    // displays outlined star if avgRating decimal < 0.25
-                    this.state.avgRating - Math.floor(this.state.avgRating) >
-                      0 &&
-                      this.state.avgRating - Math.floor(this.state.avgRating) <
-                        0.25 && <StarOutline style={{ marginRight: "5px" }} />
-                  }
-                  {
-                    // displays 5 - (avgRating rounded up to nearest whole number) outlined stars
-                    Array(5 - Math.ceil(this.state.avgRating)).fill(
+            >
+              <div id="overallStars">
+                {
+                  // displays avgRating(rounded down to nearest whole number) filled stars
+                  Array(Math.floor(avgRating)).fill(
+                    <Star style={{ color: "white", marginRight: "5px" }} />
+                  )
+                }
+                {
+                  // displays half star if avgRating decimal >= 0.25
+                  avgRating - Math.floor(avgRating) >= 0.25 && (
+                    <StarHalf style={{ color: "white", marginRight: "5px" }} />
+                  )
+                }
+                {
+                  // displays outlined star if avgRating decimal < 0.25
+                  avgRating - Math.floor(avgRating) > 0 &&
+                    avgRating - Math.floor(avgRating) < 0.25 && (
                       <StarOutline style={{ marginRight: "5px" }} />
+                    )
+                }
+                {
+                  // displays 5 - (avgRating rounded up to nearest whole number) outlined stars
+                  Array(5 - Math.ceil(avgRating)).fill(
+                    <StarOutline style={{ marginRight: "5px" }} />
+                  )
+                }
+              </div>
+              <h3>{reviewList.length} reviews</h3>
+            </div>
+
+            <div id="right" style={{ marginLeft: "auto" }}>
+              <h1>{(Math.round(avgRating * 100) / 100).toFixed(2)} / 5</h1>
+              <h3>Overall Rating</h3>
+            </div>
+          </Grid>
+        </Card>
+
+        <div align="center">
+          <Button
+            variant="contained"
+            disableElevation
+            className={classes.addReviewButton}
+            onClick={popUpAddReview}
+          >
+            Write a Review
+          </Button>
+          <AddReview trigger={buttonPopup} closed={closePopUp} />
+        </div>
+
+        <Grid container justify="center" alignItems="center">
+          <Grid item xs={6}>
+            <h1>Reviews</h1>
+          </Grid>
+          <Grid item xs={2}>
+            <h2>Sort By</h2>
+          </Grid>
+          {reviewList.map((review) => (
+            <Accordion
+              key={"accordian" + review.user}
+              defaultExpanded
+              style={{
+                backgroundColor: "#4198b5",
+                borderRadius: 25,
+                width: isMobileOnly ? "90vw" : "65vw",
+                marginBottom: "10px",
+                padding: "10px",
+              }}
+            >
+              <AccordionSummary
+                key={"accordianSummary" + review.user}
+                expandIcon={<ExpandMore />}
+                aria-controls="panel1a-content"
+                id="panel1a-header"
+              >
+                <Typography key={review.user} style={{ color: "white" }}>
+                  {review.user}
+                </Typography>
+
+                <div key={"stars" + review.user} style={{ marginLeft: "auto" }}>
+                  {
+                    // displays rating(rounded down to nearest whole number) filled stars
+                    Array(Math.floor(review.rating)).fill(
+                      <Star style={{ color: "white", marginLeft: "5px" }} />
+                    )
+                  }
+                  {
+                    // displays half star if rating decimal >= 0.25
+                    review.rating - Math.floor(review.rating) >= 0.25 && (
+                      <StarHalf style={{ color: "white", marginLeft: "5px" }} />
+                    )
+                  }
+                  {
+                    // displays outlined star if rating decimal < 0.25
+                    review.rating - Math.floor(review.rating) > 0 &&
+                      review.rating - Math.floor(review.rating) < 0.25 && (
+                        <StarOutline style={{ marginLeft: "5px" }} />
+                      )
+                  }
+                  {
+                    // displays 5 - (rating rounded up to nearest whole number) outlined stars
+                    Array(5 - Math.ceil(review.rating)).fill(
+                      <StarOutline style={{ marginLeft: "5px" }} />
                     )
                   }
                 </div>
-                <h3>{this.state.reviewList.length} reviews</h3>
-              </div>
 
-              <div id="right" style={{ marginLeft: "auto" }}>
-                <h1>
-                  {(Math.round(this.state.avgRating * 100) / 100).toFixed(2)} /
-                  5
-                </h1>
-                <h3>Overall Rating</h3>
-              </div>
-            </Grid>
-          </Card>
+                {
+                  // if NOT on mobile, professor displayed in accordion summary
+                  !isMobileOnly && (
+                    <Typography
+                      key={"prof" + review.user}
+                      style={{ color: "white", marginLeft: "auto" }}
+                    >
+                      Professor: {review.prof}
+                    </Typography>
+                  )
+                }
+              </AccordionSummary>
 
-          <div id="addReviewButtonDiv" align="center">
-            <Button
-              variant="contained"
-              disableElevation
-              className={classes.addReviewButton}
-              onClick={this.popUpAddReview}
-            >
-              Write a Review
-            </Button>
-            <AddReview
-              trigger={this.state.buttonPopup}
-              setTrigger={this.state.buttonPopUp}
-              closed={this.closePopUp}
-            />
-          </div>
-
-          <Grid id="mainGridRP" container justify="center" alignItems="center">
-            <Grid item xs={6}>
-              <h1>Reviews</h1>
-            </Grid>
-            <Grid item xs={2}>
-              <h2>Sort By</h2>
-            </Grid>
-            {this.state.reviewList.map((review) => (
-              <Accordion
-                defaultExpanded
-                style={{
-                  backgroundColor: "#4198b5",
-                  borderRadius: 25,
-                  width: isMobileOnly ? "90vw" : "65vw",
-                  marginBottom: "10px",
-                  padding: "10px",
-                }}
-              >
-                <AccordionSummary
-                  expandIcon={<ExpandMore />}
-                  aria-controls="panel1a-content"
-                  id="panel1a-header"
-                >
-                  <Typography style={{ color: "white" }}>Username</Typography>
-
-                  <div style={{ marginLeft: "auto" }}>
-                    {
-                      // displays rating(rounded down to nearest whole number) filled stars
-                      Array(Math.floor(review.rating)).fill(
-                        <Star style={{ color: "white", marginLeft: "5px" }} />
-                      )
-                    }
-                    {
-                      // displays half star if rating decimal >= 0.25
-                      review.rating - Math.floor(review.rating) >= 0.25 && (
-                        <StarHalf
-                          style={{ color: "white", marginLeft: "5px" }}
-                        />
-                      )
-                    }
-                    {
-                      // displays outlined star if rating decimal < 0.25
-                      review.rating - Math.floor(review.rating) > 0 &&
-                        review.rating - Math.floor(review.rating) < 0.25 && (
-                          <StarOutline style={{ marginLeft: "5px" }} />
-                        )
-                    }
-                    {
-                      // displays 5 - (rating rounded up to nearest whole number) outlined stars
-                      Array(5 - Math.ceil(review.rating)).fill(
-                        <StarOutline style={{ marginLeft: "5px" }} />
-                      )
-                    }
-                  </div>
-
-                  {
-                    // if NOT on mobile, professor displayed in accordion summary
-                    !isMobileOnly && (
-                      <Typography
-                        style={{ color: "white", marginLeft: "auto" }}
-                      >
-                        Professor: {review.prof}
-                      </Typography>
-                    )
-                  }
-                </AccordionSummary>
-
-                <AccordionDetails>
-                  <Typography align="left">{review.description}</Typography>
-                  {
-                    // if on mobile, professor displayed in accordion details to right of description
-                    isMobileOnly && (
-                      <Typography
-                        style={{ color: "white", marginLeft: "auto" }}
-                      >
-                        Professor: {review.prof}
-                      </Typography>
-                    )
-                  }
-                </AccordionDetails>
-              </Accordion>
-            ))}
-          </Grid>
-        </div>
-      );
-    }
+              <AccordionDetails key={"accordionDetails" + review.user}>
+                <Typography key={"description" + review.user} align="left">
+                  {review.description}
+                </Typography>
+                {
+                  // if on mobile, professor displayed in accordion details to right of description
+                  isMobileOnly && (
+                    <Typography
+                      key={"prof" + review.user}
+                      style={{ color: "white", marginLeft: "auto" }}
+                    >
+                      Professor: {review.prof}
+                    </Typography>
+                  )
+                }
+              </AccordionDetails>
+            </Accordion>
+          ))}
+        </Grid>
+      </div>
+    );
   }
-}
+};
 
 export default withStyles(styles)(ReviewPage);

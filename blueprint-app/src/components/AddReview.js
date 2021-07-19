@@ -3,7 +3,7 @@ import { SportsRugbySharp } from "@material-ui/icons";
 import { Grid, Card } from "@material-ui/core";
 import TextField from "@material-ui/core/TextField";
 
-function AddReview(props) {
+const AddReview = (props) => {
   // CSS
   const background = {
     position: "fixed",
@@ -66,6 +66,6 @@ function AddReview(props) {
       </div>
     )
   );
-}
+};
 
 export default AddReview;

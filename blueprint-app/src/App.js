@@ -1,5 +1,5 @@
 import { Route, Switch } from "react-router-dom";
-import StartPage from "./components/StartPage";
+import LandingPage from "./components/LandingPage";
 import LoginPage from "./components/LoginPage";
 import SignupPage from "./components/SignupPage";
 import ForgotpassPage from "./components/ForgotpassPage";
@@ -18,7 +18,7 @@ function App(props) {
         isAuthenticated={isAuthenticated}
         isVerifying={isVerifying}
       />
-      <Route exact path="/" render={() => <>{<StartPage />}</>} />
+      <Route exact path="/" component={LandingPage} />
       <Route exact path="/login" component={LoginPage} />
       <Route exact path="/signup" component={SignupPage} />
       <Route exact path="/forgotpassword" component={ForgotpassPage} />

@@ -47,12 +47,14 @@ const styles = () => ({
     marginRight: "auto",
     borderRadius: 25,
   },
+  addReviewButton: {
+    width: isMobileOnly ? "80vw" : "30rem",
+    height: "2rem",
+    borderRadius: 25,
+    backgroundColor: "#bdf4ff",
+    marginTop: "25px",
+  },
 });
-const defaultProps = {
-  bgcolor: "background.paper",
-  borderColor: "text.primary",
-  style: { width: "30rem", height: "2rem", borderRadius: 25 },
-};
 
 class ReviewPage extends Component {
   state = {
@@ -62,13 +64,14 @@ class ReviewPage extends Component {
     buttonPopup: false,
   };
 
-  popUpOn = () => {
+  popUpAddReview = () => {
     this.setState({ buttonPopup: true });
   };
 
   closePopUp = () => {
     this.setState({ buttonPopup: false });
   };
+
   // handles when back button is clicked
   handleReturnToDashboard = () => {
     this.setState({ mountDashboard: true });
@@ -106,8 +109,8 @@ class ReviewPage extends Component {
               height="50"
               style={{
                 marginLeft: "auto",
-                marginRight: "7px",
-                marginTop: "7px",
+                marginRight: "5px",
+                marginTop: "5px",
               }}
               alt=""
             />
@@ -121,14 +124,14 @@ class ReviewPage extends Component {
               </div>
 
               <div
-                id="center"
+                id="middle"
                 style={{
                   marginLeft: "auto",
                   marginRight: "auto",
                   marginTop: "auto",
                 }}
               >
-                <div id="stars">
+                <div id="overallStars">
                   {
                     // displays avgRating(rounded down to nearest whole number) filled stars
                     Array(Math.floor(this.state.avgRating)).fill(
@@ -171,45 +174,29 @@ class ReviewPage extends Component {
             </Grid>
           </Card>
 
-          {/* Button and Popup for adding reviews */}
-          <Grid container justify="center" style={{ marginTop: "25px" }}>
+          <div id="addReviewButtonDiv" align="center">
             <Button
               variant="contained"
               disableElevation
-              {...defaultProps}
-              onClick={this.popUpOn}
+              className={classes.addReviewButton}
+              onClick={this.popUpAddReview}
             >
               Write a Review
             </Button>
-          </Grid>
+            <AddReview
+              trigger={this.state.buttonPopup}
+              setTrigger={this.state.buttonPopUp}
+              closed={this.closePopUp}
+            />
+          </div>
 
-          <AddReview
-            trigger={this.state.buttonPopup}
-            setTrigger={this.state.buttonPopUp}
-            closed={this.closePopUp}
-          ></AddReview>
-
-          {/* Reviews text and Sort by in Grids */}
-          <Grid
-            container
-            direction="row"
-            spacing={50}
-            style={{ marginTop: "0px" }}
-            justify="center"
-            alignItems="flex-start"
-          >
-            <Grid item xs={2}></Grid>
-            <Grid item xs={1}>
+          <Grid id="mainGridRP" container justify="center" alignItems="center">
+            <Grid item xs={6}>
               <h1>Reviews</h1>
             </Grid>
-            <Grid item xs={6}></Grid>
             <Grid item xs={2}>
-              <h2> Sort By </h2>
+              <h2>Sort By</h2>
             </Grid>
-            <Grid item xs={1}></Grid>
-          </Grid>
-
-          <Grid id="mainGridRP" container justify="center">
             {this.state.reviewList.map((review) => (
               <Accordion
                 defaultExpanded
@@ -227,6 +214,7 @@ class ReviewPage extends Component {
                   id="panel1a-header"
                 >
                   <Typography style={{ color: "white" }}>Username</Typography>
+
                   <div style={{ marginLeft: "auto" }}>
                     {
                       // displays rating(rounded down to nearest whole number) filled stars
@@ -256,6 +244,7 @@ class ReviewPage extends Component {
                       )
                     }
                   </div>
+
                   {
                     // if NOT on mobile, professor displayed in accordion summary
                     !isMobileOnly && (

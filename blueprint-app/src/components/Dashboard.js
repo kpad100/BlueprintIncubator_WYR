@@ -6,34 +6,17 @@ import {
   Menu,
   MenuItem,
   GridList,
-  Typography,
   GridListTile,
   InputBase,
 } from "@material-ui/core";
 import { Search } from "@material-ui/icons";
 import { withStyles } from "@material-ui/styles";
 import { Component } from "react";
-import {
-  createMuiTheme,
-  responsiveFontSizes,
-  ThemeProvider,
-} from "@material-ui/core/styles";
 import { connect } from "react-redux";
 import { isMobileOnly } from "react-device-detect";
 import { logoutUser } from "../actions";
 import { db } from "../firebase/firebase";
 import ReviewPage from "./ReviewPage";
-
-// const theme = createMuiTheme();
-// theme.typography.body1 = {
-//   fontSize: "0.8rem",
-//   "@media (min-width:600px)": {
-//     fontSize: "1rem",
-//   },
-//   [theme.breakpoints.up("md")]: {
-//     fontSize: "1.25rem",
-//   },
-// };
 
 // CSS styling
 const styles = () => ({
@@ -66,7 +49,6 @@ const styles = () => ({
     width: "90vw",
     height: "auto",
     padding: "15px",
-    backgroundColor: "white",
   },
 });
 
@@ -164,7 +146,11 @@ class Dashboard extends Component {
             <img
               src="https://cdn.discordapp.com/attachments/812822571094900746/837106499863969812/wyr_transparent.png"
               height="50"
-              style={{ marginLeft: "auto" }}
+              style={{
+                marginLeft: "auto",
+                marginRight: "5px",
+                marginTop: "5px",
+              }}
               alt=""
             />
           </Grid>
@@ -230,12 +216,10 @@ class Dashboard extends Component {
                           alignItems="center"
                           justify="center"
                         >
-                          {/* <ThemeProvider theme={theme}> */}
                           <h3 key={course.name} style={{ marginTop: "auto" }}>
                             {course.name}
                           </h3>
                           <h3 key={course.code}>{course.code}</h3>
-                          {/* </ThemeProvider> */}
                         </Grid>
                       </Card>
                     </GridListTile>

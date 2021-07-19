@@ -1,13 +1,7 @@
 import { useState, useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { withStyles } from "@material-ui/styles";
-import {
-  Star,
-  StarOutline,
-  StarHalf,
-  ArrowBackIos,
-  ExpandMore,
-} from "@material-ui/icons";
+import { ArrowBackIos, ExpandMore } from "@material-ui/icons";
 import Dashboard from "./Dashboard";
 import { db } from "../firebase/firebase";
 import { isMobileOnly } from "react-device-detect";
@@ -23,6 +17,7 @@ import {
 } from "@material-ui/core";
 import Button from "@material-ui/core/Button";
 import AddReview from "./AddReview";
+import RatingStars from "./RatingStars";
 
 // const useStyles2 = makeStyles((theme) => ({
 //   root: {
@@ -57,7 +52,7 @@ const styles = () => ({
 });
 
 const ReviewPage = (props) => {
-  const [mountDashboard, setMountDashboard] = useState(false); // when true, mounts Dashboard component
+  const [returnToDashboard, setReturnToDashboard] = useState(false); // when true, returns Dashboard component
   const [reviewList, setReviewList] = useState([]); // list of reviews
   const [avgRating, setAvgRating] = useState(0); // avgRating of all reviews for course
   const [buttonPopup, setButtonPopup] = useState(false);
@@ -73,7 +68,7 @@ const ReviewPage = (props) => {
 
   // handles when back button is clicked
   const handleReturnToDashboard = () => {
-    setMountDashboard(true);
+    setReturnToDashboard(true);
   };
 
   useEffect(() => {
@@ -92,7 +87,7 @@ const ReviewPage = (props) => {
     );
   }, [selectedCourseID]);
 
-  if (mountDashboard) {
+  if (returnToDashboard) {
     return <Dashboard />;
   } else {
     return (
@@ -128,33 +123,7 @@ const ReviewPage = (props) => {
                 marginTop: "auto",
               }}
             >
-              <div id="overallStars">
-                {
-                  // displays avgRating(rounded down to nearest whole number) filled stars
-                  Array(Math.floor(avgRating)).fill(
-                    <Star style={{ color: "white", marginRight: "5px" }} />
-                  )
-                }
-                {
-                  // displays half star if avgRating decimal >= 0.25
-                  avgRating - Math.floor(avgRating) >= 0.25 && (
-                    <StarHalf style={{ color: "white", marginRight: "5px" }} />
-                  )
-                }
-                {
-                  // displays outlined star if avgRating decimal < 0.25
-                  avgRating - Math.floor(avgRating) > 0 &&
-                    avgRating - Math.floor(avgRating) < 0.25 && (
-                      <StarOutline style={{ marginRight: "5px" }} />
-                    )
-                }
-                {
-                  // displays 5 - (avgRating rounded up to nearest whole number) outlined stars
-                  Array(5 - Math.ceil(avgRating)).fill(
-                    <StarOutline style={{ marginRight: "5px" }} />
-                  )
-                }
-              </div>
+              <RatingStars rating={avgRating} user={"average"} />
               <h3>{reviewList.length} reviews</h3>
             </div>
 
@@ -205,35 +174,9 @@ const ReviewPage = (props) => {
                 <Typography key={review.user} style={{ color: "white" }}>
                   {review.user}
                 </Typography>
-
-                <div key={"stars" + review.user} style={{ marginLeft: "auto" }}>
-                  {
-                    // displays rating(rounded down to nearest whole number) filled stars
-                    Array(Math.floor(review.rating)).fill(
-                      <Star style={{ color: "white", marginLeft: "5px" }} />
-                    )
-                  }
-                  {
-                    // displays half star if rating decimal >= 0.25
-                    review.rating - Math.floor(review.rating) >= 0.25 && (
-                      <StarHalf style={{ color: "white", marginLeft: "5px" }} />
-                    )
-                  }
-                  {
-                    // displays outlined star if rating decimal < 0.25
-                    review.rating - Math.floor(review.rating) > 0 &&
-                      review.rating - Math.floor(review.rating) < 0.25 && (
-                        <StarOutline style={{ marginLeft: "5px" }} />
-                      )
-                  }
-                  {
-                    // displays 5 - (rating rounded up to nearest whole number) outlined stars
-                    Array(5 - Math.ceil(review.rating)).fill(
-                      <StarOutline style={{ marginLeft: "5px" }} />
-                    )
-                  }
+                <div style={{ marginLeft: "auto" }}>
+                  <RatingStars rating={review.rating} user={review.user} />
                 </div>
-
                 {
                   // if NOT on mobile, professor displayed in accordion summary
                   !isMobileOnly && (

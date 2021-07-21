@@ -96,15 +96,13 @@ const Dashboard = (props) => {
 
   useEffect(() => {
     // receives course data from Firebase and updates courseList and courseIDs in state
-  // Called immediately after a component is mounted. Setting state here will trigger re-rendering.
-  componentDidMount() {
+    //receives course data from Firebase and updates courseList in state
     if(!myFirebase.auth().currentUser.emailVerified)
     {
-      this.handleLogout();
+      handleLogout();
+      alert("Verify your Email first!")
       return <Redirect to="/login" />
     }
-    //receives course data from Firebase and updates courseList in state
-
     db.collection("courses").onSnapshot((querySnapshot) => {
       const courses = [];
       const firestoreIDs = [];
@@ -116,6 +114,7 @@ const Dashboard = (props) => {
       setCourseIDs(firestoreIDs);
     });
   }, []);
+
 
   if (mountReviewPage) {
     return (

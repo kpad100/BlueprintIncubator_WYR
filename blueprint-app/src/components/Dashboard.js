@@ -15,7 +15,8 @@ import { Component } from "react";
 import { connect } from "react-redux";
 import { isMobileOnly } from "react-device-detect";
 import { logoutUser } from "../actions";
-import { db } from "../firebase/firebase";
+import { db, myFirebase } from "../firebase/firebase";
+import { Redirect } from "react-router-dom";
 
 
 //CSS styling
@@ -77,6 +78,11 @@ class Dashboard extends Component {
 
   // Called immediately after a component is mounted. Setting state here will trigger re-rendering.
   componentDidMount() {
+    if(!myFirebase.auth().currentUser.emailVerified)
+    {
+      this.handleLogout();
+      return <Redirect to="/login" />
+    }
     //receives course data from Firebase and updates courseList in state
     db.collection("courses").onSnapshot((querySnapshot) => {
       var courses = [];

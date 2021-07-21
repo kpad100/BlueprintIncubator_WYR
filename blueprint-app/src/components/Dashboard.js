@@ -9,17 +9,18 @@ import {
   GridListTile,
   InputBase,
 } from "@material-ui/core";
-import { Search, Star, StarOutline, StarHalf } from "@material-ui/icons";
+import { Search } from "@material-ui/icons";
 import { withStyles } from "@material-ui/styles";
-import { Component } from "react";
+import { useState, useEffect } from "react";
 import { connect } from "react-redux";
 import { isMobileOnly } from "react-device-detect";
 import { logoutUser } from "../actions";
+
+import ReviewPage from "./ReviewPage";
 import { db, myFirebase } from "../firebase/firebase";
 import { Redirect } from "react-router-dom";
 
-
-//CSS styling
+// CSS styling
 const styles = () => ({
   "@global": {
     //makes scrollbar look less intrusive
@@ -33,10 +34,9 @@ const styles = () => ({
       backgroundColor: "#D6EAF8 ",
       outline: "1px solid slategrey",
     },
-
   },
   searchBar: {
-    backgroundColor: "#D6EAF8 ",
+    backgroundColor: "#7ae7ff",
     opacity: 0.5,
     borderRadius: 25,
     padding: "10px",
@@ -45,37 +45,57 @@ const styles = () => ({
     backgroundColor: "#fb9263",
     borderRadius: 25,
     padding: "20px",
+    height: "100px",
   },
   gridList: {
     width: "90vw",
-    height: "75vh",
+    height: "auto",
     padding: "15px",
-    backgroundColor:"white",
   },
 });
 
-class Dashboard extends Component {
-  // logsout user
-  handleLogout = () => {
-    const { dispatch } = this.props;
+const Dashboard = (props) => {
+  const [anchorEl, setAnchorEl] = useState(null); // anchor for menu, closed by default
+  const [courseList, setCourseList] = useState([]); // list of courses
+  const [courseIDs, setCourseIDs] = useState([]); // list of Firestore IDs for each course
+  const [selectedCourse, setSelectedCourse] = useState({}); // course to pass to ReviewPage
+  const [selectedCourseID, setSelectedCourseID] = useState(""); // Firestore ID of course to pass to ReviewPage
+  const [mountReviewPage, setMountReviewPage] = useState(false); // mounts ReviewPage when true
+  const [searchTerm, setSearchTerm] = useState(""); // value of input to search bar
+  const { classes, isLoggingOut, logoutError, dispatch } = props;
+
+  // handles logout
+  const handleLogout = () => {
     dispatch(logoutUser());
   };
 
   // opens account menu (currently only option in menu is to Logout)
-  handleOpenMenu = (e) => {
-    this.setState({ anchorEl: e.currentTarget });
+  const handleOpenMenu = (e) => {
+    setAnchorEl(e.currentTarget);
   };
 
   // closes account menu
-  handleCloseMenu = () => {
-    this.setState({ anchorEl: null });
+  const handleCloseMenu = () => {
+    setAnchorEl(null);
   };
 
-  state = {
-    anchorEl: null, // anchor for menu, closed by default
-    courseList: [], // list of courses
+  // handles when a course is clicked on
+  const onCourseClick = (e) => {
+    const text = e.target.innerText;
+    for (let i = 0; i < courseList.length; i++) {
+      let course = courseList[i];
+      let courseID = courseIDs[i];
+      if (text.includes(course.name) || text.includes(course.code)) {
+        setSelectedCourse(course);
+        setSelectedCourseID(courseID);
+        setMountReviewPage(true);
+      }
+    }
   };
 
+
+  useEffect(() => {
+    // receives course data from Firebase and updates courseList and courseIDs in state
   // Called immediately after a component is mounted. Setting state here will trigger re-rendering.
   componentDidMount() {
     if(!myFirebase.auth().currentUser.emailVerified)
@@ -84,50 +104,67 @@ class Dashboard extends Component {
       return <Redirect to="/login" />
     }
     //receives course data from Firebase and updates courseList in state
+
     db.collection("courses").onSnapshot((querySnapshot) => {
-      var courses = [];
+      const courses = [];
+      const firestoreIDs = [];
       querySnapshot.forEach((doc) => {
         courses.push(doc.data());
+        firestoreIDs.push(doc.id);
       });
-      this.setState({ courseList: courses });
+      setCourseList(courses);
+      setCourseIDs(firestoreIDs);
     });
-  }
+  }, []);
 
-  render() {
-    const { classes, isLoggingOut, logoutError } = this.props;
+  if (mountReviewPage) {
+    return (
+      <ReviewPage
+        selectedCourse={selectedCourse}
+        selectedCourseID={selectedCourseID}
+      />
+    );
+  } else {
     return (
       <div>
-        <header>
-          <IconButton onClick={this.handleOpenMenu} aria-controls="menu">
+        <Grid container>
+          <IconButton onClick={handleOpenMenu} aria-controls="menu">
             <Avatar />
-            </IconButton>
-            <img
-              src="https://cdn.discordapp.com/attachments/812822571094900746/837106499863969812/wyr_transparent.png"
-              height="50"
-              style={{ marginTop: "15px", marginBottom: "15px", float: "right" }}
-              alt=""
-            />
+          </IconButton>
           <Menu
             id="menu"
-            onClose={this.handleCloseMenu}
-            anchorEl={this.state.anchorEl}
-            open={Boolean(this.state.anchorEl)}
+            onClose={handleCloseMenu}
+            anchorEl={anchorEl}
+            open={Boolean(anchorEl)}
           >
-            <MenuItem onClick={this.handleLogout}>Logout</MenuItem>
-            
+            <MenuItem key="logoutItem" onClick={handleLogout}>
+              Logout
+            </MenuItem>
           </Menu>
-          <h1 style={{textAlign:"center"}}>Classes</h1>
-        </header>
 
-        <Grid container direction="column" alignItems="center" justify="center"  >
-        
+          <h1 style={{ marginLeft: "auto" }}>Classes</h1>
+          <img
+            src="https://cdn.discordapp.com/attachments/812822571094900746/837106499863969812/wyr_transparent.png"
+            height="50"
+            style={{
+              marginLeft: "auto",
+              marginRight: "5px",
+              marginTop: "5px",
+            }}
+            alt=""
+          />
+        </Grid>
+
+        <Grid container direction="column" alignItems="center" justify="center">
           <div className={classes.searchBar}>
             <InputBase
               placeholder="Course Name or Code..."
-              style={{ width: "50vw", }}
-              // TODO: make this a functioning search bar
+              onChange={(e) => {
+                setSearchTerm(e.target.value);
+              }}
+              style={{ width: "50vw" }}
             />
-            <Search style={{ color: "orange", }} />
+            <Search style={{ color: "orange" }} />
           </div>
 
           <GridList
@@ -137,50 +174,48 @@ class Dashboard extends Component {
           >
             {
               // iterates through list of courses, creates Card/gridListTile, and adds it to gridList
-              // TODO: make Card clickable/link to page with reviews for that course
-              this.state.courseList.map((course) => (
-                <GridListTile style={{ height: "auto", padding: "10px" }}>
-                  <Card className={classes.courseCard}>
-                    <Grid
-                      container
-                      direction="column"
-                      alignItems="center"
-                      justify="center"
+              // filters based on search term
+              courseList
+                .filter((course) => {
+                  if (searchTerm === "") {
+                    return course;
+                  } else if (
+                    course.name.toLowerCase().includes(searchTerm.toLowerCase())
+                  ) {
+                    return course;
+                  } else if (
+                    course.code
+                      .replaceAll(":", "")
+                      .includes(searchTerm.replaceAll(":", ""))
+                  ) {
+                    return course;
+                  }
+                })
+                .map((course) => (
+                  <GridListTile
+                    key={"GLT" + course.code}
+                    style={{ height: "auto", padding: "10px" }}
+                  >
+                    <Card
+                      key={"card" + course.code}
+                      className={classes.courseCard}
+                      onClick={onCourseClick}
                     >
-                      <h4 style={{ marginBottom: "0px", marginTop: "0px" }}>
-                        {course.name}
-                      </h4>
-                      <h4>{course.code}</h4>
-                      <div>
-                        {
-                          // displays avgRating(rounded down to nearest whole number) filled stars
-                          Array(Math.floor(course.avgRating)).fill(
-                            <Star style={{ color: "white" }} />
-                          )
-                        }
-                        {
-                          // displays half star if avgRating decimal >= 0.25
-                          course.avgRating - Math.floor(course.avgRating) >=
-                            0.25 && <StarHalf style={{ color: "white" }} />
-                        }
-                        {
-                          // displays outlined star if avgRating decimal < 0.25
-                          course.avgRating - Math.floor(course.avgRating) > 0 &&
-                            course.avgRating - Math.floor(course.avgRating) <
-                              0.25 && <StarOutline />
-                        }
-                        {
-                          // displays 5 - (avgRating rounded up to nearest whole number) outlined stars
-                          Array(5 - Math.ceil(course.avgRating)).fill(
-                            <StarOutline />
-                          )
-                        }
-                        {course.avgRating}/5
-                      </div>
-                    </Grid>
-                  </Card>
-                </GridListTile>
-              ))
+                      <Grid
+                        key={"cardGrid" + course.code}
+                        container
+                        direction="column"
+                        alignItems="center"
+                        justify="center"
+                      >
+                        <h3 key={course.name} style={{ marginTop: "auto" }}>
+                          {course.name}
+                        </h3>
+                        <h3 key={course.code}>{course.code}</h3>
+                      </Grid>
+                    </Card>
+                  </GridListTile>
+                ))
             }
           </GridList>
         </Grid>
@@ -190,7 +225,7 @@ class Dashboard extends Component {
       </div>
     );
   }
-}
+};
 
 function mapStateToProps(state) {
   return {
@@ -200,4 +235,3 @@ function mapStateToProps(state) {
 }
 
 export default withStyles(styles)(connect(mapStateToProps)(Dashboard));
-

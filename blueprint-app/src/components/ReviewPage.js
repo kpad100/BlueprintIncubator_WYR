@@ -1,214 +1,217 @@
-import React from "react";
+import { useState, useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import Paper from "@material-ui/core/Paper";
-import Grid from "@material-ui/core/Grid";
-import Typography from "@material-ui/core/Typography";
-import StarIcon from "@material-ui/icons/Star";
-import StarOutlineIcon from "@material-ui/icons/StarOutline";
-import StarHalfIcon from "@material-ui/icons/StarHalf";
-import Card from "@material-ui/core/Card";
-import Accordion from "@material-ui/core/Accordion";
-import AccordionSummary from "@material-ui/core/AccordionSummary";
-import AccordionDetails from "@material-ui/core/AccordionDetails";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+import { withStyles } from "@material-ui/styles";
+import { ArrowBackIos, ExpandMore } from "@material-ui/icons";
+import Dashboard from "./Dashboard";
+import { db } from "../firebase/firebase";
+import { isMobileOnly } from "react-device-detect";
+import {
+  IconButton,
+  Paper,
+  Grid,
+  Typography,
+  Card,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
+} from "@material-ui/core";
+import Button from "@material-ui/core/Button";
+import AddReview from "./AddReview";
+import RatingStars from "./RatingStars";
 
-const useStyles2 = makeStyles((theme) => ({
-  root: {
-    display: "flex",
+// const useStyles2 = makeStyles((theme) => ({
+//   root: {
+//     display: "flex",
+//   },
+//   paper: {
+//     padding: theme.spacing(2),
+//     textAlign: "center",
+//     color: theme.palette.text.secondary,
+//     backgroundColor: "#4198b5",
+//     height: "flex",
+//   },
+// }));
+
+// CSS styling
+const styles = () => ({
+  summaryCard: {
+    backgroundColor: "#fb9263",
+    width: "65vw",
+    padding: "25px",
+    marginLeft: "auto",
+    marginRight: "auto",
+    borderRadius: 25,
   },
-  paper: {
-    padding: theme.spacing(2),
-    textAlign: "center",
-    color: theme.palette.text.secondary,
-    backgroundColor: "#4198b5",
-    height: "flex",
+  addReviewButton: {
+    width: isMobileOnly ? "80vw" : "30rem",
+    height: "2rem",
+    borderRadius: 25,
+    backgroundColor: "#bdf4ff",
+    marginTop: "25px",
   },
-}));
+});
 
-const ReviewPage = () => {
-  const classes2 = useStyles2();
-  return (
-    <>
-    <header>
-    <img
-              src="https://cdn.discordapp.com/attachments/812822571094900746/837106499863969812/wyr_transparent.png"
-              height="50"
-              style={{ marginTop: "15px", marginBottom: "15px", float:"right" }}
-              alt=""
-            />
-    </header>
-      <Card
-        style={{
-          backgroundColor: "#fb9263",
-          marginBottom: "15px",
-          marginTop: "5px",
-          marginRight: "300px",
-          marginLeft: "300px",
-          padding: "25px",
-        }}
-      >
-        <Grid
-          container
-          direction="row"
-          alignItems="center"
-          justify="center"
-          zeroMinWidth
-        >
-          <h1 >Class 2</h1>
-          <StarIcon style={{ marginLeft: "100px", fontSize:"40px", alignItems:"center" }} />
-          <StarIcon style={{ marginLeft: "30px", fontSize:"40px", alignItems:"center" }}/>
-          <StarIcon style={{ marginLeft: "30px", fontSize:"40px", alignItems:"center" }}/>
-          <StarHalfIcon style={{ marginLeft: "30px", fontSize:"40px", alignItems:"center" }}/>
-          <StarOutlineIcon style={{ marginLeft: "30px", fontSize:"40px", alignItems:"center" }}/>
-          <p style={{ marginLeft: "15px" }}>(191 reviews)</p>
+const ReviewPage = (props) => {
+  const [returnToDashboard, setReturnToDashboard] = useState(false); // when true, returns Dashboard component
+  const [reviewList, setReviewList] = useState([]); // list of reviews
+  const [avgRating, setAvgRating] = useState(0); // avgRating of all reviews for course
+  const [buttonPopup, setButtonPopup] = useState(false);
+  const { selectedCourse, selectedCourseID, classes } = props;
+
+  const popUpAddReview = () => {
+    setButtonPopup(true);
+  };
+
+  const closePopUp = () => {
+    setButtonPopup(false);
+  };
+
+  // handles when back button is clicked
+  const handleReturnToDashboard = () => {
+    setReturnToDashboard(true);
+  };
+
+  useEffect(() => {
+    // receives review data from Firebase and updates reviewList and avgRating in state
+    db.collection("courses/" + selectedCourseID + "/reviews").onSnapshot(
+      (querySnapshot) => {
+        const reviews = [];
+        let sum = 0;
+        querySnapshot.forEach((doc) => {
+          reviews.push(doc.data());
+          sum += doc.data().rating;
+        });
+        setReviewList(reviews);
+        setAvgRating(sum / reviews.length);
+      }
+    );
+  }, [selectedCourseID]);
+
+  if (returnToDashboard) {
+    return <Dashboard />;
+  } else {
+    return (
+      <div>
+        <Grid container>
+          <IconButton onClick={handleReturnToDashboard}>
+            <ArrowBackIos />
+          </IconButton>
+          <img
+            src="https://cdn.discordapp.com/attachments/812822571094900746/837106499863969812/wyr_transparent.png"
+            height="50"
+            style={{
+              marginLeft: "auto",
+              marginRight: "5px",
+              marginTop: "5px",
+            }}
+            alt=""
+          />
         </Grid>
-      </Card>
-      <h2 style={{marginLeft: "300px"}}>Reviews</h2>
-      <Grid
-        container
-        direction="row"
-        spacing={2}
-        style={{ padding: 20 }}
-        justify="center"
-        alignItems="flex-start"
-      >
-        <Grid item xs={7} zeroMinWidth>
-          <Paper className={classes2.paper}>
-            <Typography variant="subtitle2" align="left" color="textPrimary">
-              Username
-            </Typography>
-            <Accordion backgroundColor="#4198b5">
+
+        <Card className={classes.summaryCard}>
+          <Grid container alignItems="center">
+            <div id="left">
+              <h2>{selectedCourse.name}</h2>
+              <h3>{selectedCourse.code}</h3>
+            </div>
+
+            <div
+              id="middle"
+              style={{
+                marginLeft: "auto",
+                marginRight: "auto",
+                marginTop: "auto",
+              }}
+            >
+              <RatingStars rating={avgRating} user={"average"} />
+              <h3>{reviewList.length} reviews</h3>
+            </div>
+
+            <div id="right" style={{ marginLeft: "auto" }}>
+              <h1>{(Math.round(avgRating * 100) / 100).toFixed(2)} / 5</h1>
+              <h3>Overall Rating</h3>
+            </div>
+          </Grid>
+        </Card>
+
+        <div align="center">
+          <Button
+            variant="contained"
+            disableElevation
+            className={classes.addReviewButton}
+            onClick={popUpAddReview}
+          >
+            Write a Review
+          </Button>
+          <AddReview trigger={buttonPopup} closed={closePopUp} />
+        </div>
+
+        <Grid container justify="center" alignItems="center">
+          <Grid item xs={6}>
+            <h1>Reviews</h1>
+          </Grid>
+          <Grid item xs={2}>
+            <h2>Sort By</h2>
+          </Grid>
+          {reviewList.map((review) => (
+            <Accordion
+              key={"accordian" + review.user}
+              defaultExpanded
+              style={{
+                backgroundColor: "#4198b5",
+                borderRadius: 25,
+                width: isMobileOnly ? "90vw" : "65vw",
+                marginBottom: "10px",
+                padding: "10px",
+              }}
+            >
               <AccordionSummary
-                expandIcon={<ExpandMoreIcon />}
+                key={"accordianSummary" + review.user}
+                expandIcon={<ExpandMore />}
                 aria-controls="panel1a-content"
                 id="panel1a-header"
               >
-                <Typography variant="body2">
-                  This is class is xyz and I would reccomend it because xyz...
+                <Typography key={review.user} style={{ color: "white" }}>
+                  {review.user}
                 </Typography>
+                <div style={{ marginLeft: "auto" }}>
+                  <RatingStars rating={review.rating} user={review.user} />
+                </div>
+                {
+                  // if NOT on mobile, professor displayed in accordion summary
+                  !isMobileOnly && (
+                    <Typography
+                      key={"prof" + review.user}
+                      style={{ color: "white", marginLeft: "auto" }}
+                    >
+                      Professor: {review.prof}
+                    </Typography>
+                  )
+                }
               </AccordionSummary>
 
-              <AccordionDetails>
-                <Typography variant="body2" align="left">
-                  This is a review. This is a review. This is a review. This is
-                  a review. This is a review. This is a review. This is a
-                  review. This is a review. This is a review. This is a review.
-                  This is a review. This is a review. This is a review. This is
-                  a review. This is a review. This is a review. This is a
-                  review. This is a review. This is a review. This is a review.
-                  This is a review. This is a review. This is a review. This is
-                  a review. This is a review. This is a review. This is a
-                  review. This is a review. This is a review. This is a review.
-                  This is a review. This is a review. This is a review.
+              <AccordionDetails key={"accordionDetails" + review.user}>
+                <Typography key={"description" + review.user} align="left">
+                  {review.description}
                 </Typography>
+                {
+                  // if on mobile, professor displayed in accordion details to right of description
+                  isMobileOnly && (
+                    <Typography
+                      key={"prof" + review.user}
+                      style={{ color: "white", marginLeft: "auto" }}
+                    >
+                      Professor: {review.prof}
+                    </Typography>
+                  )
+                }
               </AccordionDetails>
             </Accordion>
-          </Paper>
+          ))}
         </Grid>
-
-        <Grid item xs={7} zeroMinWidth>
-          <Paper className={classes2.paper}>
-            <Typography variant="subtitle2" align="left" color="textPrimary">
-              Username
-            </Typography>
-            <Accordion backgroundColor="#add8e6">
-              <AccordionSummary
-                expandIcon={<ExpandMoreIcon />}
-                aria-controls="panel1a-content"
-                id="panel1a-header"
-              >
-                <Typography variant="body2">
-                  This is class is xyz and I would reccomend it because xyz...
-                </Typography>
-              </AccordionSummary>
-
-              <AccordionDetails>
-                <Typography variant="body2" align="left">
-                  This is a review. This is a review. This is a review. This is
-                  a review. This is a review. This is a review. This is a
-                  review. This is a review. This is a review. This is a review.
-                  This is a review. This is a review. This is a review. This is
-                  a review. This is a review. This is a review. This is a
-                  review. This is a review. This is a review. This is a review.
-                  This is a review. This is a review. This is a review. This is
-                  a review. This is a review. This is a review. This is a
-                  review. This is a review. This is a review. This is a review.
-                  This is a review. This is a review. This is a review.
-                </Typography>
-              </AccordionDetails>
-            </Accordion>
-          </Paper>
-        </Grid>
-
-        <Grid item xs={7} zeroMinWidth>
-          <Paper className={classes2.paper}>
-            <Typography variant="subtitle2" align="left" color="textPrimary">
-              Username
-            </Typography>
-            <Accordion backgroundColor="#add8e6">
-              <AccordionSummary
-                expandIcon={<ExpandMoreIcon />}
-                aria-controls="panel1a-content"
-                id="panel1a-header"
-              >
-                <Typography variant="body2">
-                  This is class is xyz and I would reccomend it because xyz...
-                </Typography>
-              </AccordionSummary>
-
-              <AccordionDetails>
-                <Typography variant="body2" align="left">
-                  This is a review. This is a review. This is a review. This is
-                  a review. This is a review. This is a review. This is a
-                  review. This is a review. This is a review. This is a review.
-                  This is a review. This is a review. This is a review. This is
-                  a review. This is a review. This is a review. This is a
-                  review. This is a review. This is a review. This is a review.
-                  This is a review. This is a review. This is a review. This is
-                  a review. This is a review. This is a review. This is a
-                  review. This is a review. This is a review. This is a review.
-                  This is a review. This is a review. This is a review.
-                </Typography>
-              </AccordionDetails>
-            </Accordion>
-          </Paper>
-        </Grid>
-        <Grid item xs={7} zeroMinWidth>
-          <Paper className={classes2.paper}>
-            <Typography variant="subtitle2" align="left" color="textPrimary">
-              Username
-            </Typography>
-            <Accordion backgroundColor="#add8e6">
-              <AccordionSummary
-                expandIcon={<ExpandMoreIcon />}
-                aria-controls="panel1a-content"
-                id="panel1a-header"
-              >
-                <Typography variant="body2">
-                  This is class is xyz and I would reccomend it because xyz...
-                </Typography>
-              </AccordionSummary>
-
-              <AccordionDetails>
-                <Typography variant="body2" align="left">
-                  This is a review. This is a review. This is a review. This is
-                  a review. This is a review. This is a review. This is a
-                  review. This is a review. This is a review. This is a review.
-                  This is a review. This is a review. This is a review. This is
-                  a review. This is a review. This is a review. This is a
-                  review. This is a review. This is a review. This is a review.
-                  This is a review. This is a review. This is a review. This is
-                  a review. This is a review. This is a review. This is a
-                  review. This is a review. This is a review. This is a review.
-                  This is a review. This is a review. This is a review.
-                </Typography>
-              </AccordionDetails>
-            </Accordion>
-          </Paper>
-        </Grid>
-      </Grid>
-    </>
-  );
+      </div>
+    );
+  }
 };
 
-export default ReviewPage;
+export default withStyles(styles)(ReviewPage);

@@ -15,8 +15,10 @@ import { useState, useEffect } from "react";
 import { connect } from "react-redux";
 import { isMobileOnly } from "react-device-detect";
 import { logoutUser } from "../actions";
-import { db } from "../firebase/firebase";
+
 import ReviewPage from "./ReviewPage";
+import { db, myFirebase } from "../firebase/firebase";
+import { Redirect } from "react-router-dom";
 
 // CSS styling
 const styles = () => ({
@@ -91,8 +93,18 @@ const Dashboard = (props) => {
     }
   };
 
+
   useEffect(() => {
     // receives course data from Firebase and updates courseList and courseIDs in state
+  // Called immediately after a component is mounted. Setting state here will trigger re-rendering.
+  componentDidMount() {
+    if(!myFirebase.auth().currentUser.emailVerified)
+    {
+      this.handleLogout();
+      return <Redirect to="/login" />
+    }
+    //receives course data from Firebase and updates courseList in state
+
     db.collection("courses").onSnapshot((querySnapshot) => {
       const courses = [];
       const firestoreIDs = [];

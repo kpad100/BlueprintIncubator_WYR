@@ -2,8 +2,15 @@ import Button from "@material-ui/core/Button";
 import { SportsRugbySharp } from "@material-ui/icons";
 import { Grid, Card } from "@material-ui/core";
 import TextField from "@material-ui/core/TextField";
+import { Star, StarOutline, StarHalf } from "@material-ui/icons"; 
+
+
+import {useState} from "react";
 
 const AddReview = (props) => {
+  const [rating, setRating] = useState(null);
+  const [hover, setHover] = useState(null);
+
   // CSS
   const background = {
     position: "fixed",
@@ -35,10 +42,45 @@ const AddReview = (props) => {
     props.trigger && (
       <div style={background}>
         <Card style={innerBlock}>
+
+          {/* Stars */}
+          <div>
+          {[...Array(5)].map((star,i ) => {
+            const ratingValue = i + 1;
+
+            return (
+              <label >
+                <input type="radio" name="rating" 
+                style={{display:"none"}} 
+                value={ratingValue} 
+                onClick={() => setRating(ratingValue)} 
+                />
+                
+                {/* Colors for Star  */}
+                <Star 
+                color={ratingValue <= (hover || rating) ? "primary" : "secondary"}
+                style={{ fontSize: 34, cursor:"pointer"}} 
+                onMouseEnter={() => setHover(ratingValue)}
+                onMouseLeave={()=> setHover(null)}
+                /> 
+              </label>
+
+            );
+          })}
+
+          </div>
+
           <TextField
             id="standard-multiline-static"
-            style={{ width: "80%", marginBottom: "10px" }}
-            label="Enter Your Review"
+            style={{ width: "80%", marginBottom: "10px", marginTop: "5px" }}
+            label="Professor:"
+            multiline
+            rows={2}
+          />
+          <TextField
+            id="standard-multiline-static"
+            style={{ width: "80%", marginBottom: "20px" }}
+            label="Enter Your Review:"
             multiline
             rows={5}
           />

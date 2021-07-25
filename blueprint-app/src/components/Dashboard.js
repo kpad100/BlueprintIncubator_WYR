@@ -15,8 +15,10 @@ import { useState, useEffect } from "react";
 import { connect } from "react-redux";
 import { isMobileOnly } from "react-device-detect";
 import { logoutUser } from "../actions";
-import { db } from "../firebase/firebase";
+
 import ReviewPage from "./ReviewPage";
+import { db, myFirebase } from "../firebase/firebase";
+import { Redirect } from "react-router-dom";
 
 // CSS styling
 const styles = () => ({
@@ -91,8 +93,16 @@ const Dashboard = (props) => {
     }
   };
 
+
   useEffect(() => {
     // receives course data from Firebase and updates courseList and courseIDs in state
+    //receives course data from Firebase and updates courseList in state
+    if(!myFirebase.auth().currentUser.emailVerified)
+    {
+      handleLogout();
+      alert("Verify your Email first!")
+      return <Redirect to="/login" />
+    }
     db.collection("courses").onSnapshot((querySnapshot) => {
       const courses = [];
       const firestoreIDs = [];
@@ -104,6 +114,7 @@ const Dashboard = (props) => {
       setCourseIDs(firestoreIDs);
     });
   }, []);
+
 
   if (mountReviewPage) {
     return (

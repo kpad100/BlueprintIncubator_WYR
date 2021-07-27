@@ -59,7 +59,7 @@ const Dashboard = (props) => {
   const [courseIDs, setCourseIDs] = useState([]); // list of Firestore IDs for each course
   const [selectedCourse, setSelectedCourse] = useState({}); // course to pass to ReviewPage
   const [selectedCourseID, setSelectedCourseID] = useState(""); // Firestore ID of course to pass to ReviewPage
-  const [mountReviewPage, setMountReviewPage] = useState(false); // mounts ReviewPage when true
+  const [goToReviewPage, setGoToReviewPage] = useState(false); // mounts ReviewPage when true
   const [searchTerm, setSearchTerm] = useState(""); // value of input to search bar
   const { classes, isLoggingOut, logoutError, dispatch } = props;
 
@@ -87,20 +87,20 @@ const Dashboard = (props) => {
       if (text.includes(course.name) || text.includes(course.code)) {
         setSelectedCourse(course);
         setSelectedCourseID(courseID);
-        setMountReviewPage(true);
+        setGoToReviewPage(true);
       }
     }
   };
 
   useEffect(() => {
     if (!myFirebase.auth().currentUser.emailVerified) {
-      handleLogout();
+      dispatch(logoutUser());
       alert("Verify your Email first!");
       return <Redirect to="/login" />;
     }
 
     // receives course data from Firebase and updates courseList and courseIDs in state
-    db.collection("courses").onSnapshot((querySnapshot) => {
+    const unsubscribe = db.collection("courses").onSnapshot((querySnapshot) => {
       const courses = [];
       const firestoreIDs = [];
       querySnapshot.forEach((doc) => {
@@ -110,9 +110,13 @@ const Dashboard = (props) => {
       setCourseList(courses);
       setCourseIDs(firestoreIDs);
     });
-  }, []);
 
-  if (mountReviewPage) {
+    return function cleanup() {
+      unsubscribe();
+    };
+  }, [dispatch]);
+
+  if (goToReviewPage) {
     return (
       <ReviewPage
         selectedCourse={selectedCourse}

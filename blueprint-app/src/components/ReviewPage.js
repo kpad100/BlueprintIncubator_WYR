@@ -17,7 +17,7 @@ import {
 } from "@material-ui/core";
 import Button from "@material-ui/core/Button";
 import AddReview from "./AddReview";
-import RatingStars from "./RatingStars";
+import Stars from "./Stars";
 
 // const useStyles2 = makeStyles((theme) => ({
 //   root: {
@@ -79,7 +79,7 @@ const ReviewPage = (props) => {
         let sum = 0;
         querySnapshot.forEach((doc) => {
           reviews.push(doc.data());
-          sum += doc.data().rating;
+          sum += doc.data().overallRating;
         });
         setReviewList(reviews);
         setAvgRating(sum / reviews.length);
@@ -123,7 +123,7 @@ const ReviewPage = (props) => {
                 marginTop: "auto",
               }}
             >
-              <RatingStars rating={avgRating} user={"average"} />
+              <Stars rating={avgRating} user={"average"} />
               <h3>{reviewList.length} reviews</h3>
             </div>
 
@@ -143,7 +143,12 @@ const ReviewPage = (props) => {
           >
             Write a Review
           </Button>
-          <AddReview trigger={buttonPopup} closed={closePopUp} />
+          <AddReview
+            trigger={buttonPopup}
+            close={closePopUp}
+            fromCourse={selectedCourse}
+            fromCourseID={selectedCourseID}
+          />
         </div>
 
         <Grid container justify="center" alignItems="center">
@@ -174,37 +179,78 @@ const ReviewPage = (props) => {
                 <Typography key={review.user} style={{ color: "white" }}>
                   {review.user}
                 </Typography>
-                <div style={{ marginLeft: "auto" }}>
-                  <RatingStars rating={review.rating} user={review.user} />
-                </div>
                 {
-                  // if NOT on mobile, professor displayed in accordion summary
+                  // if NOT on mobile, stars and professor displayed in accordion summary
                   !isMobileOnly && (
-                    <Typography
-                      key={"prof" + review.user}
-                      style={{ color: "white", marginLeft: "auto" }}
-                    >
-                      Professor: {review.prof}
-                    </Typography>
+                    <>
+                      <div style={{ marginLeft: "auto" }}>
+                        <Typography key={review.user + "diff"}>
+                          Difficulty Of Content:
+                        </Typography>
+                        <Stars rating={review.diffRating} user={review.user} />
+                      </div>
+                      <div style={{ marginLeft: "auto" }}>
+                        <Typography key={review.user + "workload"}>
+                          Workload:
+                        </Typography>
+                        <Stars
+                          rating={review.workloadRating}
+                          user={review.user}
+                        />
+                      </div>
+                      <Typography
+                        key={"prof" + review.user}
+                        style={{ color: "white", marginLeft: "auto" }}
+                      >
+                        Professor: {review.prof}
+                      </Typography>
+                    </>
                   )
                 }
               </AccordionSummary>
 
               <AccordionDetails key={"accordionDetails" + review.user}>
-                <Typography key={"description" + review.user} align="left">
-                  {review.description}
-                </Typography>
-                {
-                  // if on mobile, professor displayed in accordion details to right of description
-                  isMobileOnly && (
-                    <Typography
-                      key={"prof" + review.user}
-                      style={{ color: "white", marginLeft: "auto" }}
-                    >
-                      Professor: {review.prof}
-                    </Typography>
-                  )
-                }
+                <div>
+                  {
+                    // if on mobile, stars and professor displayed in accordion details
+                    isMobileOnly && (
+                      <div>
+                        <Typography
+                          key={"prof" + review.user}
+                          style={{ color: "white", marginLeft: "auto" }}
+                        >
+                          Professor: {review.prof}
+                        </Typography>
+                        <div style={{ marginTop: "10px" }}>
+                          <Typography key={review.user + "diff"}>
+                            Difficulty Of Content:
+                          </Typography>
+                          <Stars
+                            rating={review.diffRating}
+                            user={review.user}
+                          />
+                        </div>
+                        <div style={{ marginTop: "10px" }}>
+                          <Typography key={review.user + "workload"}>
+                            Workload:
+                          </Typography>
+                          <Stars
+                            rating={review.workloadRating}
+                            user={review.user}
+                          />
+                        </div>
+                      </div>
+                    )
+                  }
+
+                  <Typography
+                    key={"description" + review.user}
+                    align="left"
+                    style={{ marginTop: "10px" }}
+                  >
+                    {review.description}
+                  </Typography>
+                </div>
               </AccordionDetails>
             </Accordion>
           ))}

@@ -43,7 +43,7 @@ const styles = () => ({
     borderRadius: 25,
   },
   addReviewButton: {
-    width: isMobileOnly ? "80vw" : "30rem",
+    width: isMobileOnly ? "80vw" : "40vw",
     height: "2rem",
     borderRadius: 25,
     backgroundColor: "#bdf4ff",

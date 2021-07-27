@@ -18,7 +18,7 @@ function App(props) {
         isAuthenticated={isAuthenticated}
         isVerifying={isVerifying}
       />
-      <Route exact path="/LandingPage" component={LandingPage} />
+      <Route exact path="/" component={LandingPage} />
       <Route exact path="/login" component={LoginPage} />
       <Route exact path="/signup" component={SignupPage} />
       <Route exact path="/forgotpassword" component={ForgotpassPage} />

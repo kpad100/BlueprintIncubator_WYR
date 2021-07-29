@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import { makeStyles } from "@material-ui/core/styles";
 import { withStyles } from "@material-ui/styles";
 import { ArrowBackIos, ExpandMore } from "@material-ui/icons";
 import Dashboard from "./Dashboard";
@@ -7,15 +6,14 @@ import { db } from "../firebase/firebase";
 import { isMobileOnly } from "react-device-detect";
 import {
   IconButton,
-  Paper,
   Grid,
   Typography,
   Card,
   Accordion,
   AccordionSummary,
   AccordionDetails,
+  Button,
 } from "@material-ui/core";
-import Button from "@material-ui/core/Button";
 import AddReview from "./AddReview";
 import Stars from "./Stars";
 
@@ -56,7 +54,7 @@ const ReviewPage = (props) => {
   const [reviewList, setReviewList] = useState([]); // list of reviews
   const [avgRating, setAvgRating] = useState(0); // avgRating of all reviews for course
   const [buttonPopup, setButtonPopup] = useState(false);
-  const { selectedCourse, selectedCourseID, classes } = props;
+  const { selectedCourse, classes } = props;
 
   const popUpAddReview = () => {
     setButtonPopup(true);
@@ -73,7 +71,7 @@ const ReviewPage = (props) => {
 
   useEffect(() => {
     // receives review data from Firebase and updates reviewList and avgRating in state
-    db.collection("courses/" + selectedCourseID + "/reviews").onSnapshot(
+    db.collection("courses/" + selectedCourse.code + "/reviews").onSnapshot(
       (querySnapshot) => {
         const reviews = [];
         let sum = 0;
@@ -85,7 +83,7 @@ const ReviewPage = (props) => {
         setAvgRating(sum / reviews.length);
       }
     );
-  }, [selectedCourseID]);
+  }, [selectedCourse]);
 
   if (returnToDashboard) {
     return <Dashboard />;
@@ -145,9 +143,8 @@ const ReviewPage = (props) => {
           </Button>
           <AddReview
             trigger={buttonPopup}
-            close={closePopUp}
+            closed={closePopUp}
             fromCourse={selectedCourse}
-            fromCourseID={selectedCourseID}
           />
         </div>
 

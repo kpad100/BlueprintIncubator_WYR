@@ -1,12 +1,10 @@
-import Button from "@material-ui/core/Button";
-import { Grid, Card } from "@material-ui/core";
-import TextField from "@material-ui/core/TextField";
-import { Star, StarOutline, StarHalf } from "@material-ui/icons";
+import { Grid, Card, Button, TextField } from "@material-ui/core";
+import { Star } from "@material-ui/icons";
 import { useState } from "react";
 import { db, myFirebase } from "../firebase/firebase";
 
 const AddReview = (props) => {
-  const { trigger, close, fromCourse, fromCourseID } = props;
+  const { trigger, closed, fromCourse } = props;
   const [diffRating, setDiffRating] = useState(null);
   const [workloadRating, setWorkloadRating] = useState(null);
   const [diffHover, setDiffHover] = useState(null);
@@ -18,8 +16,10 @@ const AddReview = (props) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (fromCourseID !== undefined) {
-      db.collection("courses/" + fromCourseID + "/reviews")
+    if (diffRating === null || workloadRating === null) {
+      alert("Fill out all fields and star ratings!");
+    } else if (fromCourse !== undefined) {
+      db.collection("courses/" + fromCourse.code + "/reviews")
         .add({
           diffRating: diffRating,
           workloadRating: workloadRating,
@@ -34,8 +34,46 @@ const AddReview = (props) => {
         .catch((error) => {
           console.error("Error adding document: ", error);
         });
+
+      clearFields();
+    } else {
+      db.collection("courses")
+        .doc(newCourseCode)
+        .set({
+          name: newCourse,
+          code: newCourseCode,
+        })
+        .then((docRef) => {
+          console.log("Document written with ID: ", docRef.id);
+        })
+        .catch((error) => {
+          console.error("Error adding document: ", error);
+        });
+
+      db.collection("courses")
+        .doc(newCourseCode)
+        .collection("reviews")
+        .add({
+          diffRating: diffRating,
+          workloadRating: workloadRating,
+          overallRating: (diffRating + workloadRating) / 2,
+          prof: prof,
+          description: description,
+          user: myFirebase.auth().currentUser.uid,
+        });
+
+      clearFields();
     }
   };
+
+  function clearFields() {
+    setDiffRating(null);
+    setWorkloadRating(null);
+    setNewCourse("");
+    setNewCourseCode("");
+    setProf("");
+    setDescription("");
+  }
 
   // CSS
   const background = {
@@ -70,6 +108,9 @@ const AddReview = (props) => {
         <Card style={innerBlock}>
           {/* Stars */}
           <div>
+            {(diffRating === null || workloadRating === null) && (
+              <h5 style={{ color: "red" }}>*Click on stars to rate*</h5>
+            )}
             <h3>Difficulty of Content (1 is the HARDEST, 5 is the EASIEST)</h3>
             {[...Array(5)].map((star, i) => {
               const ratingValue = i + 1;
@@ -77,7 +118,7 @@ const AddReview = (props) => {
                 <label>
                   <input
                     type="radio"
-                    name="rating"
+                    name="diffRating"
                     style={{ display: "none" }}
                     value={ratingValue}
                     onClick={() => setDiffRating(ratingValue)}
@@ -107,7 +148,7 @@ const AddReview = (props) => {
                 <label>
                   <input
                     type="radio"
-                    name="rating"
+                    name="workloadRating"
                     style={{ display: "none" }}
                     value={ratingValue}
                     onClick={() => setWorkloadRating(ratingValue)}
@@ -176,7 +217,7 @@ const AddReview = (props) => {
               </Button>
 
               <Button
-                onClick={close}
+                onClick={closed}
                 variant="contained"
                 disableElevation
                 style={{ marginLeft: "20px", backgroundColor: "#fb9263" }}

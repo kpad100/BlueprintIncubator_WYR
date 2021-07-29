@@ -8,6 +8,7 @@ import {
   GridList,
   GridListTile,
   InputBase,
+  Button,
 } from "@material-ui/core";
 import { Search } from "@material-ui/icons";
 import { withStyles } from "@material-ui/styles";
@@ -18,6 +19,7 @@ import { logoutUser } from "../actions";
 import ReviewPage from "./ReviewPage";
 import { db, myFirebase } from "../firebase/firebase";
 import { Redirect } from "react-router-dom";
+import AddReview from "./AddReview";
 
 // CSS styling
 const styles = () => ({
@@ -51,16 +53,23 @@ const styles = () => ({
     height: "auto",
     padding: "15px",
   },
+  addReviewButton: {
+    width: isMobileOnly ? "40vw" : "20vw",
+    height: "3rem",
+    borderRadius: 25,
+    backgroundColor: "#fb9263",
+    marginBottom: "25px",
+    fontSize: 16,
+  },
 });
 
 const Dashboard = (props) => {
   const [anchorEl, setAnchorEl] = useState(null); // anchor for menu, closed by default
   const [courseList, setCourseList] = useState([]); // list of courses
-  const [courseIDs, setCourseIDs] = useState([]); // list of Firestore IDs for each course
   const [selectedCourse, setSelectedCourse] = useState({}); // course to pass to ReviewPage
-  const [selectedCourseID, setSelectedCourseID] = useState(""); // Firestore ID of course to pass to ReviewPage
   const [goToReviewPage, setGoToReviewPage] = useState(false); // mounts ReviewPage when true
   const [searchTerm, setSearchTerm] = useState(""); // value of input to search bar
+  const [buttonPopup, setButtonPopup] = useState(false);
   const { classes, isLoggingOut, logoutError, dispatch } = props;
 
   // handles logout
@@ -78,15 +87,21 @@ const Dashboard = (props) => {
     setAnchorEl(null);
   };
 
+  const popUpAddReview = () => {
+    setButtonPopup(true);
+  };
+
+  const closePopUp = () => {
+    setButtonPopup(false);
+  };
+
   // handles when a course is clicked on
   const onCourseClick = (e) => {
     const text = e.target.innerText;
     for (let i = 0; i < courseList.length; i++) {
       let course = courseList[i];
-      let courseID = courseIDs[i];
       if (text.includes(course.name) || text.includes(course.code)) {
         setSelectedCourse(course);
-        setSelectedCourseID(courseID);
         setGoToReviewPage(true);
       }
     }
@@ -102,13 +117,10 @@ const Dashboard = (props) => {
     // receives course data from Firebase and updates courseList and courseIDs in state
     const unsubscribe = db.collection("courses").onSnapshot((querySnapshot) => {
       const courses = [];
-      const firestoreIDs = [];
       querySnapshot.forEach((doc) => {
         courses.push(doc.data());
-        firestoreIDs.push(doc.id);
       });
       setCourseList(courses);
-      setCourseIDs(firestoreIDs);
     });
 
     return function cleanup() {
@@ -117,12 +129,7 @@ const Dashboard = (props) => {
   }, [dispatch]);
 
   if (goToReviewPage) {
-    return (
-      <ReviewPage
-        selectedCourse={selectedCourse}
-        selectedCourseID={selectedCourseID}
-      />
-    );
+    return <ReviewPage selectedCourse={selectedCourse} />;
   } else {
     return (
       <div>
@@ -188,6 +195,8 @@ const Dashboard = (props) => {
                       .includes(searchTerm.replaceAll(":", ""))
                   ) {
                     return course;
+                  } else {
+                    return console.log("not found");
                   }
                 })
                 .map((course) => (
@@ -217,6 +226,16 @@ const Dashboard = (props) => {
                 ))
             }
           </GridList>
+          <div align="center">
+            <h1>Can't Find the Class You're Looking For?</h1>
+            <Button
+              className={classes.addReviewButton}
+              onClick={popUpAddReview}
+            >
+              Add Class
+            </Button>
+            <AddReview trigger={buttonPopup} closed={closePopUp} />
+          </div>
         </Grid>
 
         {isLoggingOut && <p>Logging Out....</p>}

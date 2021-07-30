@@ -111,9 +111,13 @@ const SignupPage = (props) => {
     myFirebase.auth().onAuthStateChanged((user) => {
       if (user) {
         // updates display name in Firebase user profile (can be accessed same way as user's uid)
-        user.updateProfile({
-          displayName: username,
-        });
+        user
+          .updateProfile({
+            displayName: username,
+          })
+          .catch((error) => {
+            console.log("Error updating profile: " + error);
+          });
 
         // adds additional user info to Firestore "users" collection (info that's not a property of Firebase user profile)
         db.collection("users")
@@ -122,9 +126,6 @@ const SignupPage = (props) => {
             firstName: firstName,
             lastName: lastName,
             // TODO: set rest of user info
-          })
-          .then((docRef) => {
-            console.log("Document written with ID: ", docRef.id);
           })
           .catch((error) => {
             console.error("Error adding document: ", error);

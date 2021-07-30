@@ -9,6 +9,7 @@ import {
   Card,
 } from "@material-ui/core";
 import { signupWithEmailPassword } from "../actions/auth";
+import { db, myFirebase } from "../firebase/firebase";
 
 const SignupPage = (props) => {
   //const email_postfix1 = '@scarletmail.rutgers.edu';
@@ -97,11 +98,39 @@ const SignupPage = (props) => {
         setPasswordstrengthCheck(false);
         return renderForm();
       } else {
+        addUser();
         props.history.push("/dashboard");
       }
     } else {
       return renderForm();
     }
+  }
+
+  function addUser() {
+    // gets current user
+    myFirebase.auth().onAuthStateChanged((user) => {
+      if (user) {
+        // updates display name in Firebase user profile (can be accessed same way as user's uid)
+        user.updateProfile({
+          displayName: username,
+        });
+
+        // adds additional user info to Firestore "users" collection (info that's not a property of Firebase user profile)
+        db.collection("users")
+          .doc(user.uid)
+          .set({
+            firstName: firstName,
+            lastName: lastName,
+            // TODO: set rest of user info
+          })
+          .then((docRef) => {
+            console.log("Document written with ID: ", docRef.id);
+          })
+          .catch((error) => {
+            console.error("Error adding document: ", error);
+          });
+      }
+    });
   }
 
   function renderForm() {

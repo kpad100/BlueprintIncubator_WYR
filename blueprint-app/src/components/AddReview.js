@@ -26,7 +26,7 @@ const AddReview = (props) => {
           overallRating: (diffRating + workloadRating) / 2,
           prof: prof,
           description: description,
-          user: myFirebase.auth().currentUser.uid,
+          user: myFirebase.auth().currentUser.displayName,
         })
         .then((docRef) => {
           console.log("Document written with ID: ", docRef.id);
@@ -59,7 +59,7 @@ const AddReview = (props) => {
           overallRating: (diffRating + workloadRating) / 2,
           prof: prof,
           description: description,
-          user: myFirebase.auth().currentUser.uid,
+          user: myFirebase.auth().currentUser.displayName,
         });
 
       clearFields();

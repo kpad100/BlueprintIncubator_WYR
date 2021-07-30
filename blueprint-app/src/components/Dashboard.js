@@ -195,8 +195,6 @@ const Dashboard = (props) => {
                       .includes(searchTerm.replaceAll(":", ""))
                   ) {
                     return course;
-                  } else {
-                    return console.log("not found");
                   }
                 })
                 .map((course) => (

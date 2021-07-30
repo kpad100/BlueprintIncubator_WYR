@@ -1,5 +1,5 @@
 import { Grid, Card, Button, TextField } from "@material-ui/core";
-import { Star } from "@material-ui/icons";
+import { Star, StarOutline } from "@material-ui/icons";
 import { useState } from "react";
 import { db, myFirebase } from "../firebase/firebase";
 
@@ -123,18 +123,26 @@ const AddReview = (props) => {
                     value={ratingValue}
                     onClick={() => setDiffRating(ratingValue)}
                   />
-
-                  {/* Colors for Star  */}
-                  <Star
-                    color={
-                      ratingValue <= (diffHover || diffRating)
-                        ? "primary"
-                        : "secondary"
-                    }
-                    style={{ fontSize: 34, cursor: "pointer" }}
-                    onMouseEnter={() => setDiffHover(ratingValue)}
-                    onMouseLeave={() => setDiffHover(null)}
-                  />
+                  {
+                    // Colors for Star
+                    ratingValue <= (diffHover || diffRating) ? (
+                      <Star
+                        style={{
+                          fontSize: 34,
+                          cursor: "pointer",
+                          color: "#fb9263",
+                        }}
+                        onMouseEnter={() => setDiffHover(ratingValue)}
+                        onMouseLeave={() => setDiffHover(null)}
+                      />
+                    ) : (
+                      <StarOutline
+                        style={{ fontSize: 34, cursor: "pointer" }}
+                        onMouseEnter={() => setDiffHover(ratingValue)}
+                        onMouseLeave={() => setDiffHover(null)}
+                      />
+                    )
+                  }
                 </label>
               );
             })}
@@ -154,17 +162,26 @@ const AddReview = (props) => {
                     onClick={() => setWorkloadRating(ratingValue)}
                   />
 
-                  {/* Colors for Star  */}
-                  <Star
-                    color={
-                      ratingValue <= (workloadHover || workloadRating)
-                        ? "primary"
-                        : "secondary"
-                    }
-                    style={{ fontSize: 34, cursor: "pointer" }}
-                    onMouseEnter={() => setWorkloadHover(ratingValue)}
-                    onMouseLeave={() => setWorkloadHover(null)}
-                  />
+                  {
+                    // Colors for Star
+                    ratingValue <= (workloadHover || workloadRating) ? (
+                      <Star
+                        style={{
+                          fontSize: 34,
+                          cursor: "pointer",
+                          color: "#fb9263",
+                        }}
+                        onMouseEnter={() => setWorkloadHover(ratingValue)}
+                        onMouseLeave={() => setWorkloadHover(null)}
+                      />
+                    ) : (
+                      <StarOutline
+                        style={{ fontSize: 34, cursor: "pointer" }}
+                        onMouseEnter={() => setWorkloadHover(ratingValue)}
+                        onMouseLeave={() => setWorkloadHover(null)}
+                      />
+                    )
+                  }
                 </label>
               );
             })}

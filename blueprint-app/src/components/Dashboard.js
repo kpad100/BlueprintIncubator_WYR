@@ -108,12 +108,6 @@ const Dashboard = (props) => {
   };
 
   useEffect(() => {
-    if (!myFirebase.auth().currentUser.emailVerified) {
-      dispatch(logoutUser());
-      alert("Verify your Email first!");
-      return <Redirect to="/login" />;
-    }
-
     // receives course data from Firebase and updates courseList and courseIDs in state
     const unsubscribe = db.collection("courses").onSnapshot((querySnapshot) => {
       const courses = [];
@@ -128,7 +122,21 @@ const Dashboard = (props) => {
     };
   }, [dispatch]);
 
-  if (goToReviewPage) {
+  if (!myFirebase.auth().currentUser.emailVerified) {
+    return (
+      <div align="center">
+        <h1>Verify Your Email!</h1>
+        <Button
+          style={{ backgroundColor: "#fb9263" }}
+          onClick={() => {
+            window.location.reload();
+          }}
+        >
+          Refresh Page
+        </Button>
+      </div>
+    );
+  } else if (goToReviewPage) {
     return <ReviewPage selectedCourse={selectedCourse} />;
   } else {
     return (

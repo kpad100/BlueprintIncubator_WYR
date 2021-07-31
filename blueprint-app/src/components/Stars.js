@@ -1,6 +1,6 @@
 import { Star, StarOutline, StarHalf } from "@material-ui/icons";
 
-const RatingStars = ({ rating, user }) => {
+const Stars = ({ rating, user }) => {
   const stars = [];
 
   // adds rating(rounded down to nearest whole number) filled stars to stars array
@@ -43,4 +43,4 @@ const RatingStars = ({ rating, user }) => {
   return <div>{stars}</div>;
 };
 
-export default RatingStars;
+export default Stars;

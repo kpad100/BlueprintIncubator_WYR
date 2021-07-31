@@ -58,7 +58,7 @@ const LandingPage = () => {
 
         <Grid xs={7}></Grid>
 
-        <Grid container justifyContent="center" alignItems="center" xs={1}>
+        <Grid container justifycontent="center" alignItems="center" xs={1}>
           <Button
             disableElevation
             size="large"
@@ -68,7 +68,7 @@ const LandingPage = () => {
             Login
           </Button>
         </Grid>
-        <Grid container justifyContent="center" alignItems="center" xs={2}>
+        <Grid container justifycontent="center" alignItems="center" xs={2}>
           <Button
             variant="contained"
             disableElevation

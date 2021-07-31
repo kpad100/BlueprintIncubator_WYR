@@ -16,12 +16,15 @@ import { useState, useEffect } from "react";
 import { connect } from "react-redux";
 import { isMobileOnly } from "react-device-detect";
 import { logoutUser } from "../actions";
+
+import AddReview from "./AddReview";
 //import LoginPage from "./LoginPage";
 import ReviewPage from "./ReviewPage";
 import { db, myFirebase } from "../firebase/firebase";
 import { Redirect } from "react-router-dom";
 import IdleTimer from "../actions/IdleTimer";
 import LoginPage from "./LoginPage";
+
 
 // CSS styling
 const styles = () => ({
@@ -55,16 +58,23 @@ const styles = () => ({
     height: "auto",
     padding: "15px",
   },
+  addReviewButton: {
+    width: isMobileOnly ? "40vw" : "20vw",
+    height: "3rem",
+    borderRadius: 25,
+    backgroundColor: "#fb9263",
+    marginBottom: "25px",
+    fontSize: 16,
+  },
 });
 
 const Dashboard = (props) => {
   const [anchorEl, setAnchorEl] = useState(null); // anchor for menu, closed by default
   const [courseList, setCourseList] = useState([]); // list of courses
-  const [courseIDs, setCourseIDs] = useState([]); // list of Firestore IDs for each course
   const [selectedCourse, setSelectedCourse] = useState({}); // course to pass to ReviewPage
-  const [selectedCourseID, setSelectedCourseID] = useState(""); // Firestore ID of course to pass to ReviewPage
-  const [mountReviewPage, setMountReviewPage] = useState(false); // mounts ReviewPage when true
+  const [goToReviewPage, setGoToReviewPage] = useState(false); // mounts ReviewPage when true
   const [searchTerm, setSearchTerm] = useState(""); // value of input to search bar
+  const [buttonPopup, setButtonPopup] = useState(false);
   const [isTimeout, setIsTimeout] = useState(false);
   const { classes, isLoggingOut, logoutError, dispatch } = props;
 
@@ -83,56 +93,41 @@ const Dashboard = (props) => {
     setAnchorEl(null);
   };
 
+  const popUpAddReview = () => {
+    setButtonPopup(true);
+  };
+
+  const closePopUp = () => {
+    setButtonPopup(false);
+  };
+
   // handles when a course is clicked on
   const onCourseClick = (e) => {
     const text = e.target.innerText;
     for (let i = 0; i < courseList.length; i++) {
       let course = courseList[i];
-      let courseID = courseIDs[i];
       if (text.includes(course.name) || text.includes(course.code)) {
         setSelectedCourse(course);
-        setSelectedCourseID(courseID);
-        setMountReviewPage(true);
+        setGoToReviewPage(true);
       }
     }
-  };  
+  };
 
   useEffect(() => {
     // receives course data from Firebase and updates courseList and courseIDs in state
-    // if(myFirebase.auth().currentUser)
-    // {
-    //   if(!myFirebase.auth().currentUser.emailVerified)
-    //   {
-    //     handleLogout();
-    //     // alert("Verify your Email first!")
-    //     return <Redirect to="/login" />
-    //   }
-    // }
-    db.collection("courses").onSnapshot((querySnapshot) => {
+    const unsubscribe = db.collection("courses").onSnapshot((querySnapshot) => {
       const courses = [];
-      const firestoreIDs = [];
       querySnapshot.forEach((doc) => {
         courses.push(doc.data());
-        firestoreIDs.push(doc.id);
       });
       setCourseList(courses);
-      setCourseIDs(firestoreIDs);
     });
 
-    // const timer = new IdleTimer({
-    //   timeout: 1,
-    //   onTimeout: () => {
-    //     setIsTimeout(true);
-    //   },
-    //   // onExpired: () => {
-    //   //   setIsTimeout(true);
-    //   // }
-    // });
-    // return () => {
-    //   alert("cleanup")
-    //   timer.cleanUp();
-    // };
-  }, []);
+    return function cleanup() {
+      unsubscribe();
+    };
+  }, [dispatch]);
+  
   useEffect(() => {
     const timer = new IdleTimer({
       timeout: 2,
@@ -149,36 +144,24 @@ const Dashboard = (props) => {
     };
   }, []);
 
-  // if(isTimeout)
-  // { 
-  //   handleLogout();     
-  //   return <Redirect to="/login" />;
-  // } 
-  if (!myFirebase.auth().currentUser.emailVerified) {
-    return (<LoginPage/>);
-      // <div align="center">
-      //   <h1>Verify Your Email!</h1>
-      //   <Button
-      //     style={{ backgroundColor: "#fb9263" }}
-      //     onClick={() => {
-      //       window.location.reload();
-      //     }}
-      //   >
-      //     Refresh Page
-      //   </Button>
-      // </div>
 
-  
-  }
-  else if (mountReviewPage) {
+  if (!myFirebase.auth().currentUser.emailVerified) {
     return (
-      <ReviewPage
-        selectedCourse={selectedCourse}
-        selectedCourseID={selectedCourseID}
-      />
+      <div align="center">
+        <h1>Verify Your Email!</h1>
+        <Button
+          style={{ backgroundColor: "#fb9263" }}
+          onClick={() => {
+            window.location.reload();
+          }}
+        >
+          Refresh Page
+        </Button>
+      </div>
     );
-  }
-  else {
+  } else if (goToReviewPage) {
+    return <ReviewPage selectedCourse={selectedCourse} />;
+  } else {
     return (
       <div>
         <Grid container>
@@ -272,6 +255,16 @@ const Dashboard = (props) => {
                 ))
             }
           </GridList>
+          <div align="center">
+            <h1>Can't Find the Class You're Looking For?</h1>
+            <Button
+              className={classes.addReviewButton}
+              onClick={popUpAddReview}
+            >
+              Add Class
+            </Button>
+            <AddReview trigger={buttonPopup} closed={closePopUp} />
+          </div>
         </Grid>
 
         {isLoggingOut && <p>Logging Out....</p>}

@@ -1,11 +1,11 @@
 import { Route, Switch } from "react-router-dom";
-import LandingPage from "./components/LandingPage";
 import LoginPage from "./components/LoginPage";
 import SignupPage from "./components/SignupPage";
 import ForgotpassPage from "./components/ForgotpassPage";
 import Dashboard from "./components/Dashboard";
 import { connect } from "react-redux";
 import ProtectedRoute from "./components/ProtectedRoute";
+import LandingPage from "./components/LandingPage";
 
 function App(props) {
   const { isAuthenticated, isVerifying} = props;

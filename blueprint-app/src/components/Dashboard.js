@@ -16,10 +16,15 @@ import { useState, useEffect } from "react";
 import { connect } from "react-redux";
 import { isMobileOnly } from "react-device-detect";
 import { logoutUser } from "../actions";
+
+import AddReview from "./AddReview";
+//import LoginPage from "./LoginPage";
 import ReviewPage from "./ReviewPage";
 import { db, myFirebase } from "../firebase/firebase";
 import { Redirect } from "react-router-dom";
-import AddReview from "./AddReview";
+import IdleTimer from "../actions/IdleTimer";
+import LoginPage from "./LoginPage";
+
 
 // CSS styling
 const styles = () => ({
@@ -70,6 +75,7 @@ const Dashboard = (props) => {
   const [goToReviewPage, setGoToReviewPage] = useState(false); // mounts ReviewPage when true
   const [searchTerm, setSearchTerm] = useState(""); // value of input to search bar
   const [buttonPopup, setButtonPopup] = useState(false);
+  const [isTimeout, setIsTimeout] = useState(false);
   const { classes, isLoggingOut, logoutError, dispatch } = props;
 
   // handles logout
@@ -121,6 +127,23 @@ const Dashboard = (props) => {
       unsubscribe();
     };
   }, [dispatch]);
+  
+  useEffect(() => {
+    const timer = new IdleTimer({
+      timeout: 2,
+      onTimeout: () => {
+        setIsTimeout(true);
+      },
+      // onExpired: () => {
+      //   setIsTimeout(true);
+      // }
+    });
+    return () => {
+      //alert("cleanup")
+      timer.cleanUp();
+    };
+  }, []);
+
 
   if (!myFirebase.auth().currentUser.emailVerified) {
     return (

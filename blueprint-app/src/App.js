@@ -8,7 +8,7 @@ import { connect } from "react-redux";
 import ProtectedRoute from "./components/ProtectedRoute";
 
 function App(props) {
-  const { isAuthenticated, isVerifying } = props;
+  const { isAuthenticated, isVerifying} = props;
   return (
     <Switch>
       <ProtectedRoute

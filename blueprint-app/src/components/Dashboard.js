@@ -8,6 +8,7 @@ import {
   GridList,
   GridListTile,
   InputBase,
+  Button,
 } from "@material-ui/core";
 import { Search } from "@material-ui/icons";
 import { withStyles } from "@material-ui/styles";
@@ -15,10 +16,12 @@ import { useState, useEffect } from "react";
 import { connect } from "react-redux";
 import { isMobileOnly } from "react-device-detect";
 import { logoutUser } from "../actions";
-
+//import LoginPage from "./LoginPage";
 import ReviewPage from "./ReviewPage";
 import { db, myFirebase } from "../firebase/firebase";
 import { Redirect } from "react-router-dom";
+import IdleTimer from "../actions/IdleTimer";
+import LoginPage from "./LoginPage";
 
 // CSS styling
 const styles = () => ({
@@ -62,6 +65,7 @@ const Dashboard = (props) => {
   const [selectedCourseID, setSelectedCourseID] = useState(""); // Firestore ID of course to pass to ReviewPage
   const [mountReviewPage, setMountReviewPage] = useState(false); // mounts ReviewPage when true
   const [searchTerm, setSearchTerm] = useState(""); // value of input to search bar
+  const [isTimeout, setIsTimeout] = useState(false);
   const { classes, isLoggingOut, logoutError, dispatch } = props;
 
   // handles logout
@@ -91,18 +95,19 @@ const Dashboard = (props) => {
         setMountReviewPage(true);
       }
     }
-  };
-
+  };  
 
   useEffect(() => {
     // receives course data from Firebase and updates courseList and courseIDs in state
-    //receives course data from Firebase and updates courseList in state
-    if(!myFirebase.auth().currentUser.emailVerified)
-    {
-      handleLogout();
-      alert("Verify your Email first!")
-      return <Redirect to="/login" />
-    }
+    // if(myFirebase.auth().currentUser)
+    // {
+    //   if(!myFirebase.auth().currentUser.emailVerified)
+    //   {
+    //     handleLogout();
+    //     // alert("Verify your Email first!")
+    //     return <Redirect to="/login" />
+    //   }
+    // }
     db.collection("courses").onSnapshot((querySnapshot) => {
       const courses = [];
       const firestoreIDs = [];
@@ -113,17 +118,67 @@ const Dashboard = (props) => {
       setCourseList(courses);
       setCourseIDs(firestoreIDs);
     });
+
+    // const timer = new IdleTimer({
+    //   timeout: 1,
+    //   onTimeout: () => {
+    //     setIsTimeout(true);
+    //   },
+    //   // onExpired: () => {
+    //   //   setIsTimeout(true);
+    //   // }
+    // });
+    // return () => {
+    //   alert("cleanup")
+    //   timer.cleanUp();
+    // };
+  }, []);
+  useEffect(() => {
+    const timer = new IdleTimer({
+      timeout: 2,
+      onTimeout: () => {
+        setIsTimeout(true);
+      },
+      // onExpired: () => {
+      //   setIsTimeout(true);
+      // }
+    });
+    return () => {
+      //alert("cleanup")
+      timer.cleanUp();
+    };
   }, []);
 
+  // if(isTimeout)
+  // { 
+  //   handleLogout();     
+  //   return <Redirect to="/login" />;
+  // } 
+  if (!myFirebase.auth().currentUser.emailVerified) {
+    return (<LoginPage/>);
+      // <div align="center">
+      //   <h1>Verify Your Email!</h1>
+      //   <Button
+      //     style={{ backgroundColor: "#fb9263" }}
+      //     onClick={() => {
+      //       window.location.reload();
+      //     }}
+      //   >
+      //     Refresh Page
+      //   </Button>
+      // </div>
 
-  if (mountReviewPage) {
+  
+  }
+  else if (mountReviewPage) {
     return (
       <ReviewPage
         selectedCourse={selectedCourse}
         selectedCourseID={selectedCourseID}
       />
     );
-  } else {
+  }
+  else {
     return (
       <div>
         <Grid container>

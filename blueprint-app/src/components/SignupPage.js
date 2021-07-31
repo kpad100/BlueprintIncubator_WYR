@@ -97,7 +97,7 @@ const SignupPage = (props) => {
         setPasswordstrengthCheck(false);
         return renderForm();
       } else {
-        props.history.push("/dashboard");
+        props.history.push("/login");
       }
     } else {
       return renderForm();

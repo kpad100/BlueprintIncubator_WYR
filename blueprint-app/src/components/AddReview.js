@@ -200,9 +200,7 @@ const AddReview = (props) => {
             </div>
 
             <div style={{ marginTop: "10px" }}>
-              <Typography>
-                Professor (1 is the WORST professor, 5 is the BEST professor)
-              </Typography>
+              <Typography>Professor (1 is the WORST, 5 is the BEST)</Typography>
               {[...Array(5)].map((star, i) => {
                 const ratingValue = i + 1;
                 return (

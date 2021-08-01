@@ -9,6 +9,7 @@ import {
   GridListTile,
   InputBase,
   Button,
+  Typography,
 } from "@material-ui/core";
 import { Search } from "@material-ui/icons";
 import { withStyles } from "@material-ui/styles";
@@ -16,15 +17,11 @@ import { useState, useEffect } from "react";
 import { connect } from "react-redux";
 import { isMobileOnly } from "react-device-detect";
 import { logoutUser } from "../actions";
-
 import AddReview from "./AddReview";
-//import LoginPage from "./LoginPage";
 import ReviewPage from "./ReviewPage";
 import { db, myFirebase } from "../firebase/firebase";
-import { Redirect } from "react-router-dom";
 import IdleTimer from "../actions/IdleTimer";
 import LoginPage from "./LoginPage";
-
 
 // CSS styling
 const styles = () => ({
@@ -271,41 +268,30 @@ const Dashboard = (props) => {
                         className={classes.courseCard}
                         onClick={onCourseClick}
                       >
-                        <Grid
-                          key={"cardGrid" + course.code}
-                          container
-                          direction="column"
-                          alignItems="center"
-                          justify="center"
-                        >
-                          <h3 key={course.name} style={{ marginTop: "auto" }}>
-                            {course.name}
-                          </h3>
-                          <h3 key={course.code}>{course.code}</h3>
-                        </Grid>
-                      </Card>
-                    </GridListTile>
-                  ))
-              }
-            </GridList>
-            <div align="center">
-              <h1>Can't Find the Class You're Looking For?</h1>
-              <Button
-                className={classes.addReviewButton}
-                onClick={popUpAddReview}
-              >
-                Add Class
-              </Button>
-              <AddReview trigger={buttonPopup} closed={closePopUp} />
-            </div>
-          </Grid>
-  
-          {isLoggingOut && <p>Logging Out....</p>}
-          {logoutError && <p>Error logging out</p>}
-        </div>
-      );
-    }
-  };
+                        <h3 key={course.code}>{course.code}</h3>
+                        <Typography key={course.name}>{course.name}</Typography>
+                      </Grid>
+                    </Card>
+                  </GridListTile>
+                ))
+            }
+          </GridList>
+          <div align="center">
+            <h1>Can't Find the Class You're Looking For?</h1>
+            <Button
+              className={classes.addReviewButton}
+              onClick={popUpAddReview}
+            >
+              Add Class
+            </Button>
+            <AddReview trigger={buttonPopup} closed={closePopUp} />
+          </div>
+        </Grid>
+
+        {isLoggingOut && <p>Logging Out....</p>}
+        {logoutError && <p>Error logging out</p>}
+      </div>
+    );
   }
   
 

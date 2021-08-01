@@ -1,14 +1,43 @@
-import { Grid, Card, Button, TextField } from "@material-ui/core";
+import { Grid, Card, Button, TextField, Typography } from "@material-ui/core";
 import { Star, StarOutline } from "@material-ui/icons";
 import { useState } from "react";
 import { db, myFirebase } from "../firebase/firebase";
+
+// CSS
+const background = {
+  position: "fixed",
+  top: "0",
+  left: "0",
+  width: "100%",
+  height: "100vh",
+  backgroundColor: "rgba(52, 52, 52, 0.4)",
+
+  display: "flex",
+  justifyContent: "center",
+  alignItems: "center",
+  zIndex: 4,
+};
+const innerBlock = {
+  position: "relative",
+  padding: "32px",
+  width: " 70%",
+  maxWidth: "800px",
+  backgroundColor: "#FFF",
+  zIndex: 5,
+  display: "flex",
+  flexDirection: "column",
+  justifyContent: "center",
+  alignItems: "center",
+};
 
 const AddReview = (props) => {
   const { trigger, closed, fromCourse } = props;
   const [diffRating, setDiffRating] = useState(null);
   const [workloadRating, setWorkloadRating] = useState(null);
+  const [profRating, setProfRating] = useState(null);
   const [diffHover, setDiffHover] = useState(null);
   const [workloadHover, setWorkloadHover] = useState(null);
+  const [profHover, setProfHover] = useState(null);
   const [newCourse, setNewCourse] = useState("");
   const [newCourseCode, setNewCourseCode] = useState("");
   const [prof, setProf] = useState("");
@@ -16,14 +45,17 @@ const AddReview = (props) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (diffRating === null || workloadRating === null) {
+    if (diffRating === null || workloadRating === null || profRating === null) {
       alert("Fill out all fields and star ratings!");
-    } else if (fromCourse !== undefined) {
+    }
+    // if AddReview clicked on from ReviewPage, adds review to "reviews" subcollection for course
+    else if (fromCourse !== undefined) {
       db.collection("courses/" + fromCourse.code + "/reviews")
         .add({
           diffRating: diffRating,
           workloadRating: workloadRating,
-          overallRating: (diffRating + workloadRating) / 2,
+          profRating: profRating,
+          overallRating: (diffRating + workloadRating + profRating) / 3,
           prof: prof,
           description: description,
           user: myFirebase.auth().currentUser.displayName,
@@ -33,7 +65,9 @@ const AddReview = (props) => {
         });
 
       clearFields();
-    } else {
+    }
+    // else, creates new course in "courses" then adds review to "reviews" subcollection
+    else {
       db.collection("courses")
         .doc(newCourseCode)
         .set({
@@ -50,7 +84,8 @@ const AddReview = (props) => {
         .add({
           diffRating: diffRating,
           workloadRating: workloadRating,
-          overallRating: (diffRating + workloadRating) / 2,
+          profRating: profRating,
+          overallRating: (diffRating + workloadRating + profRating) / 3,
           prof: prof,
           description: description,
           user: myFirebase.auth().currentUser.displayName,
@@ -69,119 +104,142 @@ const AddReview = (props) => {
     setDescription("");
   }
 
-  // CSS
-  const background = {
-    position: "fixed",
-    top: "0",
-    left: "0",
-    width: "100%",
-    height: "100vh",
-    backgroundColor: "rgba(52, 52, 52, 0.4)",
-
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    zIndex: 4,
-  };
-  const innerBlock = {
-    position: "relative",
-    padding: "32px",
-    width: " 70%",
-    maxWidth: "800px",
-    backgroundColor: "#FFF",
-    zIndex: 5,
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "center",
-    alignItems: "center",
-  };
-
   return (
     trigger && (
       <div style={background}>
         <Card style={innerBlock}>
-          {/* Stars */}
-          <div>
-            {(diffRating === null || workloadRating === null) && (
+          <form onSubmit={handleSubmit}>
+            {(diffRating === null ||
+              workloadRating === null ||
+              profRating === null) && (
               <h5 style={{ color: "red" }}>*Click on stars to rate*</h5>
             )}
-            <h3>Difficulty of Content (1 is the HARDEST, 5 is the EASIEST)</h3>
-            {[...Array(5)].map((star, i) => {
-              const ratingValue = i + 1;
-              return (
-                <label>
-                  <input
-                    type="radio"
-                    name="diffRating"
-                    style={{ display: "none" }}
-                    value={ratingValue}
-                    onClick={() => setDiffRating(ratingValue)}
-                  />
-                  {
-                    // Colors for Star
-                    ratingValue <= (diffHover || diffRating) ? (
-                      <Star
-                        style={{
-                          fontSize: 34,
-                          cursor: "pointer",
-                          color: "#fb9263",
-                        }}
-                        onMouseEnter={() => setDiffHover(ratingValue)}
-                        onMouseLeave={() => setDiffHover(null)}
-                      />
-                    ) : (
-                      <StarOutline
-                        style={{ fontSize: 34, cursor: "pointer" }}
-                        onMouseEnter={() => setDiffHover(ratingValue)}
-                        onMouseLeave={() => setDiffHover(null)}
-                      />
-                    )
-                  }
-                </label>
-              );
-            })}
-          </div>
+            <div>
+              <Typography>
+                Workload (1 is the MOST work, 5 is the LEAST work)
+              </Typography>
+              {[...Array(5)].map((star, i) => {
+                const ratingValue = i + 1;
+                return (
+                  <label key={"workloadLabel" + i}>
+                    <input
+                      type="radio"
+                      key={"workloadRating" + i}
+                      style={{ display: "none" }}
+                      value={ratingValue}
+                      onClick={() => setWorkloadRating(ratingValue)}
+                    />
 
-          <div>
-            <h3>Workload (1 is the MOST work, 5 is the LEAST work)</h3>
-            {[...Array(5)].map((star, i) => {
-              const ratingValue = i + 1;
-              return (
-                <label>
-                  <input
-                    type="radio"
-                    name="workloadRating"
-                    style={{ display: "none" }}
-                    value={ratingValue}
-                    onClick={() => setWorkloadRating(ratingValue)}
-                  />
+                    {
+                      // Colors for Star
+                      ratingValue <= (workloadHover || workloadRating) ? (
+                        <Star
+                          key={"workloadStar" + i}
+                          style={{
+                            fontSize: 34,
+                            cursor: "pointer",
+                            color: "#fb9263",
+                          }}
+                          onMouseEnter={() => setWorkloadHover(ratingValue)}
+                          onMouseLeave={() => setWorkloadHover(null)}
+                        />
+                      ) : (
+                        <StarOutline
+                          key={"workloadStarOutline" + i}
+                          style={{ fontSize: 34, cursor: "pointer" }}
+                          onMouseEnter={() => setWorkloadHover(ratingValue)}
+                          onMouseLeave={() => setWorkloadHover(null)}
+                        />
+                      )
+                    }
+                  </label>
+                );
+              })}
+            </div>
 
-                  {
-                    // Colors for Star
-                    ratingValue <= (workloadHover || workloadRating) ? (
-                      <Star
-                        style={{
-                          fontSize: 34,
-                          cursor: "pointer",
-                          color: "#fb9263",
-                        }}
-                        onMouseEnter={() => setWorkloadHover(ratingValue)}
-                        onMouseLeave={() => setWorkloadHover(null)}
-                      />
-                    ) : (
-                      <StarOutline
-                        style={{ fontSize: 34, cursor: "pointer" }}
-                        onMouseEnter={() => setWorkloadHover(ratingValue)}
-                        onMouseLeave={() => setWorkloadHover(null)}
-                      />
-                    )
-                  }
-                </label>
-              );
-            })}
-          </div>
+            <div style={{ marginTop: "10px" }}>
+              <Typography>
+                Difficulty of Content (1 is the HARDEST, 5 is the EASIEST)
+              </Typography>
+              {[...Array(5)].map((star, i) => {
+                const ratingValue = i + 1;
+                return (
+                  <label key={"diffLabel" + i}>
+                    <input
+                      type="radio"
+                      key={"diffRating" + i}
+                      style={{ display: "none" }}
+                      value={ratingValue}
+                      onClick={() => setDiffRating(ratingValue)}
+                    />
+                    {
+                      // Colors for Star
+                      ratingValue <= (diffHover || diffRating) ? (
+                        <Star
+                          key={"diffStar" + i}
+                          style={{
+                            fontSize: 34,
+                            cursor: "pointer",
+                            color: "#fb9263",
+                          }}
+                          onMouseEnter={() => setDiffHover(ratingValue)}
+                          onMouseLeave={() => setDiffHover(null)}
+                        />
+                      ) : (
+                        <StarOutline
+                          key={"diffStarOutline" + i}
+                          style={{ fontSize: 34, cursor: "pointer" }}
+                          onMouseEnter={() => setDiffHover(ratingValue)}
+                          onMouseLeave={() => setDiffHover(null)}
+                        />
+                      )
+                    }
+                  </label>
+                );
+              })}
+            </div>
 
-          <form onSubmit={handleSubmit}>
+            <div style={{ marginTop: "10px" }}>
+              <Typography>Professor (1 is the WORST, 5 is the BEST)</Typography>
+              {[...Array(5)].map((star, i) => {
+                const ratingValue = i + 1;
+                return (
+                  <label key={"profRatingLabel" + i}>
+                    <input
+                      type="radio"
+                      key={"profRating" + i}
+                      style={{ display: "none" }}
+                      value={ratingValue}
+                      onClick={() => setProfRating(ratingValue)}
+                    />
+
+                    {
+                      // Colors for Star
+                      ratingValue <= (profHover || profRating) ? (
+                        <Star
+                          key={"profStar" + i}
+                          style={{
+                            fontSize: 34,
+                            cursor: "pointer",
+                            color: "#fb9263",
+                          }}
+                          onMouseEnter={() => setProfHover(ratingValue)}
+                          onMouseLeave={() => setProfHover(null)}
+                        />
+                      ) : (
+                        <StarOutline
+                          key={"profStarOutline" + i}
+                          style={{ fontSize: 34, cursor: "pointer" }}
+                          onMouseEnter={() => setProfHover(ratingValue)}
+                          onMouseLeave={() => setProfHover(null)}
+                        />
+                      )
+                    }
+                  </label>
+                );
+              })}
+            </div>
+
             <TextField
               id="courseName"
               required

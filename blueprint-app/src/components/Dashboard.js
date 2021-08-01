@@ -132,7 +132,7 @@ const Dashboard = (props) => {
   //Timer for timeout, timeout counter set to 900s (15min now)
   useEffect(() => {
     const timer = new IdleTimer({
-      timeout: 60,
+      timeout: 900,
       onTimeout: () => {
         //console.log("In onTimeout")
         setIsTimeout(true);

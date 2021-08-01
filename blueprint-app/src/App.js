@@ -8,7 +8,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import LandingPage from "./components/LandingPage";
 
 function App(props) {
-  const { isAuthenticated, isVerifying} = props;
+  const { isAuthenticated, isVerifying } = props;
   return (
     <Switch>
       <ProtectedRoute

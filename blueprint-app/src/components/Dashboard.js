@@ -21,7 +21,7 @@ import AddReview from "./AddReview";
 import ReviewPage from "./ReviewPage";
 import { db, myFirebase } from "../firebase/firebase";
 import IdleTimer from "../actions/IdleTimer";
-import LoginPage from "./LoginPage";
+import { Redirect } from "react-router-dom";
 
 // CSS styling
 const styles = () => ({
@@ -141,7 +141,7 @@ const Dashboard = (props) => {
 
   if (isTimeout) {
     dispatch(logoutUser());
-    // return <LoginPage />;
+    return <Redirect to="/login" />;
   } else if (!myFirebase.auth().currentUser.emailVerified) {
     return (
       <div align="center">

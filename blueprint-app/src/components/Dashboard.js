@@ -112,6 +112,18 @@ const Dashboard = (props) => {
   };
 
   useEffect(() => {
+    // Timer for timeout, timeout counter set to 900s (15min now)
+    const timer = new IdleTimer({
+      timeout: 900,
+      onTimeout: () => {
+        //console.log("In onTimeout")
+        setIsTimeout(true);
+      },
+      onExpired: () => {
+        setIsTimeout(true);
+      },
+    });
+
     // receives course data from Firebase and updates courseList and courseIDs in state
     const unsubscribe = db.collection("courses").onSnapshot((querySnapshot) => {
       const courses = [];
@@ -121,152 +133,124 @@ const Dashboard = (props) => {
       setCourseList(courses);
     });
 
-    return function cleanup() {
+    return () => {
       unsubscribe();
+      timer.cleanUp();
     };
   }, [dispatch]);
-  
-  //Timer for timeout, timeout counter set to 900s (15min now)
-  useEffect(() => {
-    const timer = new IdleTimer({
-      timeout: 900,
-      onTimeout: () => {
-        //console.log("In onTimeout")
-        setIsTimeout(true);
-      },
-      onExpired: () => {
-        setIsTimeout(true);
-      }
-    });
 
-
-    return () => {
-      //alert("cleanup")
-      //console.log("expire time before cleanup is" + parseInt(localStorage.getItem("_expiredTime"), 10));
-      timer.cleanUp();
-      // console.log("In cleanup");
-      //console.log("expire time after cleanup is" + parseInt(localStorage.getItem("_expiredTime"), 10));
-    };
-  }, []);
-
-
-  if(isTimeout)
-  {
-    handleLogout();
-    return <LoginPage />
-    //return <Redirect to="/login" />
-  }
-
-  //check whether user verify their email address before loading
-  //************ */
-  //FIX ME: Style
-  //************* */
-  else if(myFirebase.auth().currentUser != null)
-  {
-    if (!myFirebase.auth().currentUser.emailVerified) {
-      return (
-        <div align="center">
-          <h1>Verify Your Email!</h1>
-          <Button
-            style={{ backgroundColor: "#fb9263" }}
-            disabled = {emailSent}
-            onClick={() => {
-                myFirebase.auth().currentUser.sendEmailVerification();
-                sendEmail(true);
-            }}
-          >
-            Resend Verification Email
-          </Button>
-          <Button 
+  if (isTimeout) {
+    dispatch(logoutUser());
+    // return <LoginPage />;
+  } else if (!myFirebase.auth().currentUser.emailVerified) {
+    return (
+      <div align="center">
+        <h1>Verify Your Email!</h1>
+        <Button
+          style={{ backgroundColor: "#fb9263" }}
+          disabled={emailSent}
+          onClick={() => {
+            myFirebase.auth().currentUser.sendEmailVerification();
+            sendEmail(true);
+          }}
+        >
+          Resend Verification Email
+        </Button>
+        <Button
           style={{ backgroundColor: "#fb9263" }}
           onClick={() => {
-              window.location.reload();
+            window.location.reload();
           }}
+        >
+          Refresh Page
+        </Button>
+      </div>
+    );
+  } else if (goToReviewPage) {
+    return <ReviewPage selectedCourse={selectedCourse} />;
+  } else {
+    return (
+      <div>
+        <Grid container>
+          <IconButton onClick={handleOpenMenu} aria-controls="menu">
+            <Avatar />
+          </IconButton>
+          <Menu
+            id="menu"
+            onClose={handleCloseMenu}
+            anchorEl={anchorEl}
+            open={Boolean(anchorEl)}
           >
-            Refresh Page
-          </Button>
-        </div>
-      );
-    } 
-    else if (goToReviewPage) {
-      return <ReviewPage selectedCourse={selectedCourse} />;
-    } 
-    else {
-      return (
-        <div>
-          <Grid container>
-            <IconButton onClick={handleOpenMenu} aria-controls="menu">
-              <Avatar />
-            </IconButton>
-            <Menu
-              id="menu"
-              onClose={handleCloseMenu}
-              anchorEl={anchorEl}
-              open={Boolean(anchorEl)}
-            >
-              <MenuItem key="logoutItem" onClick={handleLogout}>
-                Logout
-              </MenuItem>
-            </Menu>
-  
-            <h1 style={{ marginLeft: "auto" }}>Classes</h1>
-            <img
-              src="https://cdn.discordapp.com/attachments/812822571094900746/837106499863969812/wyr_transparent.png"
-              height="50"
-              style={{
-                marginLeft: "auto",
-                marginRight: "5px",
-                marginTop: "5px",
+            <MenuItem key="logoutItem" onClick={handleLogout}>
+              Logout
+            </MenuItem>
+          </Menu>
+
+          <h1 style={{ marginLeft: "auto" }}>Classes</h1>
+          <img
+            src="https://cdn.discordapp.com/attachments/812822571094900746/837106499863969812/wyr_transparent.png"
+            height="50"
+            style={{
+              marginLeft: "auto",
+              marginRight: "5px",
+              marginTop: "5px",
+            }}
+            alt=""
+          />
+        </Grid>
+
+        <Grid container direction="column" alignItems="center" justify="center">
+          <div className={classes.searchBar}>
+            <InputBase
+              placeholder="Course Name or Code..."
+              onChange={(e) => {
+                setSearchTerm(e.target.value);
               }}
-              alt=""
+              style={{ width: "50vw" }}
             />
-          </Grid>
-  
-          <Grid container direction="column" alignItems="center" justify="center">
-            <div className={classes.searchBar}>
-              <InputBase
-                placeholder="Course Name or Code..."
-                onChange={(e) => {
-                  setSearchTerm(e.target.value);
-                }}
-                style={{ width: "50vw" }}
-              />
-              <Search style={{ color: "orange" }} />
-            </div>
-  
-            <GridList
-              className={classes.gridList}
-              // if user is on mobile then gridList has 1 column, otherwise it has 3 columns
-              cols={isMobileOnly ? 1 : 3}
-            >
-              {
-                // iterates through list of courses, creates Card/gridListTile, and adds it to gridList
-                // filters based on search term
-                courseList
-                  .filter((course) => {
-                    if (searchTerm === "") {
-                      return course;
-                    } else if (
-                      course.name.toLowerCase().includes(searchTerm.toLowerCase())
-                    ) {
-                      return course;
-                    } else if (
-                      course.code
-                        .replaceAll(":", "")
-                        .includes(searchTerm.replaceAll(":", ""))
-                    ) {
-                      return course;
-                    }
-                  })
-                  .map((course) => (
-                    <GridListTile
-                      key={"GLT" + course.code}
-                      style={{ height: "auto", padding: "10px" }}
+            <Search style={{ color: "orange" }} />
+          </div>
+
+          <GridList
+            className={classes.gridList}
+            // if user is on mobile then gridList has 1 column, otherwise it has 3 columns
+            cols={isMobileOnly ? 1 : 3}
+          >
+            {
+              // iterates through list of courses, creates Card/gridListTile, and adds it to gridList
+              // filters based on search term
+              courseList
+                .filter((course) => {
+                  if (searchTerm === "") {
+                    return course;
+                  } else if (
+                    course.name.toLowerCase().includes(searchTerm.toLowerCase())
+                  ) {
+                    return course;
+                  } else if (
+                    course.code
+                      .replaceAll(":", "")
+                      .includes(searchTerm.replaceAll(":", ""))
+                  ) {
+                    return course;
+                  }
+                })
+                .map((course) => (
+                  <GridListTile
+                    key={"GLT" + course.code}
+                    style={{ height: "auto", padding: "10px" }}
+                  >
+                    <Card
+                      key={"card" + course.code}
+                      className={classes.courseCard}
+                      onClick={onCourseClick}
                     >
-                      <Card
-                        key={"card" + course.code}
-                        className={classes.courseCard}
-                        onClick={onCourseClick}
+                      <Grid
+                        key={"cardGrid" + course.code}
+                        container
+                        direction="column"
+                        alignItems="center"
+                        justify="center"
                       >
                         <h3 key={course.code}>{course.code}</h3>
                         <Typography key={course.name}>{course.name}</Typography>
@@ -276,6 +260,7 @@ const Dashboard = (props) => {
                 ))
             }
           </GridList>
+
           <div align="center">
             <h1>Can't Find the Class You're Looking For?</h1>
             <Button
@@ -293,7 +278,7 @@ const Dashboard = (props) => {
       </div>
     );
   }
-  
+};
 
 function mapStateToProps(state) {
   return {

@@ -178,6 +178,7 @@ const SignupPage = (props) => {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                 />
+
                 {!emailcheck && (
                   <FormHelperText
                     style={{

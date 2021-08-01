@@ -124,6 +124,11 @@ const Dashboard = (props) => {
       },
     });
 
+    if (isTimeout) {
+      dispatch(logoutUser());
+      return <Redirect to="/login" />;
+    }
+
     // receives course data from Firebase and updates courseList and courseIDs in state
     const unsubscribe = db.collection("courses").onSnapshot((querySnapshot) => {
       const courses = [];
@@ -137,12 +142,9 @@ const Dashboard = (props) => {
       unsubscribe();
       timer.cleanUp();
     };
-  }, [dispatch]);
+  }, [dispatch, isTimeout]);
 
-  if (isTimeout) {
-    dispatch(logoutUser());
-    return <Redirect to="/login" />;
-  } else if (!myFirebase.auth().currentUser.emailVerified) {
+  if (!myFirebase.auth().currentUser.emailVerified) {
     return (
       <div align="center">
         <h1>Verify Your Email!</h1>

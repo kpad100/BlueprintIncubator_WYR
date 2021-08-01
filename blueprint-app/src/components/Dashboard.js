@@ -9,6 +9,7 @@ import {
   GridListTile,
   InputBase,
   Button,
+  Typography,
 } from "@material-ui/core";
 import { Search } from "@material-ui/icons";
 import { withStyles } from "@material-ui/styles";
@@ -18,7 +19,6 @@ import { isMobileOnly } from "react-device-detect";
 import { logoutUser } from "../actions";
 import ReviewPage from "./ReviewPage";
 import { db, myFirebase } from "../firebase/firebase";
-import { Redirect } from "react-router-dom";
 import AddReview from "./AddReview";
 
 // CSS styling
@@ -222,10 +222,8 @@ const Dashboard = (props) => {
                         alignItems="center"
                         justify="center"
                       >
-                        <h3 key={course.name} style={{ marginTop: "auto" }}>
-                          {course.name}
-                        </h3>
                         <h3 key={course.code}>{course.code}</h3>
+                        <Typography key={course.name}>{course.name}</Typography>
                       </Grid>
                     </Card>
                   </GridListTile>

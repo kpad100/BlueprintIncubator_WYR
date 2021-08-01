@@ -1,4 +1,4 @@
-import { Grid, Card, Button, TextField } from "@material-ui/core";
+import { Grid, Card, Button, TextField, Typography } from "@material-ui/core";
 import { Star, StarOutline } from "@material-ui/icons";
 import { useState } from "react";
 import { db, myFirebase } from "../firebase/firebase";
@@ -34,8 +34,10 @@ const AddReview = (props) => {
   const { trigger, closed, fromCourse } = props;
   const [diffRating, setDiffRating] = useState(null);
   const [workloadRating, setWorkloadRating] = useState(null);
+  const [profRating, setProfRating] = useState(null);
   const [diffHover, setDiffHover] = useState(null);
   const [workloadHover, setWorkloadHover] = useState(null);
+  const [profHover, setProfHover] = useState(null);
   const [newCourse, setNewCourse] = useState("");
   const [newCourseCode, setNewCourseCode] = useState("");
   const [prof, setProf] = useState("");
@@ -43,7 +45,7 @@ const AddReview = (props) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (diffRating === null || workloadRating === null) {
+    if (diffRating === null || workloadRating === null || profRating === null) {
       alert("Fill out all fields and star ratings!");
     }
     // if AddReview clicked on from ReviewPage, adds review to "reviews" subcollection for course
@@ -52,7 +54,8 @@ const AddReview = (props) => {
         .add({
           diffRating: diffRating,
           workloadRating: workloadRating,
-          overallRating: (diffRating + workloadRating) / 2,
+          profRating: profRating,
+          overallRating: (diffRating + workloadRating + profRating) / 3,
           prof: prof,
           description: description,
           user: myFirebase.auth().currentUser.displayName,
@@ -81,7 +84,8 @@ const AddReview = (props) => {
         .add({
           diffRating: diffRating,
           workloadRating: workloadRating,
-          overallRating: (diffRating + workloadRating) / 2,
+          profRating: profRating,
+          overallRating: (diffRating + workloadRating + profRating) / 3,
           prof: prof,
           description: description,
           user: myFirebase.auth().currentUser.displayName,
@@ -105,11 +109,15 @@ const AddReview = (props) => {
       <div style={background}>
         <Card style={innerBlock}>
           <form onSubmit={handleSubmit}>
-            {(diffRating === null || workloadRating === null) && (
+            {(diffRating === null ||
+              workloadRating === null ||
+              profRating === null) && (
               <h5 style={{ color: "red" }}>*Click on stars to rate*</h5>
             )}
             <div>
-              <h3>Workload (1 is the MOST work, 5 is the LEAST work) </h3>
+              <Typography>
+                Workload (1 is the MOST work, 5 is the LEAST work)
+              </Typography>
               {[...Array(5)].map((star, i) => {
                 const ratingValue = i + 1;
                 return (
@@ -149,10 +157,10 @@ const AddReview = (props) => {
               })}
             </div>
 
-            <div>
-              <h3>
+            <div style={{ marginTop: "10px" }}>
+              <Typography>
                 Difficulty of Content (1 is the HARDEST, 5 is the EASIEST)
-              </h3>
+              </Typography>
               {[...Array(5)].map((star, i) => {
                 const ratingValue = i + 1;
                 return (
@@ -183,6 +191,49 @@ const AddReview = (props) => {
                           style={{ fontSize: 34, cursor: "pointer" }}
                           onMouseEnter={() => setDiffHover(ratingValue)}
                           onMouseLeave={() => setDiffHover(null)}
+                        />
+                      )
+                    }
+                  </label>
+                );
+              })}
+            </div>
+
+            <div style={{ marginTop: "10px" }}>
+              <Typography>
+                Professor (1 is the WORST professor, 5 is the BEST professor)
+              </Typography>
+              {[...Array(5)].map((star, i) => {
+                const ratingValue = i + 1;
+                return (
+                  <label key={"profRatingLabel" + i}>
+                    <input
+                      type="radio"
+                      key={"profRating" + i}
+                      style={{ display: "none" }}
+                      value={ratingValue}
+                      onClick={() => setProfRating(ratingValue)}
+                    />
+
+                    {
+                      // Colors for Star
+                      ratingValue <= (profHover || profRating) ? (
+                        <Star
+                          key={"profStar" + i}
+                          style={{
+                            fontSize: 34,
+                            cursor: "pointer",
+                            color: "#fb9263",
+                          }}
+                          onMouseEnter={() => setProfHover(ratingValue)}
+                          onMouseLeave={() => setProfHover(null)}
+                        />
+                      ) : (
+                        <StarOutline
+                          key={"profStarOutline" + i}
+                          style={{ fontSize: 34, cursor: "pointer" }}
+                          onMouseEnter={() => setProfHover(ratingValue)}
+                          onMouseLeave={() => setProfHover(null)}
                         />
                       )
                     }

@@ -181,12 +181,6 @@ const ReviewPage = (props) => {
                   !isMobileOnly && (
                     <>
                       <div style={{ marginLeft: "auto" }}>
-                        <Typography key={review.user + "diff"}>
-                          Difficulty Of Content:
-                        </Typography>
-                        <Stars rating={review.diffRating} user={review.user} />
-                      </div>
-                      <div style={{ marginLeft: "auto" }}>
                         <Typography key={review.user + "workload"}>
                           Workload:
                         </Typography>
@@ -195,12 +189,21 @@ const ReviewPage = (props) => {
                           user={review.user}
                         />
                       </div>
-                      <Typography
-                        key={"prof" + review.user}
-                        style={{ color: "white", marginLeft: "auto" }}
-                      >
-                        Professor: {review.prof}
-                      </Typography>
+                      <div style={{ marginLeft: "auto" }}>
+                        <Typography key={review.user + "diff"}>
+                          Difficulty Of Content:
+                        </Typography>
+                        <Stars rating={review.diffRating} user={review.user} />
+                      </div>
+                      <div style={{ marginLeft: "auto" }}>
+                        <Typography
+                          key={"prof" + review.user}
+                          style={{ color: "white" }}
+                        >
+                          Professor: {review.prof}
+                        </Typography>
+                        <Stars rating={review.profRating} user={review.user} />
+                      </div>
                     </>
                   )
                 }
@@ -212,18 +215,15 @@ const ReviewPage = (props) => {
                     // if on mobile, stars and professor displayed in accordion details
                     isMobileOnly && (
                       <div>
-                        <Typography
-                          key={"prof" + review.user}
-                          style={{ color: "white", marginLeft: "auto" }}
-                        >
-                          Professor: {review.prof}
-                        </Typography>
-                        <div style={{ marginTop: "10px" }}>
-                          <Typography key={review.user + "diff"}>
-                            Difficulty Of Content:
+                        <div>
+                          <Typography
+                            key={"prof" + review.user}
+                            style={{ color: "white", marginLeft: "auto" }}
+                          >
+                            Professor: {review.prof}
                           </Typography>
                           <Stars
-                            rating={review.diffRating}
+                            rating={review.profRating}
                             user={review.user}
                           />
                         </div>
@@ -233,6 +233,15 @@ const ReviewPage = (props) => {
                           </Typography>
                           <Stars
                             rating={review.workloadRating}
+                            user={review.user}
+                          />
+                        </div>
+                        <div style={{ marginTop: "10px" }}>
+                          <Typography key={review.user + "diff"}>
+                            Difficulty Of Content:
+                          </Typography>
+                          <Stars
+                            rating={review.diffRating}
                             user={review.user}
                           />
                         </div>

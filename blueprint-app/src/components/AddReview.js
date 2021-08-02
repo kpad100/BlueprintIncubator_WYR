@@ -98,6 +98,7 @@ const AddReview = (props) => {
   function clearFields() {
     setDiffRating(null);
     setWorkloadRating(null);
+    setProfRating(null);
     setNewCourse("");
     setNewCourseCode("");
     setProf("");
@@ -109,14 +110,9 @@ const AddReview = (props) => {
       <div style={background}>
         <Card style={innerBlock}>
           <form onSubmit={handleSubmit}>
-            {(diffRating === null ||
-              workloadRating === null ||
-              profRating === null) && (
-              <h5 style={{ color: "red" }}>*Click on stars to rate*</h5>
-            )}
             <div>
               <Typography>
-                Workload (1 is the MOST work, 5 is the LEAST work)
+                Workload (1 is the MOST work, 5 is the LEAST work): *
               </Typography>
               {[...Array(5)].map((star, i) => {
                 const ratingValue = i + 1;
@@ -159,7 +155,7 @@ const AddReview = (props) => {
 
             <div style={{ marginTop: "10px" }}>
               <Typography>
-                Difficulty of Content (1 is the HARDEST, 5 is the EASIEST)
+                Difficulty of Content (1 is the HARDEST, 5 is the EASIEST): *
               </Typography>
               {[...Array(5)].map((star, i) => {
                 const ratingValue = i + 1;
@@ -200,7 +196,9 @@ const AddReview = (props) => {
             </div>
 
             <div style={{ marginTop: "10px" }}>
-              <Typography>Professor (1 is the WORST, 5 is the BEST)</Typography>
+              <Typography>
+                Professor (1 is the WORST, 5 is the BEST): *
+              </Typography>
               {[...Array(5)].map((star, i) => {
                 const ratingValue = i + 1;
                 return (

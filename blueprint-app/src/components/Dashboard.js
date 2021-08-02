@@ -21,7 +21,6 @@ import AddReview from "./AddReview";
 import ReviewPage from "./ReviewPage";
 import { db, myFirebase } from "../firebase/firebase";
 import IdleTimer from "../actions/IdleTimer";
-import { Redirect } from "react-router-dom";
 
 // CSS styling
 const styles = () => ({
@@ -126,7 +125,6 @@ const Dashboard = (props) => {
 
     if (isTimeout) {
       dispatch(logoutUser());
-      return <Redirect to="/login" />;
     }
 
     // receives course data from Firebase and updates courseList and courseIDs in state
@@ -210,7 +208,7 @@ const Dashboard = (props) => {
               }}
               style={{ width: "50vw" }}
             />
-            <Search style={{ color: "orange" }} />
+            <Search style={{ color: "#fb9263" }} />
           </div>
 
           <GridList

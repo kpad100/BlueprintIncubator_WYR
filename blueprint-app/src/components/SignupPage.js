@@ -265,7 +265,7 @@ const SignupPage = (props) => {
                 )}
                 {majorList.map((x, i) => {
                   return (
-                    <div>
+                    <div key={"majorListDiv" + i}>
                       <TextField
                         label="Major"
                         variant="outlined"
@@ -273,7 +273,6 @@ const SignupPage = (props) => {
                           marginBottom: "7px",
                           backgroundColor: "#D6EAF8 ",
                         }}
-                        key={"majorListTextField " + i}
                         value={x}
                         onChange={(e) => handleInputChangeMajor(e, i)}
                       />
@@ -283,7 +282,6 @@ const SignupPage = (props) => {
                           variant="contained"
                           disableElevation
                           style={{ marginLeft: "10px", marginTop: "10px" }}
-                          key={"majorListRemoveButton " + i}
                           onClick={() => handleRemoveClickMajor(i)}
                         >
                           Remove
@@ -294,7 +292,6 @@ const SignupPage = (props) => {
                           variant="contained"
                           disableElevation
                           style={{ marginLeft: "10px", marginTop: "10px" }}
-                          key={"majorListAddButton " + i}
                           onClick={handleAddClickMajor}
                         >
                           Add
@@ -307,7 +304,6 @@ const SignupPage = (props) => {
                             marginBottom: "7px",
                             alignSelf: "center",
                           }}
-                          key={"majorListFormHelperText " + i}
                         >
                           Enter at least one major
                         </FormHelperText>
@@ -317,11 +313,10 @@ const SignupPage = (props) => {
                 })}
                 {minorList.map((x, i) => {
                   return (
-                    <div>
+                    <div key={"minorListDiv" + i}>
                       <TextField
                         label="Minor (if applicable)"
                         variant="outlined"
-                        key={"minorListTextField " + i}
                         style={{
                           marginBottom: "7px",
                           backgroundColor: "#D6EAF8 ",
@@ -335,7 +330,6 @@ const SignupPage = (props) => {
                           variant="contained"
                           disableElevation
                           style={{ marginLeft: "10px", marginTop: "10px" }}
-                          key={"minorListRemoveButton " + i}
                           onClick={() => handleRemoveClickMinor(i)}
                         >
                           Remove
@@ -346,7 +340,6 @@ const SignupPage = (props) => {
                           variant="contained"
                           disableElevation
                           style={{ marginLeft: "10px", marginTop: "10px" }}
-                          key={"minorListAddButton " + i}
                           onClick={handleAddClickMinor}
                         >
                           Add

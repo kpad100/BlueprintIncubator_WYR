@@ -1,31 +1,22 @@
-import React from "react";
 import { useState, useEffect, useRef } from "react";
 
 const Typewriter = ({ text }) => {
-    
-    const index = useRef(0);
+  const index = useRef(0);
 
-    const [currentText, setCurrentText] = useState('');
+  const [currentText, setCurrentText] = useState("");
 
-    //for animation
+  //for animation
 
-    useEffect(() => {
-        
-        if(index.current < text.length){
-            
-             setTimeout(() => {
-                setCurrentText((value) => value + text.charAt(index.current));
-                index.current += 1; 
-            }, 200);
-        }
+  useEffect(() => {
+    if (index.current < text.length) {
+      setTimeout(() => {
+        setCurrentText((value) => value + text.charAt(index.current));
+        index.current += 1;
+      }, 200);
+    }
+  }, [currentText, text]);
 
-    }, [currentText, text]);
-    
-    
-    
-    return (
-        <p>{currentText} </p>
-    )
-}
+  return <h1>{currentText} </h1>;
+};
 
-export default Typewriter
+export default Typewriter;

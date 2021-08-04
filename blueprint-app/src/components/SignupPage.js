@@ -23,8 +23,6 @@ const SignupPage = (props) => {
   const [majorList, setMajorList] = useState([""]);
   const [minorList, setMinorList] = useState([""]);
 
-
-
   const [emailcheck, setEmailcheck] = useState(true);
   const [password_length_check, setPasswordLengthCheck] = useState(true);
   const [passMatch, setPassMatch] = useState(true);
@@ -90,13 +88,10 @@ const SignupPage = (props) => {
     }
 
     //console.log(majorList[0]);
-    if(majorList[0] !== "")
-    {
+    if (majorList[0] !== "") {
       setMajorCheck(true);
       pass = pass && true;
-    }
-    else
-    {
+    } else {
       setMajorCheck(false);
       pass = pass && false;
     }
@@ -124,16 +119,14 @@ const SignupPage = (props) => {
       return renderForm();
     }
   }
-  function cleanList(list){
+  function cleanList(list) {
     let majors = list;
-    for(var i = 0; i<majors.length; i++)
-    {
-      if(majors[i] == "")
-      {
+    for (var i = 0; i < majors.length; i++) {
+      if (majors[i] === "") {
         majors.splice(i, 1);
       }
     }
-    return majors
+    return majors;
   }
   function addUser() {
     // gets current user
@@ -172,8 +165,8 @@ const SignupPage = (props) => {
     const list = [...majorList];
     list[index] = name;
     setMajorList(list);
-  }
-  const handleRemoveClickMajor = index => {
+  };
+  const handleRemoveClickMajor = (index) => {
     const list = [...majorList];
     list.splice(index, 1);
     setMajorList(list);
@@ -183,14 +176,13 @@ const SignupPage = (props) => {
     setMajorList([...majorList, ""]);
   };
 
-
   const handleInputChangeMinor = (e, index) => {
     const name = e.target.value;
     const list = [...minorList];
     list[index] = name;
     setMinorList(list);
-  }
-  const handleRemoveClickMinor = index => {
+  };
+  const handleRemoveClickMinor = (index) => {
     const list = [...minorList];
     list.splice(index, 1);
     setMinorList(list);
@@ -220,7 +212,7 @@ const SignupPage = (props) => {
             <h1>Sign Up</h1>
             <form onSubmit={handleSubmit}>
               <FormControl style={{ minWidth: "25vw", padding: "15px" }}>
-              {(
+                {
                   <FormHelperText
                     style={{
                       color: "red",
@@ -228,12 +220,14 @@ const SignupPage = (props) => {
                       alignSelf: "center",
                     }}
                   >
-                    please enter a password longer than six digits <br/>
-                    Include at least one uppercase and one lower case letter <br/>
-                    please use your rutgers email ending with @rutgers.edu<br/>
-
+                    * Password must be longer than six digits and
+                    <br />
+                    include at least one uppercase and one lower case letter
+                    <br />
+                    * Please use your rutgers email ending with @rutgers.edu
+                    <br />
                   </FormHelperText>
-                )}
+                }
                 <TextField
                   required
                   label="First Name"
@@ -258,7 +252,7 @@ const SignupPage = (props) => {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                 />
-                 {!emailfakecheck && (
+                {!emailfakecheck && (
                   <FormHelperText
                     style={{
                       color: "red",
@@ -275,25 +269,49 @@ const SignupPage = (props) => {
                       <TextField
                         label="Major"
                         variant="outlined"
-                        style={{ marginBottom: "7px", backgroundColor: "#D6EAF8 " }}
+                        style={{
+                          marginBottom: "7px",
+                          backgroundColor: "#D6EAF8 ",
+                        }}
+                        key={"majorListTextField " + i}
                         value={x}
-                        onChange={e => handleInputChangeMajor(e, i)}
+                        onChange={(e) => handleInputChangeMajor(e, i)}
                       />
-                        {majorList.length !== 1 && <button
+                      {majorList.length !== 1 && (
+                        <Button
                           //className="mr10"
-                          onClick={() => handleRemoveClickMajor(i)}>Remove</button>}
-                        {majorList.length - 1 === i && <button onClick={handleAddClickMajor}>Add</button>}
-                        {!majorCheck && (i === 0) && (
-                          <FormHelperText
-                            style={{
-                              color: "red",
-                              marginBottom: "7px",
-                              alignSelf: "center",
-                            }}
-                          >
-                            Enter at least one major
-                          </FormHelperText>
-                        )}
+                          variant="contained"
+                          disableElevation
+                          style={{ marginLeft: "10px", marginTop: "10px" }}
+                          key={"majorListRemoveButton " + i}
+                          onClick={() => handleRemoveClickMajor(i)}
+                        >
+                          Remove
+                        </Button>
+                      )}
+                      {majorList.length - 1 === i && (
+                        <Button
+                          variant="contained"
+                          disableElevation
+                          style={{ marginLeft: "10px", marginTop: "10px" }}
+                          key={"majorListAddButton " + i}
+                          onClick={handleAddClickMajor}
+                        >
+                          Add
+                        </Button>
+                      )}
+                      {!majorCheck && i === 0 && (
+                        <FormHelperText
+                          style={{
+                            color: "red",
+                            marginBottom: "7px",
+                            alignSelf: "center",
+                          }}
+                          key={"majorListFormHelperText " + i}
+                        >
+                          Enter at least one major
+                        </FormHelperText>
+                      )}
                     </div>
                   );
                 })}
@@ -303,19 +321,41 @@ const SignupPage = (props) => {
                       <TextField
                         label="Minor (if applicable)"
                         variant="outlined"
-                        style={{ marginBottom: "7px", backgroundColor: "#D6EAF8 " }}
+                        key={"minorListTextField " + i}
+                        style={{
+                          marginBottom: "7px",
+                          backgroundColor: "#D6EAF8 ",
+                        }}
                         value={x}
-                        onChange={e => handleInputChangeMinor(e, i)}
+                        onChange={(e) => handleInputChangeMinor(e, i)}
                       />
-                        {minorList.length !== 1 && <button
+                      {minorList.length !== 1 && (
+                        <Button
                           //className="mr10"
-                          onClick={() => handleRemoveClickMinor(i)}>Remove</button>}
-                        {minorList.length - 1 === i && <button onClick={handleAddClickMinor}>Add</button>}
+                          variant="contained"
+                          disableElevation
+                          style={{ marginLeft: "10px", marginTop: "10px" }}
+                          key={"minorListRemoveButton " + i}
+                          onClick={() => handleRemoveClickMinor(i)}
+                        >
+                          Remove
+                        </Button>
+                      )}
+                      {minorList.length - 1 === i && (
+                        <Button
+                          variant="contained"
+                          disableElevation
+                          style={{ marginLeft: "10px", marginTop: "10px" }}
+                          key={"minorListAddButton " + i}
+                          onClick={handleAddClickMinor}
+                        >
+                          Add
+                        </Button>
+                      )}
                     </div>
                   );
                 })}
 
-               
                 <TextField
                   required
                   label="Username"
@@ -373,9 +413,9 @@ const SignupPage = (props) => {
                 </Button>
               </FormControl>
             </form>
-            <footer style={{ marginBottom: "15px" }}>
+            <div style={{ marginBottom: "15px" }}>
               Already a member? <Link to="/login">Log in</Link>
-            </footer>
+            </div>
           </Grid>
         </Card>
       </Grid>

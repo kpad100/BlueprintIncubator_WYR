@@ -20,12 +20,18 @@ const SignupPage = (props) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [majorList, setMajorList] = useState([""]);
+  const [minorList, setMinorList] = useState([""]);
+
+
+
   const [emailcheck, setEmailcheck] = useState(true);
   const [password_length_check, setPasswordLengthCheck] = useState(true);
   const [passMatch, setPassMatch] = useState(true);
   const [upperlower, setUpperLowerCheck] = useState(true);
   const [emailfakecheck, setEmailfakeCheck] = useState(true);
   const [passwordStrength, setPasswordstrengthCheck] = useState(true);
+  const [majorCheck, setMajorCheck] = useState(true);
 
   function validateForm() {
     var pass = true;
@@ -82,6 +88,18 @@ const SignupPage = (props) => {
       setPassMatch(false);
       pass = pass && false;
     }
+
+    //console.log(majorList[0]);
+    if(majorList[0] !== "")
+    {
+      setMajorCheck(true);
+      pass = pass && true;
+    }
+    else
+    {
+      setMajorCheck(false);
+      pass = pass && false;
+    }
     return pass;
   }
 
@@ -98,6 +116,7 @@ const SignupPage = (props) => {
         setPasswordstrengthCheck(false);
         return renderForm();
       } else {
+        //console.log("arrive");
         addUser();
         props.history.push("/dashboard");
       }
@@ -105,7 +124,17 @@ const SignupPage = (props) => {
       return renderForm();
     }
   }
-
+  function cleanList(list){
+    let majors = list;
+    for(var i = 0; i<majors.length; i++)
+    {
+      if(majors[i] == "")
+      {
+        majors.splice(i, 1);
+      }
+    }
+    return majors
+  }
   function addUser() {
     // gets current user
     myFirebase.auth().onAuthStateChanged((user) => {
@@ -120,12 +149,16 @@ const SignupPage = (props) => {
           });
 
         // adds additional user info to Firestore "users" collection (info that's not a property of Firebase user profile)
+        let majors = cleanList(majorList);
+        let minors = cleanList(minorList);
         db.collection("users")
           .doc(user.uid)
           .set({
             firstName: firstName,
             lastName: lastName,
             // TODO: set rest of user info
+            major: majors,
+            minor: minors,
           })
           .catch((error) => {
             console.error("Error adding document: ", error);
@@ -133,6 +166,39 @@ const SignupPage = (props) => {
       }
     });
   }
+
+  const handleInputChangeMajor = (e, index) => {
+    const name = e.target.value;
+    const list = [...majorList];
+    list[index] = name;
+    setMajorList(list);
+  }
+  const handleRemoveClickMajor = index => {
+    const list = [...majorList];
+    list.splice(index, 1);
+    setMajorList(list);
+  };
+
+  const handleAddClickMajor = () => {
+    setMajorList([...majorList, ""]);
+  };
+
+
+  const handleInputChangeMinor = (e, index) => {
+    const name = e.target.value;
+    const list = [...minorList];
+    list[index] = name;
+    setMinorList(list);
+  }
+  const handleRemoveClickMinor = index => {
+    const list = [...minorList];
+    list.splice(index, 1);
+    setMinorList(list);
+  };
+
+  const handleAddClickMinor = () => {
+    setMinorList([...minorList, ""]);
+  };
 
   function renderForm() {
     return (
@@ -154,6 +220,20 @@ const SignupPage = (props) => {
             <h1>Sign Up</h1>
             <form onSubmit={handleSubmit}>
               <FormControl style={{ minWidth: "25vw", padding: "15px" }}>
+              {(
+                  <FormHelperText
+                    style={{
+                      color: "red",
+                      marginBottom: "7px",
+                      alignSelf: "center",
+                    }}
+                  >
+                    please enter a password longer than six digits <br/>
+                    Include at least one uppercase and one lower case letter <br/>
+                    please use your rutgers email ending with @rutgers.edu<br/>
+
+                  </FormHelperText>
+                )}
                 <TextField
                   required
                   label="First Name"
@@ -178,18 +258,7 @@ const SignupPage = (props) => {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                 />
-                {!emailcheck && (
-                  <FormHelperText
-                    style={{
-                      color: "red",
-                      marginBottom: "7px",
-                      alignSelf: "left",
-                    }}
-                  >
-                    You have to use a rutgers email ending with @rutgers.edu
-                  </FormHelperText>
-                )}
-                {!emailfakecheck && (
+                 {!emailfakecheck && (
                   <FormHelperText
                     style={{
                       color: "red",
@@ -200,6 +269,53 @@ const SignupPage = (props) => {
                     Email address is invalid
                   </FormHelperText>
                 )}
+                {majorList.map((x, i) => {
+                  return (
+                    <div>
+                      <TextField
+                        label="Major"
+                        variant="outlined"
+                        style={{ marginBottom: "7px", backgroundColor: "#D6EAF8 " }}
+                        value={x}
+                        onChange={e => handleInputChangeMajor(e, i)}
+                      />
+                        {majorList.length !== 1 && <button
+                          //className="mr10"
+                          onClick={() => handleRemoveClickMajor(i)}>Remove</button>}
+                        {majorList.length - 1 === i && <button onClick={handleAddClickMajor}>Add</button>}
+                        {!majorCheck && (i === 0) && (
+                          <FormHelperText
+                            style={{
+                              color: "red",
+                              marginBottom: "7px",
+                              alignSelf: "center",
+                            }}
+                          >
+                            Enter at least one major
+                          </FormHelperText>
+                        )}
+                    </div>
+                  );
+                })}
+                {minorList.map((x, i) => {
+                  return (
+                    <div>
+                      <TextField
+                        label="Minor (if applicable)"
+                        variant="outlined"
+                        style={{ marginBottom: "7px", backgroundColor: "#D6EAF8 " }}
+                        value={x}
+                        onChange={e => handleInputChangeMinor(e, i)}
+                      />
+                        {minorList.length !== 1 && <button
+                          //className="mr10"
+                          onClick={() => handleRemoveClickMinor(i)}>Remove</button>}
+                        {minorList.length - 1 === i && <button onClick={handleAddClickMinor}>Add</button>}
+                    </div>
+                  );
+                })}
+
+               
                 <TextField
                   required
                   label="Username"
@@ -217,28 +333,6 @@ const SignupPage = (props) => {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                 />
-                {!password_length_check && (
-                  <FormHelperText
-                    style={{
-                      color: "red",
-                      marginBottom: "7px",
-                      alignSelf: "center",
-                    }}
-                  >
-                    please enter a password longer than six digits
-                  </FormHelperText>
-                )}
-                {!upperlower && (
-                  <FormHelperText
-                    style={{
-                      color: "red",
-                      marginBottom: "7px",
-                      alignSelf: "center",
-                    }}
-                  >
-                    Include at least one uppercase and one lower case letter
-                  </FormHelperText>
-                )}
                 {!passwordStrength && (
                   <FormHelperText
                     style={{

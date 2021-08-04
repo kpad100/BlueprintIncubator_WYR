@@ -1,0 +1,25 @@
+{
+  "files": {
+    "main.css": "/BlueprintIncubatorGeneral/static/css/main.2ae47eeb.chunk.css",
+    "main.js": "/BlueprintIncubatorGeneral/static/js/main.9208618c.chunk.js",
+    "main.js.map": "/BlueprintIncubatorGeneral/static/js/main.9208618c.chunk.js.map",
+    "runtime-main.js": "/BlueprintIncubatorGeneral/static/js/runtime-main.8e9f6e67.js",
+    "runtime-main.js.map": "/BlueprintIncubatorGeneral/static/js/runtime-main.8e9f6e67.js.map",
+    "static/css/2.7fc9bc2b.chunk.css": "/BlueprintIncubatorGeneral/static/css/2.7fc9bc2b.chunk.css",
+    "static/js/2.ac7181a2.chunk.js": "/BlueprintIncubatorGeneral/static/js/2.ac7181a2.chunk.js",
+    "static/js/2.ac7181a2.chunk.js.map": "/BlueprintIncubatorGeneral/static/js/2.ac7181a2.chunk.js.map",
+    "static/js/3.f7aa902f.chunk.js": "/BlueprintIncubatorGeneral/static/js/3.f7aa902f.chunk.js",
+    "static/js/3.f7aa902f.chunk.js.map": "/BlueprintIncubatorGeneral/static/js/3.f7aa902f.chunk.js.map",
+    "index.html": "/BlueprintIncubatorGeneral/index.html",
+    "static/css/2.7fc9bc2b.chunk.css.map": "/BlueprintIncubatorGeneral/static/css/2.7fc9bc2b.chunk.css.map",
+    "static/css/main.2ae47eeb.chunk.css.map": "/BlueprintIncubatorGeneral/static/css/main.2ae47eeb.chunk.css.map",
+    "static/js/2.ac7181a2.chunk.js.LICENSE.txt": "/BlueprintIncubatorGeneral/static/js/2.ac7181a2.chunk.js.LICENSE.txt"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.8e9f6e67.js",
+    "static/css/2.7fc9bc2b.chunk.css",
+    "static/js/2.ac7181a2.chunk.js",
+    "static/css/main.2ae47eeb.chunk.css",
+    "static/js/main.9208618c.chunk.js"
+  ]
+}

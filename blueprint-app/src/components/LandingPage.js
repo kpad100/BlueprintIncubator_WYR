@@ -1,26 +1,32 @@
 import React from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Redirect } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
-import { Grid, Card, Paper } from "@material-ui/core";
+import { Grid, Card } from "@material-ui/core";
+import Aos from "aos";
+import "aos/dist/aos.css";
+import Typewriter from "../actions/Typewriter.js";
 
 const useStyles = makeStyles({
   root: {
     background: "linear-gradient(145deg, #5F9EA0 20%, #ff7f50 70%)",
 
     color: "white",
-    height: "3300px",
+    height: "3500px",
     width: "100%",
   },
 });
 
 const LandingPage = () => {
+  useEffect(() => {
+    Aos.init({duration: 1500});
+  }, []);
+
   const classes = useStyles();
 
   const [directToLogin, setDirectToLogin] = useState(false);
   const [directToSignup, setDirectToSignup] = useState(false);
-
   const handleLoginClick = () => {
     setDirectToLogin(true);
   };
@@ -34,6 +40,9 @@ const LandingPage = () => {
   if (directToSignup === true) return <Redirect to="/signup" />;
 
   return (
+
+
+    // The top bar with logo and sign up and login 
     <Card className={classes.root} square="false">
       <Grid
         container
@@ -81,6 +90,8 @@ const LandingPage = () => {
         </Grid>
       </Grid>
 
+
+            {/* Large would you recommend section  */}
       <Grid
         container
         direction="column"
@@ -89,11 +100,14 @@ const LandingPage = () => {
         spacing={0}
         style={{
           marginTop: "10px",
-          minHeight: "600px",
+          minHeight: "700px",
         }}
       >
-        <Grid item xs={12} style={{ fontSize: 100, fontWeight: "bold" }}>
-          would you recommend?
+        
+        <Grid item xs={12} style={{ fontSize: 90, fontWeight: "bold" }}>
+          <center>
+            <Typewriter text={'would you recommend?'}/>
+          </center>
         </Grid>
         <Grid item xs={8} style={{ fontSize: 45 }}>
           <center>
@@ -134,7 +148,9 @@ const LandingPage = () => {
         }}
       >
         <Grid item xs={12} style={{ fontSize: 75, fontWeight: "bold" }}>
-          real students, real reviews
+          <center>
+              <Typewriter text={'real students, real reviews'}/>
+          </center>
         </Grid>
         <Grid item xs={8} style={{ fontSize: 45 }}>
           <center>
@@ -157,14 +173,20 @@ const LandingPage = () => {
           minHeight: "500px",
         }}
       >
-        <Grid item xs={4}>
-          <Paper
-            elevation={0}
-            style={{ backgroundColor: "white", minHeight: "320px" }}
-          ></Paper>
+        <Grid item xs={5}>
+          <img data-aos="slide-right"
+            src="/images/search_feature.PNG"
+            width="98%"
+            max-height="98%"
+            object-fit="contain"
+            style={{
+              marginLeft: "2%",
+            }}
+            alt=""
+            />
         </Grid>
         <Grid item xs={1}></Grid>
-        <Grid item xs={6} style={{ fontSize: 45 }}>
+        <Grid item xs={5} style={{ fontSize: 45 }}>
           <center>
             <h5>
               search for topics of interests to find the perfect classes for you
@@ -185,19 +207,26 @@ const LandingPage = () => {
           minHeight: "500px",
         }}
       >
-        <Grid item xs={1}></Grid>
-        <Grid item xs={6} style={{ fontSize: 45 }}>
+        <Grid item xs={1}> </Grid>
+        <Grid item xs={4} style={{ fontSize: 45 }}>
           <center>
             <h5>get simple overviews for classes with all the info you need</h5>
           </center>
         </Grid>
-        <Grid item xs={1}></Grid>
+        
+        <Grid item xs={1}> </Grid>
 
-        <Grid item xs={4}>
-          <Paper
-            elevation={0}
-            style={{ backgroundColor: "white", minHeight: "320px" }}
-          ></Paper>
+        <Grid item xs={6}>
+        <img data-aos="slide-left"
+            src="/images/class_feature.PNG"
+            width="98%"
+            max-height="98%"
+            object-fit="contain"
+            style={{
+              marginRight: "2%",
+            }}
+            alt=""
+          />
         </Grid>
       </Grid>
 
@@ -212,14 +241,20 @@ const LandingPage = () => {
           minHeight: "500px",
         }}
       >
-        <Grid item xs={4}>
-          <Paper
-            elevation={0}
-            style={{ backgroundColor: "white", minHeight: "320px" }}
-          ></Paper>
+        <Grid item xs={5}>
+        <img data-aos="slide-right"
+            src="/images/review_feature.PNG"
+            width="98%"
+            max-height="98%"
+            object-fit="contain"
+            style={{
+              marginLeft: "2%",
+            }}
+            alt=""
+          />
         </Grid>
         <Grid item xs={1}></Grid>
-        <Grid item xs={6} style={{ fontSize: 45 }}>
+        <Grid item xs={5} style={{ fontSize: 45 }}>
           <center>
             <h5>
               write reviews based on experience to help other students choose
@@ -238,7 +273,7 @@ const LandingPage = () => {
         spacing={0}
         style={{
           marginTop: "10px",
-          minHeight: "400px",
+          minHeight: "500px",
         }}
       >
         <Grid item xs={6} style={{ fontSize: 45 }}>

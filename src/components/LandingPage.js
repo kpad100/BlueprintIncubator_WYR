@@ -144,7 +144,7 @@ const LandingPage = () => {
         <Grid item xs={5}>
           <img
             data-aos="slide-right"
-            src="/images/search_feature.PNG"
+            src={process.env.PUBLIC_URL + "/images/search_feature.PNG"}
             width="98%"
             max-height="98%"
             object-fit="contain"
@@ -180,7 +180,7 @@ const LandingPage = () => {
         <Grid item xs={6}>
           <img
             data-aos="slide-left"
-            src="/images/class_feature.PNG"
+            src={process.env.PUBLIC_URL + "/images/class_feature.PNG"}
             width="98%"
             max-height="98%"
             object-fit="contain"
@@ -206,7 +206,7 @@ const LandingPage = () => {
         <Grid item xs={5}>
           <img
             data-aos="slide-right"
-            src="/images/review_feature.PNG"
+            src={process.env.PUBLIC_URL + "/images/review_feature.PNG"}
             width="98%"
             max-height="98%"
             object-fit="contain"

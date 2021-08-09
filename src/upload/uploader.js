@@ -1,3 +1,4 @@
+//To update, run node upload.js 
 var admin = require("firebase-admin");
 
 var serviceAccount = require("./serviceAccount.json");
@@ -26,14 +27,19 @@ fs.readdir(directoryPath, function(err, files) {
       // let mycode = code.substring(0, code.length-1);
 
       let mydoc = firestore.collection(file.substring(0, lastDotIndex)).doc(obj.code);
-      // if(mydoc)
-      //   {
-      //     var fields = mydoc.get().then((doc) => {
-      //       fields.
-      //     })
-      //     console.log(fields);
-      //   }
-      // else{
+      if(mydoc)
+        {
+          mydoc.get().then((doc) => {
+            var data = doc.data();
+            var toUpdate = {required: "", elective: ""};
+            toUpdate.required = obj.required;
+            toUpdate.elective = obj.elective;
+            mydoc.update(toUpdate);
+          }).catch((error) => {
+            console.log("Error getting document:", error);
+        });
+        }
+      else{
       firestore
         .collection(file.substring(0, lastDotIndex))
         .doc(obj.code)
@@ -44,7 +50,7 @@ fs.readdir(directoryPath, function(err, files) {
         .catch(function(error) {
           console.error("Error adding document: ", error);
         });
-      // }
+      }
     });
   });
 });

@@ -1,5 +1,5 @@
 //To use this feature, download serviceAccount.json from Google drive and put it inside upload folder
-//To update, run node upload.js
+//To update, run node uploader.js
  
 var admin = require("firebase-admin");
 

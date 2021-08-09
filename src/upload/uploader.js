@@ -35,6 +35,7 @@ fs.readdir(directoryPath, function(err, files) {
             toUpdate.required = obj.required;
             toUpdate.elective = obj.elective;
             mydoc.update(toUpdate);
+            console.log("Field updated");
           }).catch((error) => {
             console.log("Error getting document:", error);
         });

@@ -1,4 +1,6 @@
-//To update, run node upload.js 
+//To use this feature, download serviceAccount.json from Google drive and put it inside upload folder
+//To update, run node upload.js
+ 
 var admin = require("firebase-admin");
 
 var serviceAccount = require("./serviceAccount.json");

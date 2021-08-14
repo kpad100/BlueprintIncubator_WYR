@@ -1,0 +1,111 @@
+body{
+    background-color: rgb(43, 151, 151);
+
+}
+.content{
+    border: 10px;
+    background-color: white;
+    text-align: center;
+    align-items: center;
+    place-content: center;
+    justify-content: center;
+    border: 15px rgb(43, 151, 151);
+    padding: 50px rgb(43, 151, 151);
+    margin: 20px rgb(43, 151, 151);
+}
+.buttonClass{
+    background-color:#4198b5;
+    height: 40px;
+    width: 200px;
+    text-align: center;
+    border-radius: 24px;
+    font-size: 16px;
+    align-self: center;
+    justify-content: center;
+    color:white;
+    border: none;
+  padding: 14px 28px;
+  font-size: 16px;
+  display: inline-block;
+
+}
+.buttonClass:hover{
+    background-color: gray;
+    
+}
+.buttonYear{
+    /*background-color: aqua;*/
+    height: 40px;
+    width: 200px;
+    text-align: center;
+    border-radius: 24px;
+    background-color: #fb9263;
+    justify-content: center ;
+    color: white;
+    font-size: 16px;
+    border: none;
+    align-self: center;
+}
+.buttonYear:hover{
+    background-color: gray;
+}
+.buttonMajor{
+    /*background-color: aqua;*/
+    height: 40px;
+    width: 200px;
+    text-align: center;
+    border-radius: 24px;
+    font-size: 16px;
+    border: none;
+    display: inline-block;
+    align-self: center;
+    background-color: #fb9263;
+    justify-content: center ;
+    color: white;
+}
+.buttonMajor:hover{
+    background-color: gray;
+}
+.buttonMinor{
+    /*background-color: aqua;*/
+    height: 40px;
+    width: 200px;
+    text-align: center;
+    font-size: 16px;
+    border: none;
+    display: inline-block;
+
+    align-self: center;
+    border-radius: 24px;
+    background-color: #fb9263;
+    justify-content: center ;
+    color: white;
+}
+.buttonMinor:hover{
+    background-color: gray;
+}
+.clubButton{
+    height: 40px;
+    width: 200px;
+    text-align: center;
+    font-size: 16px;
+    border: none;
+    align-self: center;
+    display: inline-block;
+    border-radius: 24px;
+    background-color: #75c1dc;
+    justify-content: center ;
+    color: white;
+    
+}
+.clubButton:hover{
+    background-color: gray;
+
+}
+form{
+    text-align: center;
+}
+#personalBio{
+    background-color: #7ae7ff;
+
+}

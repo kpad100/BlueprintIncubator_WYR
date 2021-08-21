@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { withStyles } from "@material-ui/styles";
+import { makeStyles } from "@material-ui/styles";
 import { ArrowBackIos, ExpandMore } from "@material-ui/icons";
 import Dashboard from "./Dashboard";
 import { db } from "../firebase/firebase";
@@ -17,21 +17,7 @@ import {
 import AddReview from "./AddReview";
 import Stars from "./Stars";
 
-// const useStyles2 = makeStyles((theme) => ({
-//   root: {
-//     display: "flex",
-//   },
-//   paper: {
-//     padding: theme.spacing(2),
-//     textAlign: "center",
-//     color: theme.palette.text.secondary,
-//     backgroundColor: "#4198b5",
-//     height: "flex",
-//   },
-// }));
-
-// CSS styling
-const styles = () => ({
+const useStyles = makeStyles((theme) => ({
   summaryCard: {
     backgroundColor: "#fb9263",
     width: "65vw",
@@ -47,14 +33,15 @@ const styles = () => ({
     backgroundColor: "#bdf4ff",
     marginTop: "25px",
   },
-});
+}));
 
 const ReviewPage = (props) => {
+  const classes = useStyles();
   const [returnToDashboard, setReturnToDashboard] = useState(false); // when true, returns Dashboard component
   const [reviewList, setReviewList] = useState([]); // list of reviews
   const [avgRating, setAvgRating] = useState(0); // avgRating of all reviews for course
   const [buttonPopup, setButtonPopup] = useState(false);
-  const { selectedCourse, classes } = props;
+  const { selectedCourse } = props;
 
   const popUpAddReview = () => {
     setButtonPopup(true);
@@ -149,11 +136,8 @@ const ReviewPage = (props) => {
         </div>
 
         <Grid container justify="center" alignItems="center">
-          <Grid item xs={6}>
+          <Grid item xs={8}>
             <h1>Reviews</h1>
-          </Grid>
-          <Grid item xs={2}>
-            <h2>Sort By</h2>
           </Grid>
           {reviewList.map((review) => (
             <Accordion
@@ -173,90 +157,96 @@ const ReviewPage = (props) => {
                 aria-controls="panel1a-content"
                 id="panel1a-header"
               >
-                <Typography key={review.user} style={{ color: "white" }}>
-                  {review.user}
+                <Typography
+                  key={"prof" + review.user}
+                  style={{ color: "white", marginRight: "auto" }}
+                >
+                  Professor: {review.prof}
                 </Typography>
+
                 {
-                  // if NOT on mobile, stars and professor displayed in accordion summary
+                  // if NOT on mobile, shows overallRating (stars) for review in accordianSummary
                   !isMobileOnly && (
-                    <>
-                      <div style={{ marginLeft: "auto" }}>
-                        <Typography key={review.user + "workload"}>
-                          Workload:
-                        </Typography>
-                        <Stars
-                          rating={review.workloadRating}
-                          user={review.user}
-                        />
-                      </div>
-                      <div style={{ marginLeft: "auto" }}>
-                        <Typography key={review.user + "diff"}>
-                          Difficulty Of Content:
-                        </Typography>
-                        <Stars rating={review.diffRating} user={review.user} />
-                      </div>
-                      <div style={{ marginLeft: "auto" }}>
-                        <Typography
-                          key={"prof" + review.user}
-                          style={{ color: "white" }}
-                        >
-                          Professor: {review.prof}
-                        </Typography>
-                        <Stars rating={review.profRating} user={review.user} />
-                      </div>
-                    </>
+                    <Stars rating={review.overallRating} user={review.user} />
                   )
                 }
+                {
+                  // if NOT on mobile, shows overallRating (number) for review in accordianSummary
+                  !isMobileOnly &&
+                    (Math.round(review.overallRating * 100) / 100).toFixed(2)
+                }
+                {!isMobileOnly && " overall"}
+
+                {
+                  // if NOT on mobile, shows grade received for review in accordianSummary
+                  !isMobileOnly && (
+                    <Typography
+                      key={"grade" + review.user}
+                      style={{ marginLeft: "auto" }}
+                    >
+                      Grade Received: {review.grade}
+                    </Typography>
+                  )
+                }
+
+                <Typography
+                  key={review.user}
+                  style={{ color: "white", marginLeft: "auto" }}
+                >
+                  {review.user}
+                </Typography>
               </AccordionSummary>
 
               <AccordionDetails key={"accordionDetails" + review.user}>
-                <div>
+                <Grid container direction={isMobileOnly ? "column" : "row"}>
                   {
-                    // if on mobile, stars and professor displayed in accordion details
+                    // if ON mobile, shows grade received for review in accordianDetails
                     isMobileOnly && (
-                      <div>
-                        <div>
-                          <Typography
-                            key={"prof" + review.user}
-                            style={{ color: "white", marginLeft: "auto" }}
-                          >
-                            Professor: {review.prof}
-                          </Typography>
-                          <Stars
-                            rating={review.profRating}
-                            user={review.user}
-                          />
-                        </div>
-                        <div style={{ marginTop: "10px" }}>
-                          <Typography key={review.user + "workload"}>
-                            Workload:
-                          </Typography>
-                          <Stars
-                            rating={review.workloadRating}
-                            user={review.user}
-                          />
-                        </div>
-                        <div style={{ marginTop: "10px" }}>
-                          <Typography key={review.user + "diff"}>
-                            Difficulty Of Content:
-                          </Typography>
-                          <Stars
-                            rating={review.diffRating}
-                            user={review.user}
-                          />
-                        </div>
-                      </div>
+                      <Typography
+                        key={"grade" + review.user}
+                        style={{ marginBottom: "10px" }}
+                      >
+                        Grade Received: {review.grade}
+                      </Typography>
                     )
                   }
+                  <div id="ratings">
+                    <div>
+                      <Typography key={review.user + "workload"}>
+                        Workload:
+                      </Typography>
+                      <Stars
+                        rating={review.workloadRating}
+                        user={review.user}
+                      />
+                    </div>
+                    <div style={{ marginTop: "10px" }}>
+                      <Typography key={review.user + "diff"}>
+                        Difficulty Of Content:
+                      </Typography>
+                      <Stars rating={review.diffRating} user={review.user} />
+                    </div>
+                    <div
+                      style={
+                        isMobileOnly
+                          ? { marginTop: "10px", marginBottom: "10px" }
+                          : { marginTop: "10px" }
+                      }
+                    >
+                      <Typography key={"teach" + review.user}>
+                        Teaching:
+                      </Typography>
+                      <Stars rating={review.teachRating} user={review.user} />
+                    </div>
+                  </div>
 
                   <Typography
                     key={"description" + review.user}
-                    align="left"
-                    style={{ marginTop: "10px" }}
+                    style={{ marginLeft: "auto" }}
                   >
                     {review.description}
                   </Typography>
-                </div>
+                </Grid>
               </AccordionDetails>
             </Accordion>
           ))}
@@ -266,4 +256,4 @@ const ReviewPage = (props) => {
   }
 };
 
-export default withStyles(styles)(ReviewPage);
+export default ReviewPage;

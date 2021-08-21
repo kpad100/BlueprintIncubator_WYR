@@ -34,18 +34,23 @@ const AddReview = (props) => {
   const { trigger, closed, fromCourse } = props;
   const [diffRating, setDiffRating] = useState(null);
   const [workloadRating, setWorkloadRating] = useState(null);
-  const [profRating, setProfRating] = useState(null);
+  const [teachRating, setTeachRating] = useState(null);
   const [diffHover, setDiffHover] = useState(null);
   const [workloadHover, setWorkloadHover] = useState(null);
-  const [profHover, setProfHover] = useState(null);
+  const [teachHover, setTeachHover] = useState(null);
   const [newCourse, setNewCourse] = useState("");
   const [newCourseCode, setNewCourseCode] = useState("");
   const [prof, setProf] = useState("");
   const [description, setDescription] = useState("");
+  const [grade, setGrade] = useState(null);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (diffRating === null || workloadRating === null || profRating === null) {
+    if (
+      diffRating === null ||
+      workloadRating === null ||
+      teachRating === null
+    ) {
       alert("Fill out all fields and star ratings!");
     }
     // if AddReview clicked on from ReviewPage, adds review to "reviews" subcollection for course
@@ -54,8 +59,9 @@ const AddReview = (props) => {
         .add({
           diffRating: diffRating,
           workloadRating: workloadRating,
-          profRating: profRating,
-          overallRating: (diffRating + workloadRating + profRating) / 3,
+          teachRating: teachRating,
+          overallRating: (diffRating + workloadRating + teachRating) / 3,
+          grade: grade,
           prof: prof,
           description: description,
           user: myFirebase.auth().currentUser.displayName,
@@ -84,8 +90,9 @@ const AddReview = (props) => {
         .add({
           diffRating: diffRating,
           workloadRating: workloadRating,
-          profRating: profRating,
-          overallRating: (diffRating + workloadRating + profRating) / 3,
+          teachRating: teachRating,
+          overallRating: (diffRating + workloadRating + teachRating) / 3,
+          grade: grade,
           prof: prof,
           description: description,
           user: myFirebase.auth().currentUser.displayName,
@@ -98,7 +105,8 @@ const AddReview = (props) => {
   function clearFields() {
     setDiffRating(null);
     setWorkloadRating(null);
-    setProfRating(null);
+    setTeachRating(null);
+    setGrade(null);
     setNewCourse("");
     setNewCourseCode("");
     setProf("");
@@ -202,18 +210,18 @@ const AddReview = (props) => {
               {[...Array(5)].map((star, i) => {
                 const ratingValue = i + 1;
                 return (
-                  <label key={"profRatingLabel" + i}>
+                  <label key={"teachRatingLabel" + i}>
                     <input
                       type="radio"
-                      key={"profRating" + i}
+                      key={"teachRating" + i}
                       style={{ display: "none" }}
                       value={ratingValue}
-                      onClick={() => setProfRating(ratingValue)}
+                      onClick={() => setTeachRating(ratingValue)}
                     />
 
                     {
                       // Colors for Star
-                      ratingValue <= (profHover || profRating) ? (
+                      ratingValue <= (teachHover || teachRating) ? (
                         <Star
                           key={"profStar" + i}
                           style={{
@@ -221,15 +229,15 @@ const AddReview = (props) => {
                             cursor: "pointer",
                             color: "#fb9263",
                           }}
-                          onMouseEnter={() => setProfHover(ratingValue)}
-                          onMouseLeave={() => setProfHover(null)}
+                          onMouseEnter={() => setTeachHover(ratingValue)}
+                          onMouseLeave={() => setTeachHover(null)}
                         />
                       ) : (
                         <StarOutline
                           key={"profStarOutline" + i}
                           style={{ fontSize: 34, cursor: "pointer" }}
-                          onMouseEnter={() => setProfHover(ratingValue)}
-                          onMouseLeave={() => setProfHover(null)}
+                          onMouseEnter={() => setTeachHover(ratingValue)}
+                          onMouseLeave={() => setTeachHover(null)}
                         />
                       )
                     }

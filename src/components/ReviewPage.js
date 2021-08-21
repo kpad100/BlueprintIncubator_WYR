@@ -198,7 +198,7 @@ const ReviewPage = (props) => {
               </AccordionSummary>
 
               <AccordionDetails key={"accordionDetails" + review.user}>
-                <Grid container direction={isMobileOnly ? "column" : "row"}>
+                <Grid container direction="column">
                   {
                     // if ON mobile, shows grade received for review in accordianDetails
                     isMobileOnly && (
@@ -210,7 +210,7 @@ const ReviewPage = (props) => {
                       </Typography>
                     )
                   }
-                  <div id="ratings">
+                  <Grid container direction={isMobileOnly ? "column" : "row"}>
                     <div>
                       <Typography key={review.user + "workload"}>
                         Workload:
@@ -220,7 +220,13 @@ const ReviewPage = (props) => {
                         user={review.user}
                       />
                     </div>
-                    <div style={{ marginTop: "10px" }}>
+                    <div
+                      style={
+                        isMobileOnly
+                          ? { marginTop: "10px" }
+                          : { marginLeft: "auto" }
+                      }
+                    >
                       <Typography key={review.user + "diff"}>
                         Difficulty Of Content:
                       </Typography>
@@ -229,8 +235,8 @@ const ReviewPage = (props) => {
                     <div
                       style={
                         isMobileOnly
-                          ? { marginTop: "10px", marginBottom: "10px" }
-                          : { marginTop: "10px" }
+                          ? { marginTop: "10px" }
+                          : { marginLeft: "auto" }
                       }
                     >
                       <Typography key={"teach" + review.user}>
@@ -238,11 +244,11 @@ const ReviewPage = (props) => {
                       </Typography>
                       <Stars rating={review.teachRating} user={review.user} />
                     </div>
-                  </div>
+                  </Grid>
 
                   <Typography
                     key={"description" + review.user}
-                    style={{ marginLeft: "auto" }}
+                    style={{ marginTop: "10px" }}
                   >
                     {review.description}
                   </Typography>

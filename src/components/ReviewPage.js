@@ -241,10 +241,10 @@ const ReviewPage = ({ selectedCourse }) => {
               key={"accordian" + review.user}
               defaultExpanded
               style={{
-                backgroundColor: "#4198b5",
+                backgroundColor: "#54b6d6",
                 borderRadius: 25,
                 width: isMobileOnly ? "90vw" : "65vw",
-                marginBottom: "10px",
+                marginBottom: "5px",
                 padding: "10px",
               }}
             >
@@ -309,13 +309,18 @@ const ReviewPage = ({ selectedCourse }) => {
                   }
                   <Grid container direction={isMobileOnly ? "column" : "row"}>
                     <div>
-                      <Typography key={review.user + "workload"}>
-                        Workload:
-                      </Typography>
-                      <Stars
-                        rating={review.workloadRating}
-                        user={review.user}
-                      />
+                      <Grid container direction="row">
+                        <Typography
+                          style={{ marginRight: "5px" }}
+                          key={review.user + "workload"}
+                        >
+                          Workload:
+                        </Typography>
+                        <Stars
+                          rating={review.workloadRating}
+                          user={review.user}
+                        />
+                      </Grid>
                     </div>
                     <div
                       style={
@@ -324,10 +329,15 @@ const ReviewPage = ({ selectedCourse }) => {
                           : { marginLeft: "auto" }
                       }
                     >
-                      <Typography key={review.user + "diff"}>
-                        Difficulty Of Content:
-                      </Typography>
-                      <Stars rating={review.diffRating} user={review.user} />
+                      <Grid container direction="row">
+                        <Typography
+                          style={{ marginRight: "5px" }}
+                          key={review.user + "diff"}
+                        >
+                          Difficulty Of Content:
+                        </Typography>
+                        <Stars rating={review.diffRating} user={review.user} />
+                      </Grid>
                     </div>
                     <div
                       style={
@@ -336,16 +346,21 @@ const ReviewPage = ({ selectedCourse }) => {
                           : { marginLeft: "auto" }
                       }
                     >
-                      <Typography key={"teach" + review.user}>
-                        Teaching:
-                      </Typography>
-                      <Stars rating={review.teachRating} user={review.user} />
+                      <Grid container direction="row">
+                        <Typography
+                          style={{ marginRight: "5px" }}
+                          key={"teach" + review.user}
+                        >
+                          Teaching:
+                        </Typography>
+                        <Stars rating={review.teachRating} user={review.user} />
+                      </Grid>
                     </div>
                   </Grid>
 
                   <Typography
                     key={"description" + review.user}
-                    style={{ marginTop: "10px" }}
+                    style={{ marginTop: "20px" }}
                   >
                     {review.description}
                   </Typography>

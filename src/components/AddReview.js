@@ -60,7 +60,6 @@ const AddReview = (props) => {
           diffRating: diffRating,
           workloadRating: workloadRating,
           teachRating: teachRating,
-          overallRating: (diffRating + workloadRating + teachRating) / 3,
           grade: grade,
           prof: prof,
           description: description,
@@ -84,19 +83,15 @@ const AddReview = (props) => {
           console.error("Error adding document: ", error);
         });
 
-      db.collection("courses")
-        .doc(newCourseCode)
-        .collection("reviews")
-        .add({
-          diffRating: diffRating,
-          workloadRating: workloadRating,
-          teachRating: teachRating,
-          overallRating: (diffRating + workloadRating + teachRating) / 3,
-          grade: grade,
-          prof: prof,
-          description: description,
-          user: myFirebase.auth().currentUser.displayName,
-        });
+      db.collection("courses").doc(newCourseCode).collection("reviews").add({
+        diffRating: diffRating,
+        workloadRating: workloadRating,
+        teachRating: teachRating,
+        grade: grade,
+        prof: prof,
+        description: description,
+        user: myFirebase.auth().currentUser.displayName,
+      });
 
       clearFields();
     }

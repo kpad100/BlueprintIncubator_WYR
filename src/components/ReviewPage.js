@@ -13,6 +13,10 @@ import {
   AccordionSummary,
   AccordionDetails,
   Button,
+  InputBase,
+  Select,
+  MenuItem,
+  FormControl,
 } from "@material-ui/core";
 import AddReview from "./AddReview";
 import Stars from "./Stars";
@@ -20,7 +24,7 @@ import Stars from "./Stars";
 const useStyles = makeStyles((theme) => ({
   summaryCard: {
     backgroundColor: "#fb9263",
-    width: "65vw",
+    width: isMobileOnly ? "90vw" : "65vw",
     padding: "25px",
     marginLeft: "auto",
     marginRight: "auto",
@@ -35,13 +39,17 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const ReviewPage = (props) => {
+const ReviewPage = ({ selectedCourse }) => {
   const classes = useStyles();
   const [returnToDashboard, setReturnToDashboard] = useState(false); // when true, returns Dashboard component
   const [reviewList, setReviewList] = useState([]); // list of reviews
-  const [avgRating, setAvgRating] = useState(0); // avgRating of all reviews for course
+  const [selectedProf, setSelectedProf] = useState("All Professors");
+  const [profList, setProfList] = useState([]);
+  const [avgWorkload, setAvgWorkload] = useState(0);
+  const [avgDiff, setAvgDiff] = useState(0);
+  const [avgTeach, setAvgTeach] = useState(0);
+  const [avgOverall, setAvgOverall] = useState(0); // avgRating of all reviews for course
   const [buttonPopup, setButtonPopup] = useState(false);
-  const { selectedCourse } = props;
 
   const popUpAddReview = () => {
     setButtonPopup(true);
@@ -57,20 +65,58 @@ const ReviewPage = (props) => {
   };
 
   useEffect(() => {
+    db.collection("courses/")
+      .doc(selectedCourse.code)
+      .get()
+      .then((doc) => {
+        if (doc.exists) {
+          const profs = [];
+          for (let i = 0; i < doc.data().profs.length; i++) {
+            profs.push(doc.data().profs[i]);
+          }
+          setProfList(profs);
+        } else {
+          // doc.data() will be undefined in this case
+          console.log("No such document!");
+        }
+      })
+      .catch((error) => {
+        console.log("Error getting document:", error);
+      });
+
     // receives review data from Firebase and updates reviewList and avgRating in state
     db.collection("courses/" + selectedCourse.code + "/reviews").onSnapshot(
       (querySnapshot) => {
         const reviews = [];
-        let sum = 0;
+        let workloadSum = 0;
+        let diffSum = 0;
+        let teachSum = 0;
         querySnapshot.forEach((doc) => {
-          reviews.push(doc.data());
-          sum += doc.data().overallRating;
+          if (selectedProf === "All Professors") {
+            reviews.push(doc.data());
+            workloadSum += doc.data().workloadRating;
+            diffSum += doc.data().diffRating;
+            teachSum += doc.data().teachRating;
+          } else if (doc.data().prof === selectedProf) {
+            reviews.push(doc.data());
+            workloadSum += doc.data().workloadRating;
+            diffSum += doc.data().diffRating;
+            teachSum += doc.data().teachRating;
+          }
         });
         setReviewList(reviews);
-        setAvgRating(sum / reviews.length);
+        setAvgWorkload(workloadSum / reviews.length);
+        setAvgDiff(diffSum / reviews.length);
+        setAvgTeach(teachSum / reviews.length);
+        setAvgOverall(
+          (workloadSum / reviews.length +
+            diffSum / reviews.length +
+            teachSum / reviews.length) /
+            3
+        );
       }
     );
-  }, [selectedCourse]);
+  }, [selectedCourse, selectedProf]);
 
   if (returnToDashboard) {
     return <Dashboard />;
@@ -98,6 +144,42 @@ const ReviewPage = (props) => {
             <div id="left">
               <h2>{selectedCourse.name}</h2>
               <h3>{selectedCourse.code}</h3>
+              <Grid container>
+                {isMobileOnly ? (
+                  <h4>Showing averages for</h4>
+                ) : (
+                  <h3>Showing averages for</h3>
+                )}
+
+                <FormControl
+                  style={{
+                    backgroundColor: "#bdf4ff",
+                    marginLeft: "10px",
+                    marginTop: "10px",
+                    height: 30,
+                    padding: "5px",
+                  }}
+                >
+                  <Select
+                    value={selectedProf}
+                    onChange={(e) => {
+                      setSelectedProf(e.target.value);
+                    }}
+                    input={<InputBase />}
+                  >
+                    <MenuItem key={"All Profs key"} value={"All Professors"}>
+                      All Professors
+                    </MenuItem>
+                    {profList.map((prof) => {
+                      return (
+                        <MenuItem key={prof + "key"} value={prof}>
+                          {prof}
+                        </MenuItem>
+                      );
+                    })}
+                  </Select>
+                </FormControl>
+              </Grid>
             </div>
 
             <div
@@ -108,13 +190,30 @@ const ReviewPage = (props) => {
                 marginTop: "auto",
               }}
             >
-              <Stars rating={avgRating} user={"average"} />
-              <h3>{reviewList.length} reviews</h3>
+              <Grid container>
+                <h3>Workload:</h3>
+                <div style={{ marginTop: "18px", marginLeft: "10px" }}>
+                  <Stars rating={avgWorkload} user={"average"} />
+                </div>
+              </Grid>
+              <Grid container>
+                <h3>Difficulty:</h3>
+                <div style={{ marginTop: "18px", marginLeft: "10px" }}>
+                  <Stars rating={avgDiff} user={"average"} />
+                </div>
+              </Grid>
+              <Grid container>
+                <h3>Teaching:</h3>
+                <div style={{ marginTop: "18px", marginLeft: "10px" }}>
+                  <Stars rating={avgTeach} user={"average"} />
+                </div>
+              </Grid>
             </div>
 
             <div id="right" style={{ marginLeft: "auto" }}>
-              <h1>{(Math.round(avgRating * 100) / 100).toFixed(2)} / 5</h1>
-              <h3>Overall Rating</h3>
+              <h3>Overall Rating:</h3>
+              <h1>{(Math.round(avgOverall * 100) / 100).toFixed(2)} / 5</h1>
+              <h3>{reviewList.length} reviews</h3>
             </div>
           </Grid>
         </Card>
@@ -144,10 +243,10 @@ const ReviewPage = (props) => {
               key={"accordian" + review.user}
               defaultExpanded
               style={{
-                backgroundColor: "#4198b5",
+                backgroundColor: "#54b6d6",
                 borderRadius: 25,
                 width: isMobileOnly ? "90vw" : "65vw",
-                marginBottom: "10px",
+                marginBottom: "5px",
                 padding: "10px",
               }}
             >
@@ -167,13 +266,29 @@ const ReviewPage = (props) => {
                 {
                   // if NOT on mobile, shows overallRating (stars) for review in accordianSummary
                   !isMobileOnly && (
-                    <Stars rating={review.overallRating} user={review.user} />
+                    <Stars
+                      rating={
+                        (review.workloadRating +
+                          review.diffRating +
+                          review.teachRating) /
+                        3
+                      }
+                      user={review.user}
+                    />
                   )
                 }
                 {
                   // if NOT on mobile, shows overallRating (number) for review in accordianSummary
                   !isMobileOnly &&
-                    (Math.round(review.overallRating * 100) / 100).toFixed(2)
+                    (
+                      Math.round(
+                        ((review.workloadRating +
+                          review.diffRating +
+                          review.teachRating) /
+                          3) *
+                          100
+                      ) / 100
+                    ).toFixed(2)
                 }
                 {!isMobileOnly && " overall"}
 
@@ -189,12 +304,14 @@ const ReviewPage = (props) => {
                   )
                 }
 
-                <Typography
-                  key={review.user}
-                  style={{ color: "white", marginLeft: "auto" }}
-                >
-                  {review.user}
-                </Typography>
+                {!review.anon && (
+                  <Typography
+                    key={review.user}
+                    style={{ color: "white", marginLeft: "auto" }}
+                  >
+                    {review.user}
+                  </Typography>
+                )}
               </AccordionSummary>
 
               <AccordionDetails key={"accordionDetails" + review.user}>
@@ -212,13 +329,18 @@ const ReviewPage = (props) => {
                   }
                   <Grid container direction={isMobileOnly ? "column" : "row"}>
                     <div>
-                      <Typography key={review.user + "workload"}>
-                        Workload:
-                      </Typography>
-                      <Stars
-                        rating={review.workloadRating}
-                        user={review.user}
-                      />
+                      <Grid container direction="row">
+                        <Typography
+                          style={{ marginRight: "5px" }}
+                          key={review.user + "workload"}
+                        >
+                          Workload:
+                        </Typography>
+                        <Stars
+                          rating={review.workloadRating}
+                          user={review.user}
+                        />
+                      </Grid>
                     </div>
                     <div
                       style={
@@ -227,10 +349,15 @@ const ReviewPage = (props) => {
                           : { marginLeft: "auto" }
                       }
                     >
-                      <Typography key={review.user + "diff"}>
-                        Difficulty Of Content:
-                      </Typography>
-                      <Stars rating={review.diffRating} user={review.user} />
+                      <Grid container direction="row">
+                        <Typography
+                          style={{ marginRight: "5px" }}
+                          key={review.user + "diff"}
+                        >
+                          Difficulty Of Content:
+                        </Typography>
+                        <Stars rating={review.diffRating} user={review.user} />
+                      </Grid>
                     </div>
                     <div
                       style={
@@ -239,16 +366,21 @@ const ReviewPage = (props) => {
                           : { marginLeft: "auto" }
                       }
                     >
-                      <Typography key={"teach" + review.user}>
-                        Teaching:
-                      </Typography>
-                      <Stars rating={review.teachRating} user={review.user} />
+                      <Grid container direction="row">
+                        <Typography
+                          style={{ marginRight: "5px" }}
+                          key={"teach" + review.user}
+                        >
+                          Teaching:
+                        </Typography>
+                        <Stars rating={review.teachRating} user={review.user} />
+                      </Grid>
                     </div>
                   </Grid>
 
                   <Typography
                     key={"description" + review.user}
-                    style={{ marginTop: "10px" }}
+                    style={{ marginTop: "20px" }}
                   >
                     {review.description}
                   </Typography>

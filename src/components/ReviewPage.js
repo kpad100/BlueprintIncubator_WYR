@@ -91,27 +91,29 @@ const ReviewPage = ({ selectedCourse }) => {
         let workloadSum = 0;
         let diffSum = 0;
         let teachSum = 0;
-        let overallSum = 0;
         querySnapshot.forEach((doc) => {
           if (selectedProf === "All Professors") {
             reviews.push(doc.data());
             workloadSum += doc.data().workloadRating;
             diffSum += doc.data().diffRating;
             teachSum += doc.data().teachRating;
-            overallSum += doc.data().overallRating;
           } else if (doc.data().prof === selectedProf) {
             reviews.push(doc.data());
             workloadSum += doc.data().workloadRating;
             diffSum += doc.data().diffRating;
             teachSum += doc.data().teachRating;
-            overallSum += doc.data().overallRating;
           }
         });
         setReviewList(reviews);
         setAvgWorkload(workloadSum / reviews.length);
         setAvgDiff(diffSum / reviews.length);
         setAvgTeach(teachSum / reviews.length);
-        setAvgOverall(overallSum / reviews.length);
+        setAvgOverall(
+          (workloadSum / reviews.length +
+            diffSum / reviews.length +
+            teachSum / reviews.length) /
+            3
+        );
       }
     );
   }, [selectedCourse, selectedProf]);
@@ -264,13 +266,29 @@ const ReviewPage = ({ selectedCourse }) => {
                 {
                   // if NOT on mobile, shows overallRating (stars) for review in accordianSummary
                   !isMobileOnly && (
-                    <Stars rating={review.overallRating} user={review.user} />
+                    <Stars
+                      rating={
+                        (review.workloadRating +
+                          review.diffRating +
+                          review.teachRating) /
+                        3
+                      }
+                      user={review.user}
+                    />
                   )
                 }
                 {
                   // if NOT on mobile, shows overallRating (number) for review in accordianSummary
                   !isMobileOnly &&
-                    (Math.round(review.overallRating * 100) / 100).toFixed(2)
+                    (
+                      Math.round(
+                        ((review.workloadRating +
+                          review.diffRating +
+                          review.teachRating) /
+                          3) *
+                          100
+                      ) / 100
+                    ).toFixed(2)
                 }
                 {!isMobileOnly && " overall"}
 
@@ -286,12 +304,14 @@ const ReviewPage = ({ selectedCourse }) => {
                   )
                 }
 
-                <Typography
-                  key={review.user}
-                  style={{ color: "white", marginLeft: "auto" }}
-                >
-                  {review.user}
-                </Typography>
+                {!review.anon && (
+                  <Typography
+                    key={review.user}
+                    style={{ color: "white", marginLeft: "auto" }}
+                  >
+                    {review.user}
+                  </Typography>
+                )}
               </AccordionSummary>
 
               <AccordionDetails key={"accordionDetails" + review.user}>

@@ -69,10 +69,11 @@ const LandingPage = () => {
             fontWeight: "bold",
             marginTop: "50px",
             marginBottom: "50px",
+            fontFamily: "Poppins",
           }}
           onClick={() => setDirectToDashboard(true)}
         >
-          add a review now
+          look at reviews 
         </Button>
         <Grid item xs={12}>
           <center>
@@ -198,19 +199,9 @@ const LandingPage = () => {
             <h1>New things are coming soon, sign up to stay in the loop</h1>
           </center>
         </Grid>
-        <Button
-          variant="contained"
-          disableElevation
-          style={{
-            borderRadius: 25,
-            backgroundColor: "white",
-            color: "#FF7F50",
-            fontSize: 17,
-            fontWeight: "bold",
-          }}
-        >
-          sign up now
-        </Button>
+
+        <h2>
+          contact us at: wyrhelpdesk@gmail.com        </h2>
       </Grid>
     </div>
   );

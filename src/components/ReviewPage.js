@@ -230,6 +230,7 @@ const ReviewPage = ({ selectedCourse }) => {
           <AddReview
             trigger={buttonPopup}
             closed={closePopUp}
+            profList={profList}
             fromCourse={selectedCourse}
           />
         </div>
@@ -243,7 +244,7 @@ const ReviewPage = ({ selectedCourse }) => {
               key={"accordian" + review.user}
               defaultExpanded
               style={{
-                backgroundColor: "#6c9dad",
+                backgroundColor: "#69b4cf",
                 borderRadius: 25,
                 width: isMobileOnly ? "90vw" : "65vw",
                 marginBottom: "5px",
@@ -383,12 +384,19 @@ const ReviewPage = ({ selectedCourse }) => {
                     </div>
                   </Grid>
 
-                  <Typography
-                    key={"description" + review.user}
-                    style={{ marginTop: "20px" }}
-                  >
-                    {review.description}
-                  </Typography>
+                  <Grid container direction="row" style={{ marginTop: "20px" }}>
+                    <Typography key={"description" + review.user}>
+                      {review.description}
+                    </Typography>
+                    {review.tookOnline && (
+                      <Typography
+                        key={"tookOnline" + review.user}
+                        style={{ color: "white", marginLeft: "auto" }}
+                      >
+                        * online class *
+                      </Typography>
+                    )}
+                  </Grid>
                 </Grid>
               </AccordionDetails>
             </Accordion>

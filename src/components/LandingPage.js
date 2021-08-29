@@ -7,12 +7,14 @@ import Aos from "aos";
 import "aos/dist/aos.css";
 import Typewriter from "../actions/Typewriter.js";
 import NavBar from "./NavBar.js";
+import SignupPage from "./SignupPage";
+import { myFirebase } from "../firebase/firebase";
 
 const useStyles = makeStyles({
   root: {
     background: "linear-gradient(145deg, #5F9EA0 20%, #ff7f50 70%)",
     color: "white",
-    height: "3000px",
+    height: "2875px",
     maxWidth: "100%",
     overflowX: "hidden",
   },
@@ -21,10 +23,21 @@ const useStyles = makeStyles({
 const LandingPage = () => {
   useEffect(() => {
     Aos.init({ duration: 1500 });
+    checkLoginStatus();
   }, []);
 
   const classes = useStyles();
   const [directToDashboard, setDirectToDashboard] = useState(false);
+  const [signupPopup, setSignupPopup] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  function checkLoginStatus() {
+    myFirebase.auth().onAuthStateChanged(function (user) {
+      if (user) {
+        setIsLoggedIn(true);
+      }
+    });
+  }
 
   if (directToDashboard === true) return <Redirect to="/dashboard" />;
 
@@ -60,12 +73,11 @@ const LandingPage = () => {
         </Grid>
         <Button
           variant="contained"
-          disableElevation
           style={{
             borderRadius: 25,
             backgroundColor: "#FF7F50",
             color: "white",
-            fontSize: 17,
+            fontSize: 25,
             fontWeight: "bold",
             marginTop: "50px",
             marginBottom: "50px",
@@ -73,7 +85,7 @@ const LandingPage = () => {
           }}
           onClick={() => setDirectToDashboard(true)}
         >
-          look at reviews 
+          look at reviews
         </Button>
         <Grid item xs={12}>
           <center>
@@ -197,11 +209,29 @@ const LandingPage = () => {
         <Grid item xs={6}>
           <center>
             <h1>New things are coming soon, sign up to stay in the loop</h1>
+            {!isLoggedIn && (
+              <div>
+                <Button
+                  variant="contained"
+                  disableElevation
+                  style={{
+                    borderRadius: 25,
+                    marginLeft: "10px",
+                    maxHeight: "30px",
+                  }}
+                  onClick={() => setSignupPopup(true)}
+                >
+                  Sign Up
+                </Button>
+                <SignupPage trigger={signupPopup} />
+              </div>
+            )}
           </center>
         </Grid>
-
-        <h2>
-          contact us at: wyrhelpdesk@gmail.com        </h2>
+        <br />
+        <center>
+          <h2>Contact us at: wyrhelpdesk@gmail.com </h2>
+        </center>
       </Grid>
     </div>
   );

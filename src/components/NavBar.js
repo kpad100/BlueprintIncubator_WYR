@@ -13,6 +13,7 @@ const NavBar = ({
   dispatch,
   backgroundColor,
   fromLandingPage,
+  title,
 }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [loginPopup, setLoginPopup] = useState(false);
@@ -50,24 +51,35 @@ const NavBar = ({
         alt=""
         onClick={() => setBackToLanding(true)}
       />
+      {title && (
+        <div style={{ marginLeft: "auto" }}>
+          <h1
+            style={{
+              marginTop: "5px",
+              marginBottom: "0px",
+              marginLeft: isLoggedIn ? "3vw" : "8vw",
+            }}
+          >
+            {title}
+          </h1>
+        </div>
+      )}
       {isLoggedIn && (
-        <div
+        <Button
+          variant="contained"
+          disableElevation
           style={{
+            borderRadius: 25,
             marginLeft: "auto",
             marginTop: "auto",
             marginBottom: "auto",
-            marginRight: "10px",
+            marginRight: "1vw",
+            maxHeight: "30px",
           }}
+          onClick={handleLogout}
         >
-          <Button
-            variant="contained"
-            disableElevation
-            style={{ borderRadius: 25, marginLeft: "10px", maxHeight: "30px" }}
-            onClick={handleLogout}
-          >
-            Log out
-          </Button>
-        </div>
+          Log out
+        </Button>
       )}
 
       {!isLoggedIn && (
@@ -76,7 +88,7 @@ const NavBar = ({
             marginLeft: "auto",
             marginTop: "auto",
             marginBottom: "auto",
-            marginRight: "10px",
+            marginRight: "1vw",
           }}
         >
           <Button

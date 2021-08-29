@@ -21,19 +21,6 @@ import IdleTimer from "../actions/IdleTimer";
 
 // CSS styling
 const styles = () => ({
-  "@global": {
-    //makes scrollbar look less intrusive
-    "*::-webkit-scrollbar": {
-      width: "0.4em",
-    },
-    "*::-webkit-scrollbar-track": {
-      "-webkit-box-shadow": "inset 0 0 6px rgba(0,0,0,0.00)",
-    },
-    "*::-webkit-scrollbar-thumb": {
-      backgroundColor: "#D6EAF8 ",
-      outline: "1px solid slategrey",
-    },
-  },
   searchBar: {
     backgroundColor: "#bdf4ff",
     opacity: 0.5,
@@ -129,7 +116,11 @@ const Dashboard = (props) => {
   } else {
     return (
       <div>
-        <NavBar dispatch={dispatch} backgroundColor={"#6c9dad"} />
+        <NavBar
+          dispatch={dispatch}
+          backgroundColor={"#69b4cf"}
+          title={"Classes"}
+        />
         <br />
         <Grid container direction="column" alignItems="center" justify="center">
           <div className={classes.searchBar}>
@@ -138,7 +129,7 @@ const Dashboard = (props) => {
               onChange={(e) => {
                 setSearchTerm(e.target.value);
               }}
-              style={{ width: "40vw" }}
+              style={isMobileOnly ? { width: "70vw" } : { width: "40vw" }}
             />
             <Search style={{ color: "#fb9263" }} />
           </div>
@@ -175,6 +166,12 @@ const Dashboard = (props) => {
                     <Card
                       key={"card" + course.code}
                       className={classes.courseCard}
+                      onMouseOver={(e) => {
+                        e.currentTarget.style.backgroundColor = "#d67d56";
+                      }}
+                      onMouseOut={(e) => {
+                        e.currentTarget.style.backgroundColor = "#fb9263";
+                      }}
                       onClick={onCourseClick}
                     >
                       <Grid
@@ -199,7 +196,7 @@ const Dashboard = (props) => {
               className={classes.addReviewButton}
               onClick={popUpAddReview}
             >
-              Add Class
+              Add Review for New Class
             </Button>
             <AddReview trigger={buttonPopup} closed={closePopUp} />
           </div>

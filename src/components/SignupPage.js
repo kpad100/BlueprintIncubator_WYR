@@ -266,7 +266,7 @@ const SignupPage = (props) => {
                   <FormHelperText
                     style={{
                       color: "red",
-                      marginBottom: "7px",
+
                       alignSelf: "center",
                     }}
                   >
@@ -277,7 +277,7 @@ const SignupPage = (props) => {
                   <FormHelperText
                     style={{
                       color: "red",
-                      marginBottom: "7px",
+
                       alignSelf: "center",
                     }}
                   >
@@ -467,7 +467,7 @@ const SignupPage = (props) => {
                 )}
                 <Button
                   variant="contained"
-                  style={{ backgroundColor: "orange" }}
+                  style={{ backgroundColor: "#fb9263" }}
                   type="submit"
                 >
                   Create

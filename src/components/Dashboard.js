@@ -125,7 +125,7 @@ const Dashboard = (props) => {
     });
 
     if (isTimeout) {
-      handleLogout();
+      dispatch(logoutUser());
     }
 
     // receives course data from Firebase and updates courseList and courseIDs in state

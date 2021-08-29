@@ -243,7 +243,7 @@ const ReviewPage = ({ selectedCourse }) => {
               key={"accordian" + review.user}
               defaultExpanded
               style={{
-                backgroundColor: "#54b6d6",
+                backgroundColor: "#6c9dad",
                 borderRadius: 25,
                 width: isMobileOnly ? "90vw" : "65vw",
                 marginBottom: "5px",
@@ -310,6 +310,11 @@ const ReviewPage = ({ selectedCourse }) => {
                     style={{ color: "white", marginLeft: "auto" }}
                   >
                     {review.user}
+                  </Typography>
+                )}
+                {review.anon && (
+                  <Typography key={review.user} style={{ marginLeft: "auto" }}>
+                    anonymous
                   </Typography>
                 )}
               </AccordionSummary>

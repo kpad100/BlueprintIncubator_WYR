@@ -4,8 +4,8 @@ class IdleTimer {
         this.onTimeout = onTimeout;
 
             const expiredTime = parseInt(localStorage.getItem("_expiredTime"), 10);
-            //console.log("current time is " + Date.now());
-            //console.log("expire time is " + expiredTime);
+            // console.log("current time is " + Date.now());
+            // console.log("expire time is " + expiredTime);
             if(expiredTime > 0 && expiredTime < Date.now()){
                 //alert("expired")
                 onExpired();
@@ -47,7 +47,8 @@ class IdleTimer {
         }
         this.timeoutTracker = setTimeout(() => {
             localStorage.setItem("_expiredTime", Date.now() + this.timeout * 1000);
-        }, 300);
+            //console.log("setting timer...");
+        },0);
        
     }
 

@@ -6,6 +6,7 @@ import { Grid } from "@material-ui/core";
 import Aos from "aos";
 import "aos/dist/aos.css";
 import Typewriter from "../actions/Typewriter.js";
+import NavBar from "./NavBar.js";
 
 const useStyles = makeStyles({
   root: {
@@ -23,56 +24,14 @@ const LandingPage = () => {
   }, []);
 
   const classes = useStyles();
+  const [directToDashboard, setDirectToDashboard] = useState(false);
 
-  const [directToLogin, setDirectToLogin] = useState(false);
-  const [directToSignup, setDirectToSignup] = useState(false);
-  const handleLoginClick = () => {
-    setDirectToLogin(true);
-  };
-
-  const handleSignupClick = () => {
-    setDirectToSignup(true);
-  };
-
-  if (directToLogin === true) return <Redirect to="/login" />;
-
-  if (directToSignup === true) return <Redirect to="/signup" />;
+  if (directToDashboard === true) return <Redirect to="/dashboard" />;
 
   return (
     // The top bar with logo and sign up and login
     <div className={classes.root}>
-      <Grid container>
-        <img
-          src="https://cdn.discordapp.com/attachments/812822571094900746/837106499863969812/wyr_transparent.png"
-          height="80"
-          style={{
-            marginLeft: "10px",
-            marginRight: "10px",
-            marginTop: "10px",
-          }}
-          alt=""
-        />
-        <div
-          style={{ marginLeft: "auto", marginRight: "10px", marginTop: "10px" }}
-        >
-          <Button
-            disableElevation
-            size="large"
-            style={{ borderRadius: 25, color: "white" }}
-            onClick={handleLoginClick}
-          >
-            Login
-          </Button>
-          <Button
-            variant="contained"
-            disableElevation
-            style={{ borderRadius: 25, marginLeft: "10px", maxHeight: "30px" }}
-            onClick={handleSignupClick}
-          >
-            Sign Up
-          </Button>
-        </div>
-      </Grid>
+      <NavBar fromLandingPage={true} />
 
       {/* Large would you recommend section  */}
       <Grid
@@ -111,7 +70,7 @@ const LandingPage = () => {
             marginTop: "50px",
             marginBottom: "50px",
           }}
-          onClick={handleLoginClick}
+          onClick={() => setDirectToDashboard(true)}
         >
           add a review now
         </Button>
@@ -249,7 +208,6 @@ const LandingPage = () => {
             fontSize: 17,
             fontWeight: "bold",
           }}
-          onClick={handleSignupClick}
         >
           sign up now
         </Button>

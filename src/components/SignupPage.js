@@ -1,5 +1,4 @@
-import { Link } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Grid,
   TextField,
@@ -10,8 +9,27 @@ import {
 } from "@material-ui/core";
 import { signupWithEmailPassword } from "../actions/auth";
 import { db, myFirebase } from "../firebase/firebase";
+import { makeStyles } from "@material-ui/styles";
+
+const useStyles = makeStyles((theme) => ({
+  background: {
+    position: "fixed",
+    top: "0",
+    left: "0",
+    width: "100%",
+    height: "100vh",
+    backgroundColor: "rgba(52, 52, 52, 0.4)",
+
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    zIndex: 4,
+  },
+}));
 
 const SignupPage = (props) => {
+  const classes = useStyles();
+
   //const email_postfix1 = '@scarletmail.rutgers.edu';
   const email_postfix2 = "@rutgers.edu";
   const [firstName, setFirstName] = useState("");
@@ -23,13 +41,51 @@ const SignupPage = (props) => {
   // const [majorList, setMajorList] = useState([""]);
   // const [minorList, setMinorList] = useState([""]);
 
-  const [emailcheck, setEmailcheck] = useState(true);
-  const [password_length_check, setPasswordLengthCheck] = useState(true);
-  const [passMatch, setPassMatch] = useState(true);
-  const [upperlower, setUpperLowerCheck] = useState(true);
+  const [emailcheck, setEmailcheck] = useState(false);
+  const [password_length_check, setPasswordLengthCheck] = useState(false);
+  const [passMatch, setPassMatch] = useState(false);
+  const [upperlower, setUpperLowerCheck] = useState(false);
   const [emailfakecheck, setEmailfakeCheck] = useState(true);
   const [passwordStrength, setPasswordstrengthCheck] = useState(true);
   // const [majorCheck, setMajorCheck] = useState(true);
+
+  useEffect(() => {
+    //validate email address: must be rutgers email
+    let email_postfix = email.substring(email.indexOf("@"), email.length);
+    if (email.length > 0 && email_postfix === email_postfix2) {
+      setEmailcheck(true);
+    }
+
+    // validate password:
+    // must be at least seven digits and include at least one uppercase and one lowercase character
+    if (password.length > 0 && password.length > 6) {
+      setPasswordLengthCheck(true);
+      var i = 0;
+      var temp1 = false;
+      var temp2 = false;
+      while (i <= password.length) {
+        if (password.charAt(i) === "") {
+          i++;
+          continue;
+        } else if (/^[a-z]*$/.test(password.charAt(i))) {
+          temp2 = true;
+        } else if (/^[A-Z]*$/.test(password.charAt(i))) {
+          temp1 = true;
+        }
+        i++;
+      }
+      if (temp1 && temp2) {
+        setUpperLowerCheck(true);
+      }
+    }
+
+    // check passwords match
+    if (password.localeCompare(confirmPassword) === 0) {
+      setPassMatch(true);
+    } else {
+      setPassMatch(false);
+    }
+  }, [email, password, confirmPassword]);
 
   function validateForm() {
     var pass = true;
@@ -113,7 +169,7 @@ const SignupPage = (props) => {
       } else {
         //console.log("arrive");
         addUser();
-        props.history.push("/dashboard");
+        //props.history.push("/dashboard");
       }
     } else {
       return renderForm();
@@ -195,14 +251,7 @@ const SignupPage = (props) => {
 
   function renderForm() {
     return (
-      <Grid
-        container
-        spacing={0}
-        direction="column"
-        alignItems="center"
-        justify="center"
-        style={{ minHeight: "100vh", backgroundColor: "#E67E22 " }}
-      >
+      <div className={classes.background}>
         <Card>
           <Grid
             container
@@ -213,7 +262,7 @@ const SignupPage = (props) => {
             <h1 style={{ marginBottom: "0px" }}>Sign Up</h1>
             <form onSubmit={handleSubmit}>
               <FormControl style={{ minWidth: "25vw", padding: "15px" }}>
-                {
+                {!emailcheck && (
                   <FormHelperText
                     style={{
                       color: "red",
@@ -222,13 +271,32 @@ const SignupPage = (props) => {
                     }}
                   >
                     * Please use your rutgers email ending with @rutgers.edu
-                    <br />
-                    * Password must be longer than six digits and
-                    <br />
-                    include at least one uppercase and one lower case letter
-                    <br />
                   </FormHelperText>
-                }
+                )}
+                {!password_length_check && (
+                  <FormHelperText
+                    style={{
+                      color: "red",
+                      marginBottom: "7px",
+                      alignSelf: "center",
+                    }}
+                  >
+                    * Password must be longer than six digits
+                  </FormHelperText>
+                )}
+                {!upperlower && (
+                  <FormHelperText
+                    style={{
+                      color: "red",
+                      marginBottom: "7px",
+                      alignSelf: "center",
+                    }}
+                  >
+                    * Password must include at least one uppercase and one lower
+                    case letter
+                  </FormHelperText>
+                )}
+
                 <TextField
                   required
                   label="First Name"
@@ -349,7 +417,6 @@ const SignupPage = (props) => {
                     </div>
                   );
                 })} */}
-
                 <TextField
                   required
                   label="Username"
@@ -407,16 +474,17 @@ const SignupPage = (props) => {
                 </Button>
               </FormControl>
             </form>
-            <div style={{ marginBottom: "15px" }}>
-              Already a member? <Link to="/login">Log in</Link>
-            </div>
           </Grid>
         </Card>
-      </Grid>
+      </div>
     );
   }
 
-  return renderForm();
+  if (props.trigger) {
+    return renderForm();
+  } else {
+    return "";
+  }
 };
 
 export default SignupPage;

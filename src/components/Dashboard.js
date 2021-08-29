@@ -117,7 +117,9 @@ const Dashboard = (props) => {
     });
 
     return () => {
+      //dispatch(logoutUser());
       unsubscribe();
+      //console.log("cleaning up...")
       timer.cleanUp();
     };
   }, [dispatch, isTimeout]);

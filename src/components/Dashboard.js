@@ -77,6 +77,7 @@ const Dashboard = (props) => {
 
   // handles logout
   const handleLogout = () => {
+    //console.log("logging out bc user");
     dispatch(logoutUser());
   };
 
@@ -124,7 +125,7 @@ const Dashboard = (props) => {
     });
 
     if (isTimeout) {
-      dispatch(logoutUser());
+      handleLogout();
     }
 
     // receives course data from Firebase and updates courseList and courseIDs in state
@@ -137,7 +138,9 @@ const Dashboard = (props) => {
     });
 
     return () => {
+      //dispatch(logoutUser());
       unsubscribe();
+      //console.log("cleaning up...")
       timer.cleanUp();
     };
   }, [dispatch, isTimeout]);

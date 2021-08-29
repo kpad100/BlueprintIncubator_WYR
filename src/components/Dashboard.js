@@ -1,10 +1,6 @@
 import {
-  Avatar,
   Card,
   Grid,
-  IconButton,
-  Menu,
-  MenuItem,
   GridList,
   GridListTile,
   InputBase,
@@ -19,7 +15,8 @@ import { isMobileOnly } from "react-device-detect";
 import { logoutUser } from "../actions";
 import AddReview from "./AddReview";
 import ReviewPage from "./ReviewPage";
-import { db, myFirebase } from "../firebase/firebase";
+import NavBar from "./NavBar";
+import { db } from "../firebase/firebase";
 import IdleTimer from "../actions/IdleTimer";
 
 // CSS styling
@@ -38,7 +35,7 @@ const styles = () => ({
     },
   },
   searchBar: {
-    backgroundColor: "#7ae7ff",
+    backgroundColor: "#bdf4ff",
     opacity: 0.5,
     borderRadius: 25,
     padding: "10px",
@@ -65,30 +62,13 @@ const styles = () => ({
 });
 
 const Dashboard = (props) => {
-  const [anchorEl, setAnchorEl] = useState(null); // anchor for menu, closed by default
   const [courseList, setCourseList] = useState([]); // list of courses
   const [selectedCourse, setSelectedCourse] = useState({}); // course to pass to ReviewPage
   const [goToReviewPage, setGoToReviewPage] = useState(false); // mounts ReviewPage when true
   const [searchTerm, setSearchTerm] = useState(""); // value of input to search bar
   const [buttonPopup, setButtonPopup] = useState(false);
   const [isTimeout, setIsTimeout] = useState(false);
-  const [emailSent, sendEmail] = useState(false);
   const { classes, isLoggingOut, logoutError, dispatch } = props;
-
-  // handles logout
-  const handleLogout = () => {
-    dispatch(logoutUser());
-  };
-
-  // opens account menu (currently only option in menu is to Logout)
-  const handleOpenMenu = (e) => {
-    setAnchorEl(e.currentTarget);
-  };
-
-  // closes account menu
-  const handleCloseMenu = () => {
-    setAnchorEl(null);
-  };
 
   const popUpAddReview = () => {
     setButtonPopup(true);
@@ -142,63 +122,13 @@ const Dashboard = (props) => {
     };
   }, [dispatch, isTimeout]);
 
-  if (!myFirebase.auth().currentUser.emailVerified) {
-    return (
-      <div align="center">
-        <h1>Verify Your Email!</h1>
-        <Button
-          style={{ backgroundColor: "#fb9263" }}
-          disabled={emailSent}
-          onClick={() => {
-            myFirebase.auth().currentUser.sendEmailVerification();
-            sendEmail(true);
-          }}
-        >
-          Resend Verification Email
-        </Button>
-        <Button
-          style={{ backgroundColor: "#fb9263" }}
-          onClick={() => {
-            window.location.reload();
-          }}
-        >
-          Refresh Page
-        </Button>
-      </div>
-    );
-  } else if (goToReviewPage) {
+  if (goToReviewPage) {
     return <ReviewPage selectedCourse={selectedCourse} />;
   } else {
     return (
       <div>
-        <Grid container>
-          <IconButton onClick={handleOpenMenu} aria-controls="menu">
-            <Avatar />
-          </IconButton>
-          <Menu
-            id="menu"
-            onClose={handleCloseMenu}
-            anchorEl={anchorEl}
-            open={Boolean(anchorEl)}
-          >
-            <MenuItem key="logoutItem" onClick={handleLogout}>
-              Logout
-            </MenuItem>
-          </Menu>
-
-          <h1 style={{ marginLeft: "auto" }}>Classes</h1>
-          <img
-            src="https://cdn.discordapp.com/attachments/812822571094900746/837106499863969812/wyr_transparent.png"
-            height="50"
-            style={{
-              marginLeft: "auto",
-              marginRight: "5px",
-              marginTop: "5px",
-            }}
-            alt=""
-          />
-        </Grid>
-
+        <NavBar dispatch={dispatch} backgroundColor={"#6c9dad"} />
+        <br />
         <Grid container direction="column" alignItems="center" justify="center">
           <div className={classes.searchBar}>
             <InputBase
@@ -206,7 +136,7 @@ const Dashboard = (props) => {
               onChange={(e) => {
                 setSearchTerm(e.target.value);
               }}
-              style={{ width: "50vw" }}
+              style={{ width: "40vw" }}
             />
             <Search style={{ color: "#fb9263" }} />
           </div>

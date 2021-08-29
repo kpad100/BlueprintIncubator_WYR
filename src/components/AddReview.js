@@ -2,6 +2,16 @@ import { Grid, Card, Button, TextField, Typography } from "@material-ui/core";
 import { Star, StarOutline } from "@material-ui/icons";
 import { useState, useEffect } from "react";
 import { db, myFirebase } from "../firebase/firebase";
+import Radio from '@material-ui/core/Radio';
+import RadioGroup from '@material-ui/core/RadioGroup';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import FormControl from '@material-ui/core/FormControl';
+import FormLabel from '@material-ui/core/FormLabel';
+import InputLabel from '@material-ui/core/InputLabel';
+import FormHelperText from '@material-ui/core/FormHelperText';
+import Select from '@material-ui/core/Select';
+import NativeSelect from '@material-ui/core/NativeSelect';
+import MenuItem from '@material-ui/core/MenuItem';
 import LoginPage from "./LoginPage";
 
 // CSS
@@ -22,6 +32,8 @@ const innerBlock = {
   position: "relative",
   padding: "32px",
   width: " 70%",
+  height: "80%",
+  overflow: "scroll",
   maxWidth: "800px",
   backgroundColor: "#FFF",
   zIndex: 5,
@@ -44,6 +56,8 @@ const AddReview = (props) => {
   const [prof, setProf] = useState("");
   const [description, setDescription] = useState("");
   const [grade, setGrade] = useState(null);
+
+  const submitSuccess = false; 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isVerified, setIsVerified] = useState(false);
   const [emailSent, sendEmail] = useState(false);
@@ -159,9 +173,10 @@ const AddReview = (props) => {
     return (
       <div style={background}>
         <Card style={innerBlock}>
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={handleSubmit, closed}>
             <div>
-              <Typography>
+              {/* for spacing on the top */}
+              <Typography style={{ marginTop: "50vh" }}>
                 Workload (1 is the MOST work, 5 is the LEAST work): *
               </Typography>
               {[...Array(5)].map((star, i) => {
@@ -304,14 +319,104 @@ const AddReview = (props) => {
               value={fromCourse !== undefined ? fromCourse.code : newCourseCode}
               onChange={(e) => setNewCourseCode(e.target.value)}
             />
-            <TextField
+        <div>
+          {/* Professor input  */}
+        <FormControl required style={{ width: "60%", marginBottom: "10px", marginTop: "5px" }} >
+        <InputLabel minwidth={120} id="demo-simple-select-label">Professor</InputLabel>
+        
+          <Select
+            value={prof}
+            onChange={(e) => setProf(e.target.value)}
+          >
+            <MenuItem value={10}> X</MenuItem>
+            <MenuItem value={20}>Y</MenuItem>
+            <MenuItem value={30}>Z</MenuItem>
+          </Select>
+      </FormControl>
+      </div>
+            {/* <TextField
               id="prof"
               required
               style={{ width: "60%", marginBottom: "10px", marginTop: "5px" }}
               label="Professor:"
               value={prof}
-              onChange={(e) => setProf(e.target.value)}
-            />
+              
+            /> */}
+            <div>
+              <FormControl style={{ marginTop: "5px" }} component="fieldset">
+                <FormLabel component="legend">Grade</FormLabel>
+                <RadioGroup row aria-label="position" name="position" defaultValue="top">
+                  <FormControlLabel
+                    value="A"
+                    control={<Radio color="primary" />}
+                    label="A"
+                    labelPlacement="start"
+                  />
+                  <FormControlLabel
+                    value="B"
+                    control={<Radio color="primary" />}
+                    label="B"
+                    labelPlacement="start"
+                  />
+                  <FormControlLabel
+                    value="C"
+                    control={<Radio color="primary" />}
+                    label="C"
+                    labelPlacement="start"
+                  />
+                  <FormControlLabel 
+                    value="D" 
+                    control={<Radio color="primary" />} 
+                    label="D" 
+                    labelPlacement="start"
+                  />
+                  <FormControlLabel 
+                    value="F" 
+                    control={<Radio color="primary" />} 
+                    label="F" 
+                    labelPlacement="start"
+                  />
+                </RadioGroup>
+              </FormControl>
+            </div>
+            <div>
+              <FormControl component="fieldset">
+                <FormLabel component="legend">Anonymous</FormLabel>
+                <RadioGroup row aria-label="position" name="position" defaultValue="top">
+                  <FormControlLabel
+                    value="Yes"
+                    control={<Radio color="primary" />}
+                    label="Yes"
+                    labelPlacement="start"
+                  />
+                  <FormControlLabel
+                    value="No"
+                    control={<Radio color="primary" />}
+                    label="No"
+                    labelPlacement="start"
+                  />
+                </RadioGroup>
+              </FormControl>
+              <FormControl style={{ marginLeft: "10px" }}component="fieldset">
+                <FormLabel component="legend">In Person</FormLabel>
+                <RadioGroup row aria-label="position" name="position" defaultValue="top">
+                  <FormControlLabel
+                    value="Yes"
+                    control={<Radio color="primary" />}
+                    label="Yes"
+                    labelPlacement="start"
+                  />
+                  <FormControlLabel
+                    value="No"
+                    control={<Radio color="primary" />}
+                    label="No"
+                    labelPlacement="start"
+                  />
+                </RadioGroup>
+              </FormControl>
+            </div>
+
+      
             <TextField
               id="description"
               required

@@ -1,6 +1,6 @@
 import { Grid, Card, Button, TextField, Typography } from "@material-ui/core";
 import { Star, StarOutline } from "@material-ui/icons";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { db, myFirebase } from "../firebase/firebase";
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
@@ -12,6 +12,7 @@ import FormHelperText from '@material-ui/core/FormHelperText';
 import Select from '@material-ui/core/Select';
 import NativeSelect from '@material-ui/core/NativeSelect';
 import MenuItem from '@material-ui/core/MenuItem';
+import LoginPage from "./LoginPage";
 
 // CSS
 const background = {
@@ -55,7 +56,12 @@ const AddReview = (props) => {
   const [prof, setProf] = useState("");
   const [description, setDescription] = useState("");
   const [grade, setGrade] = useState(null);
+
   const submitSuccess = false; 
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isVerified, setIsVerified] = useState(false);
+  const [emailSent, sendEmail] = useState(false);
+
   const handleSubmit = (e) => {
     e.preventDefault();
     if (
@@ -120,8 +126,51 @@ const AddReview = (props) => {
     setDescription("");
   }
 
-  return (
-    trigger && (
+  function checkLoginStatus() {
+    myFirebase.auth().onAuthStateChanged(function (user) {
+      if (user) {
+        setIsLoggedIn(true);
+        if (myFirebase.auth().currentUser.emailVerified) {
+          setIsVerified(true);
+        }
+      }
+    });
+  }
+
+  useEffect(() => {
+    checkLoginStatus();
+  });
+
+  if (trigger && isLoggedIn && !isVerified) {
+    return (
+      <div style={background}>
+        <Card style={{ padding: "15px" }}>
+          <h1>Verify Your Email!</h1>
+          <Button
+            style={{ backgroundColor: "#fb9263" }}
+            disabled={emailSent}
+            onClick={() => {
+              myFirebase.auth().currentUser.sendEmailVerification();
+              sendEmail(true);
+            }}
+          >
+            Resend Verification Email
+          </Button>
+          <br />
+          <br />
+          <Button
+            style={{ backgroundColor: "#fb9263" }}
+            onClick={() => {
+              window.location.reload();
+            }}
+          >
+            Refresh Page
+          </Button>
+        </Card>
+      </div>
+    );
+  } else if (trigger && isVerified) {
+    return (
       <div style={background}>
         <Card style={innerBlock}>
           <form onSubmit={handleSubmit, closed}>
@@ -401,8 +450,10 @@ const AddReview = (props) => {
           </form>
         </Card>
       </div>
-    )
-  );
+    );
+  } else {
+    return <LoginPage trigger={trigger} />;
+  }
 };
 
 export default AddReview;

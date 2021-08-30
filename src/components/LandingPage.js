@@ -9,6 +9,7 @@ import Typewriter from "../actions/Typewriter.js";
 import NavBar from "./NavBar.js";
 import SignupPage from "./SignupPage";
 import { myFirebase } from "../firebase/firebase";
+import { isMobileOnly } from "react-device-detect";
 
 const useStyles = makeStyles({
   root: {
@@ -60,7 +61,7 @@ const LandingPage = () => {
         }}
       >
         <Grid item xs={12}>
-          <center style={{ fontSize: 40 }}>
+          <center style={{ fontSize: isMobileOnly ? 25 : 40 }}>
             <Typewriter text={"Would You Recommend?"} />
           </center>
         </Grid>
@@ -114,24 +115,43 @@ const LandingPage = () => {
           minHeight: "500px",
         }}
       >
-        <Grid item xs={5}>
+        {isMobileOnly ? (
           <img
-            data-aos="slide-right"
             src={process.env.PUBLIC_URL + "/images/review_feature.PNG"}
             width="98%"
             max-height="98%"
             object-fit="contain"
             alt=""
           />
-        </Grid>
-        <Grid item xs={6}>
+        ) : (
+          <Grid item xs={5}>
+            <img
+              data-aos="slide-right"
+              src={process.env.PUBLIC_URL + "/images/review_feature.PNG"}
+              width="98%"
+              max-height="98%"
+              object-fit="contain"
+              alt=""
+            />
+          </Grid>
+        )}
+        {isMobileOnly ? (
           <center>
             <h1 style={{ marginLeft: "10px" }}>
               Write reviews based on experience to help other students choose
               their courses.
             </h1>
           </center>
-        </Grid>
+        ) : (
+          <Grid item xs={6}>
+            <center>
+              <h1 style={{ marginLeft: "10px" }}>
+                Write reviews based on experience to help other students choose
+                their courses.
+              </h1>
+            </center>
+          </Grid>
+        )}
       </Grid>
 
       <Grid
@@ -145,28 +165,48 @@ const LandingPage = () => {
           minHeight: "500px",
         }}
       >
-        <Grid item xs={4}>
+        {isMobileOnly && (
+          <img
+            src={process.env.PUBLIC_URL + "/images/class_feature.PNG"}
+            width="98%"
+            max-height="98%"
+            object-fit="contain"
+            alt=""
+          />
+        )}
+        {isMobileOnly ? (
           <center>
             <h1>
               Get simple overviews for courses with all the info you need,
               without even signing up
             </h1>
           </center>
-        </Grid>
+        ) : (
+          <Grid item xs={4}>
+            <center>
+              <h1>
+                Get simple overviews for courses with all the info you need,
+                without even signing up
+              </h1>
+            </center>
+          </Grid>
+        )}
 
-        <Grid item xs={6}>
-          <img
-            data-aos="slide-left"
-            src={process.env.PUBLIC_URL + "/images/class_feature.PNG"}
-            width="98%"
-            max-height="98%"
-            object-fit="contain"
-            style={{
-              marginLeft: "10%",
-            }}
-            alt=""
-          />
-        </Grid>
+        {!isMobileOnly && (
+          <Grid item xs={6}>
+            <img
+              data-aos="slide-left"
+              src={process.env.PUBLIC_URL + "/images/class_feature.PNG"}
+              width="98%"
+              max-height="98%"
+              object-fit="contain"
+              style={{
+                marginLeft: "10%",
+              }}
+              alt=""
+            />
+          </Grid>
+        )}
       </Grid>
 
       <Grid
@@ -180,28 +220,47 @@ const LandingPage = () => {
           minHeight: "500px",
         }}
       >
-        <Grid item xs={5}>
+        {isMobileOnly ? (
           <img
-            data-aos="slide-right"
             src={process.env.PUBLIC_URL + "/images/search_feature.PNG"}
             width="98%"
             max-height="98%"
             object-fit="contain"
             alt=""
           />
-        </Grid>
-        <Grid item xs={6}>
+        ) : (
+          <Grid item xs={5}>
+            <img
+              data-aos="slide-right"
+              src={process.env.PUBLIC_URL + "/images/search_feature.PNG"}
+              width="98%"
+              max-height="98%"
+              object-fit="contain"
+              alt=""
+            />
+          </Grid>
+        )}
+        {isMobileOnly ? (
           <center>
             <h1 style={{ marginLeft: "10px" }}>
               Search for topics of interests to find the perfect courses for
               you.
             </h1>
-            <h1>
-              Want to write a review for a course that doesn't appear in the
-              list? No problem.
-            </h1>
           </center>
-        </Grid>
+        ) : (
+          <Grid item xs={6}>
+            <center>
+              <h1 style={{ marginLeft: "10px" }}>
+                Search for topics of interests to find the perfect courses for
+                you.
+              </h1>
+              <h1>
+                Want to write a review for a course that doesn't appear in the
+                list? No problem.
+              </h1>
+            </center>
+          </Grid>
+        )}
       </Grid>
 
       <Grid

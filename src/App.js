@@ -9,7 +9,7 @@ function App(props) {
 
   return (
     <Switch>
-      <Route exact path="/BlueprintIncubatorGeneral" component={LandingPage} />
+      <Route path="/BlueprintIncubatorGeneral" component={LandingPage} />
       <Route
         exact
         path="/courses"
@@ -17,7 +17,7 @@ function App(props) {
         isVerifying={isVerifying}
         component={CoursesPage}
       />
-      <Route exact path="/forgotpassword" component={ForgotpassPage} />
+      <Route path="/forgotpassword" component={ForgotpassPage} />
     </Switch>
   );
 }

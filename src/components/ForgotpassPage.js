@@ -49,7 +49,7 @@ const ForgotpassPage = (props) => {
               id="#btn-forgotPass"
               variant="contained"
               type="submit"
-              style={{ marginBottom: "7px", backgroundColor: "orange" }}
+              style={{ marginBottom: "7px", backgroundColor: "#fb9263" }}
               disabled={buttonDisabled}
             >
               Send email

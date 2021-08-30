@@ -85,7 +85,7 @@ const LandingPage = () => {
           }}
           onClick={() => setDirectToDashboard(true)}
         >
-          look at reviews
+          check out reviews
         </Button>
         <Grid item xs={12}>
           <center>
@@ -99,68 +99,6 @@ const LandingPage = () => {
               any way.
             </h1>
           </center>
-        </Grid>
-      </Grid>
-
-      <Grid
-        container
-        direction="row"
-        alignItems="center"
-        justify="center"
-        spacing={0}
-        style={{
-          marginTop: "10px",
-          minHeight: "500px",
-        }}
-      >
-        <Grid item xs={5}>
-          <img
-            data-aos="slide-right"
-            src={process.env.PUBLIC_URL + "/images/search_feature.PNG"}
-            width="98%"
-            max-height="98%"
-            object-fit="contain"
-            alt=""
-          />
-        </Grid>
-        <Grid item xs={6}>
-          <center>
-            <h1 style={{ marginLeft: "10px" }}>
-              Search for topics of interests to find the perfect classes for you
-            </h1>
-          </center>
-        </Grid>
-      </Grid>
-
-      <Grid
-        container
-        direction="row"
-        alignItems="center"
-        justify="center"
-        spacing={0}
-        style={{
-          marginTop: "10px",
-          minHeight: "500px",
-        }}
-      >
-        <Grid item xs={4}>
-          <center>
-            <h1>Get simple overviews for classes with all the info you need</h1>
-          </center>
-        </Grid>
-
-        <Grid item xs={6}>
-          <img
-            data-aos="slide-left"
-            src={process.env.PUBLIC_URL + "/images/class_feature.PNG"}
-            width="98%"
-            max-height="98%"
-            object-fit="contain"
-            style={{
-              marginLeft: "10%",
-            }}
-            alt=""
-          />
         </Grid>
       </Grid>
 
@@ -197,6 +135,76 @@ const LandingPage = () => {
 
       <Grid
         container
+        direction="row"
+        alignItems="center"
+        justify="center"
+        spacing={0}
+        style={{
+          marginTop: "10px",
+          minHeight: "500px",
+        }}
+      >
+        <Grid item xs={4}>
+          <center>
+            <h1>
+              Get simple overviews for classes with all the info you need,
+              without even signing up
+            </h1>
+          </center>
+        </Grid>
+
+        <Grid item xs={6}>
+          <img
+            data-aos="slide-left"
+            src={process.env.PUBLIC_URL + "/images/class_feature.PNG"}
+            width="98%"
+            max-height="98%"
+            object-fit="contain"
+            style={{
+              marginLeft: "10%",
+            }}
+            alt=""
+          />
+        </Grid>
+      </Grid>
+
+      <Grid
+        container
+        direction="row"
+        alignItems="center"
+        justify="center"
+        spacing={0}
+        style={{
+          marginTop: "10px",
+          minHeight: "500px",
+        }}
+      >
+        <Grid item xs={5}>
+          <img
+            data-aos="slide-right"
+            src={process.env.PUBLIC_URL + "/images/search_feature.PNG"}
+            width="98%"
+            max-height="98%"
+            object-fit="contain"
+            alt=""
+          />
+        </Grid>
+        <Grid item xs={6}>
+          <center>
+            <h1 style={{ marginLeft: "10px" }}>
+              Search for topics of interests to find the perfect classes for
+              you.
+            </h1>
+            <h1>
+              Want to write a review for a class that doesn't appear in the
+              list? No problem.
+            </h1>
+          </center>
+        </Grid>
+      </Grid>
+
+      <Grid
+        container
         direction="column"
         alignItems="center"
         justify="center"
@@ -206,6 +214,24 @@ const LandingPage = () => {
           minHeight: "500px",
         }}
       >
+        <Button
+          variant="contained"
+          style={{
+            borderRadius: 25,
+            backgroundColor: "#69b4cf",
+            color: "white",
+            fontSize: 25,
+            fontWeight: "bold",
+            marginTop: "50px",
+            marginBottom: "50px",
+            fontFamily: "Poppins",
+          }}
+          onClick={() => setDirectToDashboard(true)}
+        >
+          check out reviews
+        </Button>
+        <br />
+        <br />
         <Grid item xs={6}>
           <center>
             <h1>New things are coming soon, sign up to stay in the loop</h1>
@@ -225,7 +251,6 @@ const LandingPage = () => {
             )}
           </center>
         </Grid>
-        <br />
         <br />
         <br />
         <br />

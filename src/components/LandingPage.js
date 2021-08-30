@@ -15,7 +15,7 @@ const useStyles = makeStyles({
   root: {
     background: "linear-gradient(145deg, #5F9EA0 20%, #ff7f50 70%)",
     color: "white",
-    height: "3100px",
+    height: isMobileOnly ? "4000px" : "3100px",
     maxWidth: "100%",
     overflowX: "hidden",
   },

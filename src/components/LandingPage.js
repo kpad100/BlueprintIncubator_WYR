@@ -14,7 +14,7 @@ const useStyles = makeStyles({
   root: {
     background: "linear-gradient(145deg, #5F9EA0 20%, #ff7f50 70%)",
     color: "white",
-    height: "3000px",
+    height: "3100px",
     maxWidth: "100%",
     overflowX: "hidden",
   },
@@ -23,21 +23,22 @@ const useStyles = makeStyles({
 const LandingPage = () => {
   useEffect(() => {
     Aos.init({ duration: 1500 });
-    checkLoginStatus();
+
+    const unsubscribe = myFirebase.auth().onAuthStateChanged(function (user) {
+      if (user) {
+        setIsLoggedIn(true);
+      }
+    });
+
+    return () => {
+      unsubscribe();
+    };
   }, []);
 
   const classes = useStyles();
   const [directToCoursesPage, setDirectToCoursesPage] = useState(false);
   const [signupPopup, setSignupPopup] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-
-  function checkLoginStatus() {
-    myFirebase.auth().onAuthStateChanged(function (user) {
-      if (user) {
-        setIsLoggedIn(true);
-      }
-    });
-  }
 
   if (directToCoursesPage === true) return <Redirect to="/courses" />;
 

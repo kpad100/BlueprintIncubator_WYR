@@ -29,11 +29,15 @@ const NavBar = ({
   };
 
   useEffect(() => {
-    myFirebase.auth().onAuthStateChanged(function (user) {
+    const unsubscribe = myFirebase.auth().onAuthStateChanged(function (user) {
       if (user) {
         setIsLoggedIn(true);
       }
     });
+
+    return () => {
+      unsubscribe();
+    };
   });
 
   if (backToLanding && !fromLandingPage)
@@ -57,7 +61,7 @@ const NavBar = ({
           onMouseLeave={() => setHover(false)}
         />
         {hover && !fromLandingPage && (
-          <label for="wyr_logo">back to home page</label>
+          <label htmlFor="wyr_logo">back to home page</label>
         )}
       </div>
       {title && (

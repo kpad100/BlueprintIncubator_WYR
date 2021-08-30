@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import {
   Grid,
   TextField,
@@ -46,46 +46,9 @@ const SignupPage = (props) => {
   const [passMatch, setPassMatch] = useState(false);
   const [upperlower, setUpperLowerCheck] = useState(false);
   const [emailfakecheck, setEmailfakeCheck] = useState(true);
-  const [passwordStrength, setPasswordstrengthCheck] = useState(true);
+  const [passwordStrength, setPasswordstrengthCheck] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
   // const [majorCheck, setMajorCheck] = useState(true);
-
-  useEffect(() => {
-    //validate email address: must be rutgers email
-    let email_postfix = email.substring(email.indexOf("@"), email.length);
-    if (email.length > 0 && email_postfix === email_postfix2) {
-      setEmailcheck(true);
-    }
-
-    // validate password:
-    // must be at least seven digits and include at least one uppercase and one lowercase character
-    if (password.length > 0 && password.length > 6) {
-      setPasswordLengthCheck(true);
-      var i = 0;
-      var temp1 = false;
-      var temp2 = false;
-      while (i <= password.length) {
-        if (password.charAt(i) === "") {
-          i++;
-          continue;
-        } else if (/^[a-z]*$/.test(password.charAt(i))) {
-          temp2 = true;
-        } else if (/^[A-Z]*$/.test(password.charAt(i))) {
-          temp1 = true;
-        }
-        i++;
-      }
-      if (temp1 && temp2) {
-        setUpperLowerCheck(true);
-      }
-    }
-
-    // check passwords match
-    if (password.localeCompare(confirmPassword) === 0) {
-      setPassMatch(true);
-    } else {
-      setPassMatch(false);
-    }
-  }, [email, password, confirmPassword]);
 
   function validateForm() {
     var pass = true;
@@ -132,10 +95,7 @@ const SignupPage = (props) => {
     }
 
     //validate password match
-    if (
-      confirmPassword.length > 6 &&
-      password.localeCompare(confirmPassword) === 0
-    ) {
+    if (password.localeCompare(confirmPassword) === 0) {
       setPassMatch(true);
       pass = pass && true;
     } else {
@@ -156,6 +116,7 @@ const SignupPage = (props) => {
 
   function handleSubmit(event) {
     event.preventDefault();
+    setSubmitted(true);
 
     var isValid = validateForm();
     if (isValid) {
@@ -262,40 +223,18 @@ const SignupPage = (props) => {
             <h1 style={{ marginBottom: "0px" }}>Sign Up</h1>
             <form onSubmit={handleSubmit}>
               <FormControl style={{ minWidth: "25vw", padding: "15px" }}>
-                {!emailcheck && (
-                  <FormHelperText
-                    style={{
-                      color: "red",
-
-                      alignSelf: "center",
-                    }}
-                  >
-                    * Please use your rutgers email ending with @rutgers.edu
-                  </FormHelperText>
-                )}
-                {!password_length_check && (
-                  <FormHelperText
-                    style={{
-                      color: "red",
-
-                      alignSelf: "center",
-                    }}
-                  >
-                    * Password must be longer than six digits
-                  </FormHelperText>
-                )}
-                {!upperlower && (
-                  <FormHelperText
-                    style={{
-                      color: "red",
-                      marginBottom: "7px",
-                      alignSelf: "center",
-                    }}
-                  >
-                    * Password must include at least one uppercase and one lower
-                    case letter
-                  </FormHelperText>
-                )}
+                <FormHelperText
+                  style={{
+                    color: "red",
+                    marginBottom: "7px",
+                  }}
+                >
+                  * Please use your rutgers email ending with @rutgers.edu
+                  <br />
+                  * Password must be longer than six digits
+                  <br />* Password must include at least one uppercase and one
+                  lower case letter
+                </FormHelperText>
 
                 <TextField
                   required
@@ -321,6 +260,17 @@ const SignupPage = (props) => {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                 />
+                {submitted && !emailcheck && (
+                  <FormHelperText
+                    style={{
+                      color: "red",
+                      marginBottom: "7px",
+                      alignSelf: "center",
+                    }}
+                  >
+                    Please use your rutgers email ending with @rutgers.edu
+                  </FormHelperText>
+                )}
                 {!emailfakecheck && (
                   <FormHelperText
                     style={{
@@ -434,7 +384,18 @@ const SignupPage = (props) => {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                 />
-                {!passwordStrength && (
+                {submitted && !password_length_check && (
+                  <FormHelperText
+                    style={{
+                      color: "red",
+                      marginBottom: "7px",
+                      alignSelf: "center",
+                    }}
+                  >
+                    Password is too short
+                  </FormHelperText>
+                )}
+                {!passwordStrength && password_length_check && (
                   <FormHelperText
                     style={{
                       color: "red",
@@ -454,7 +415,7 @@ const SignupPage = (props) => {
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
                 />
-                {!passMatch && (
+                {submitted && !passMatch && (
                   <FormHelperText
                     style={{
                       color: "red",

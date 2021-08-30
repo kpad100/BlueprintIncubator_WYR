@@ -153,8 +153,8 @@ const AddReview = (props) => {
     setTookOnline(false);
   }
 
-  function checkLoginStatus() {
-    myFirebase.auth().onAuthStateChanged(function (user) {
+  useEffect(() => {
+    const unsubscribe = myFirebase.auth().onAuthStateChanged(function (user) {
       if (user) {
         setIsLoggedIn(true);
         if (myFirebase.auth().currentUser.emailVerified) {
@@ -162,14 +162,15 @@ const AddReview = (props) => {
         }
       }
     });
-  }
 
-  useEffect(() => {
-    checkLoginStatus();
     if (prof === "other") {
       setOtherProf(true);
       setProf("");
     }
+
+    return () => {
+      unsubscribe();
+    };
   }, [prof]);
 
   if (trigger && isLoggedIn && !isVerified) {

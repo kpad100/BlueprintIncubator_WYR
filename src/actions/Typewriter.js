@@ -9,10 +9,14 @@ const Typewriter = ({ text }) => {
 
   useEffect(() => {
     if (index.current < text.length) {
-      setTimeout(() => {
+      let timerId = setTimeout(() => {
         setCurrentText((value) => value + text.charAt(index.current));
         index.current += 1;
       }, 200);
+
+      return () => {
+        clearTimeout(timerId);
+      };
     }
   }, [currentText, text]);
 

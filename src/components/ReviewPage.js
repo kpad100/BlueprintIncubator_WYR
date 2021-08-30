@@ -85,8 +85,9 @@ const ReviewPage = ({ selectedCourse }) => {
       });
 
     // receives review data from Firebase and updates reviewList and avgRating in state
-    db.collection("courses/" + selectedCourse.code + "/reviews").onSnapshot(
-      (querySnapshot) => {
+    const unsubscribe = db
+      .collection("courses/" + selectedCourse.code + "/reviews")
+      .onSnapshot((querySnapshot) => {
         const reviews = [];
         let workloadSum = 0;
         let diffSum = 0;
@@ -114,8 +115,11 @@ const ReviewPage = ({ selectedCourse }) => {
             teachSum / reviews.length) /
             3
         );
-      }
-    );
+      });
+
+    return () => {
+      unsubscribe();
+    };
   }, [selectedCourse, selectedProf]);
 
   if (returnToCoursesPage) {

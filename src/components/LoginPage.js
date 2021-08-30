@@ -113,9 +113,10 @@ const Login = ({ dispatch, loginError, trigger }) => {
               <div style={{ marginTop: "10px", marginBottom: "15px" }}>
                 Not a member?{" "}
                 <Button
+                  variant="contained"
                   style={{
                     borderRadius: 25,
-                    maxHeight: "30px",
+                    maxHeight: "25px",
                     backgroundColor: "#fb9263",
                   }}
                   onClick={() => {

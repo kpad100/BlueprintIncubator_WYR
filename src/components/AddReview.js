@@ -10,7 +10,6 @@ import {
   Select,
   MenuItem,
   Checkbox,
-  InputBase,
 } from "@material-ui/core";
 import { Star, StarOutline } from "@material-ui/icons";
 import { isMobileOnly } from "react-device-detect";
@@ -59,7 +58,7 @@ const AddReview = (props) => {
   const [newCourseCode, setNewCourseCode] = useState("");
   const [prof, setProf] = useState("");
   const [description, setDescription] = useState("");
-  const [grade, setGrade] = useState(null);
+  const [grade, setGrade] = useState("");
   const [anon, setAnon] = useState(false);
   const [tookOnline, setTookOnline] = useState(false);
 
@@ -370,9 +369,7 @@ const AddReview = (props) => {
                 />
               ) : (
                 <FormControl required style={{ width: "50%" }}>
-                  <InputLabel minwidth={120} id="demo-simple-select-label">
-                    Professor
-                  </InputLabel>
+                  <InputLabel>Professor</InputLabel>
                   <Select
                     value={prof}
                     onChange={(e) => {
@@ -397,9 +394,7 @@ const AddReview = (props) => {
                 required
                 style={{ width: "40%", marginLeft: "10px" }}
               >
-                <InputLabel minwidth={120} id="demo-simple-select-label">
-                  Grade Received
-                </InputLabel>
+                <InputLabel>Grade Received</InputLabel>
                 <Select
                   value={grade}
                   onChange={(e) => setGrade(e.target.value)}

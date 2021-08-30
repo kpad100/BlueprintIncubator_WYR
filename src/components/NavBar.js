@@ -57,7 +57,7 @@ const NavBar = ({
             style={{
               marginTop: "5px",
               marginBottom: "0px",
-              marginLeft: isLoggedIn ? "3vw" : "8vw",
+              marginLeft: isLoggedIn ? "3vw" : "8.5vw",
             }}
           >
             {title}

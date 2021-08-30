@@ -23,11 +23,17 @@ const useStyles = makeStyles((theme) => ({
 
 function App(props) {
   const { isAuthenticated, isVerifying } = props;
-  const classes = useStyles();
+  useStyles();
   return (
     <Switch>
       <Route exact path="/BlueprintIncubatorGeneral" component={LandingPage} />
-      <Route exact path="/dashboard" component={Dashboard} />
+      <Route
+        exact
+        path="/dashboard"
+        isAuthenticated={isAuthenticated}
+        isVerifying={isVerifying}
+        component={Dashboard}
+      />
       <Route exact path="/forgotpassword" component={ForgotpassPage} />
     </Switch>
   );

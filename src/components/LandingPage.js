@@ -213,11 +213,8 @@ const LandingPage = () => {
               <div>
                 <Button
                   variant="contained"
-                  disableElevation
                   style={{
                     borderRadius: 25,
-                    marginLeft: "10px",
-                    maxHeight: "30px",
                   }}
                   onClick={() => setSignupPopup(true)}
                 >
@@ -229,8 +226,13 @@ const LandingPage = () => {
           </center>
         </Grid>
         <br />
+        <br />
+        <br />
+        <br />
         <center>
-          <h2>Contact us at: wyrhelpdesk@gmail.com </h2>
+          <h2>
+            Have questions or feedback? Contact us at: wyrhelpdesk@gmail.com{" "}
+          </h2>
         </center>
       </Grid>
     </div>

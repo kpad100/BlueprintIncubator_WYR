@@ -123,9 +123,9 @@ const ReviewPage = ({ selectedCourse }) => {
   } else {
     return (
       <div>
-        <Grid container>
+        <Grid container style={{ backgroundColor: "#69b4cf" }}>
           <IconButton onClick={handleReturnToDashboard}>
-            <ArrowBackIos />
+            <ArrowBackIos style={{ color: "white" }} />
           </IconButton>
           <img
             src="https://cdn.discordapp.com/attachments/812822571094900746/837106499863969812/wyr_transparent.png"
@@ -134,10 +134,13 @@ const ReviewPage = ({ selectedCourse }) => {
               marginLeft: "auto",
               marginRight: "5px",
               marginTop: "5px",
+              marginBottom: "5px",
             }}
             alt=""
           />
         </Grid>
+
+        <br />
 
         <Card className={classes.summaryCard}>
           <Grid container alignItems="center">

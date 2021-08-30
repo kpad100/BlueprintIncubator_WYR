@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { makeStyles } from "@material-ui/styles";
 import { ArrowBackIos, ExpandMore } from "@material-ui/icons";
-import Dashboard from "./Dashboard";
+import CoursesPage from "./CoursesPage";
 import { db } from "../firebase/firebase";
 import { isMobileOnly } from "react-device-detect";
 import {
@@ -41,7 +41,7 @@ const useStyles = makeStyles((theme) => ({
 
 const ReviewPage = ({ selectedCourse }) => {
   const classes = useStyles();
-  const [returnToDashboard, setReturnToDashboard] = useState(false); // when true, returns Dashboard component
+  const [returnToCoursesPage, setReturnToCoursesPage] = useState(false); // when true, returns CoursesPage component
   const [reviewList, setReviewList] = useState([]); // list of reviews
   const [selectedProf, setSelectedProf] = useState("All Professors");
   const [profList, setProfList] = useState([]);
@@ -60,8 +60,8 @@ const ReviewPage = ({ selectedCourse }) => {
   };
 
   // handles when back button is clicked
-  const handleReturnToDashboard = () => {
-    setReturnToDashboard(true);
+  const handleReturnToCoursesPage = () => {
+    setReturnToCoursesPage(true);
   };
 
   useEffect(() => {
@@ -118,13 +118,13 @@ const ReviewPage = ({ selectedCourse }) => {
     );
   }, [selectedCourse, selectedProf]);
 
-  if (returnToDashboard) {
-    return <Dashboard />;
+  if (returnToCoursesPage) {
+    return <CoursesPage />;
   } else {
     return (
       <div>
         <Grid container style={{ backgroundColor: "#69b4cf" }}>
-          <IconButton onClick={handleReturnToDashboard}>
+          <IconButton onClick={handleReturnToCoursesPage}>
             <ArrowBackIos style={{ color: "white" }} />
           </IconButton>
           <img

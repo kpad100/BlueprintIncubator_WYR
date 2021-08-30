@@ -1,6 +1,6 @@
 import { Route, Switch } from "react-router-dom";
 import ForgotpassPage from "./components/ForgotpassPage";
-import Dashboard from "./components/Dashboard";
+import CoursesPage from "./components/CoursesPage";
 import { connect } from "react-redux";
 import LandingPage from "./components/LandingPage";
 import { makeStyles } from "@material-ui/styles";
@@ -29,10 +29,10 @@ function App(props) {
       <Route exact path="/BlueprintIncubatorGeneral" component={LandingPage} />
       <Route
         exact
-        path="/dashboard"
+        path="/courses"
         isAuthenticated={isAuthenticated}
         isVerifying={isVerifying}
-        component={Dashboard}
+        component={CoursesPage}
       />
       <Route exact path="/forgotpassword" component={ForgotpassPage} />
     </Switch>

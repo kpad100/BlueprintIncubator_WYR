@@ -19,6 +19,7 @@ const NavBar = ({
   const [loginPopup, setLoginPopup] = useState(false);
   const [signupPopup, setSignupPopup] = useState(false);
   const [backToLanding, setBackToLanding] = useState(false);
+  const [hover, setHover] = useState(false);
 
   const handleLogout = () => {
     dispatch(logoutUser());
@@ -40,17 +41,25 @@ const NavBar = ({
 
   return (
     <Grid container style={{ backgroundColor: backgroundColor }}>
-      <img
-        src="https://cdn.discordapp.com/attachments/812822571094900746/837106499863969812/wyr_transparent.png"
-        height={fromLandingPage ? "80" : "50"}
-        style={{
-          marginLeft: "5px",
-          marginTop: "5px",
-          marginBottom: "5px",
-        }}
-        alt=""
-        onClick={() => setBackToLanding(true)}
-      />
+      <div>
+        <img
+          src="https://cdn.discordapp.com/attachments/812822571094900746/837106499863969812/wyr_transparent.png"
+          height={fromLandingPage ? "80" : "50"}
+          id="wyr_logo"
+          style={{
+            marginLeft: "5px",
+            marginTop: "5px",
+            marginBottom: "5px",
+          }}
+          alt=""
+          onClick={() => setBackToLanding(true)}
+          onMouseEnter={() => setHover(true)}
+          onMouseLeave={() => setHover(false)}
+        />
+        {hover && !fromLandingPage && (
+          <label for="wyr_logo">back to home page</label>
+        )}
+      </div>
       {title && (
         <div style={{ marginLeft: "auto" }}>
           <h1
@@ -58,6 +67,7 @@ const NavBar = ({
               marginTop: "5px",
               marginBottom: "0px",
               marginLeft: isLoggedIn ? "3vw" : "8.5vw",
+              marginRight: hover ? "11vw" : "0vw",
             }}
           >
             {title}

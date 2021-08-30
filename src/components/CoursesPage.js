@@ -48,7 +48,7 @@ const styles = () => ({
   },
 });
 
-const Dashboard = (props) => {
+const CoursesPage = (props) => {
   const [courseList, setCourseList] = useState([]); // list of courses
   const [selectedCourse, setSelectedCourse] = useState({}); // course to pass to ReviewPage
   const [goToReviewPage, setGoToReviewPage] = useState(false); // mounts ReviewPage when true
@@ -119,7 +119,7 @@ const Dashboard = (props) => {
         <NavBar
           dispatch={dispatch}
           backgroundColor={"#69b4cf"}
-          title={"Classes"}
+          title={"Courses"}
         />
         <br />
         <Grid container direction="column" alignItems="center" justify="center">
@@ -191,12 +191,12 @@ const Dashboard = (props) => {
           </GridList>
 
           <div align="center">
-            <h1>Can't Find the Class You're Looking For?</h1>
+            <h1>Can't Find the Course You're Looking For?</h1>
             <Button
               className={classes.addReviewButton}
               onClick={popUpAddReview}
             >
-              Add Review for New Class
+              Add Review for New Course
             </Button>
             <AddReview trigger={buttonPopup} closed={closePopUp} />
           </div>
@@ -216,4 +216,4 @@ function mapStateToProps(state) {
   };
 }
 
-export default withStyles(styles)(connect(mapStateToProps)(Dashboard));
+export default withStyles(styles)(connect(mapStateToProps)(CoursesPage));

@@ -14,7 +14,7 @@ const useStyles = makeStyles({
   root: {
     background: "linear-gradient(145deg, #5F9EA0 20%, #ff7f50 70%)",
     color: "white",
-    height: "2875px",
+    height: "3000px",
     maxWidth: "100%",
     overflowX: "hidden",
   },
@@ -27,7 +27,7 @@ const LandingPage = () => {
   }, []);
 
   const classes = useStyles();
-  const [directToDashboard, setDirectToDashboard] = useState(false);
+  const [directToCoursesPage, setDirectToCoursesPage] = useState(false);
   const [signupPopup, setSignupPopup] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
@@ -39,7 +39,7 @@ const LandingPage = () => {
     });
   }
 
-  if (directToDashboard === true) return <Redirect to="/dashboard" />;
+  if (directToCoursesPage === true) return <Redirect to="/courses" />;
 
   return (
     // The top bar with logo and sign up and login
@@ -67,7 +67,7 @@ const LandingPage = () => {
           <center>
             <h1>
               wyr is an informative and intuitive tool to help find, choose, and
-              organize your classes.
+              organize your courses.
             </h1>
           </center>
         </Grid>
@@ -83,7 +83,7 @@ const LandingPage = () => {
             marginBottom: "50px",
             fontFamily: "Poppins",
           }}
-          onClick={() => setDirectToDashboard(true)}
+          onClick={() => setDirectToCoursesPage(true)}
         >
           check out reviews
         </Button>
@@ -127,7 +127,7 @@ const LandingPage = () => {
           <center>
             <h1 style={{ marginLeft: "10px" }}>
               Write reviews based on experience to help other students choose
-              their classes.
+              their courses.
             </h1>
           </center>
         </Grid>
@@ -147,7 +147,7 @@ const LandingPage = () => {
         <Grid item xs={4}>
           <center>
             <h1>
-              Get simple overviews for classes with all the info you need,
+              Get simple overviews for courses with all the info you need,
               without even signing up
             </h1>
           </center>
@@ -192,11 +192,11 @@ const LandingPage = () => {
         <Grid item xs={6}>
           <center>
             <h1 style={{ marginLeft: "10px" }}>
-              Search for topics of interests to find the perfect classes for
+              Search for topics of interests to find the perfect courses for
               you.
             </h1>
             <h1>
-              Want to write a review for a class that doesn't appear in the
+              Want to write a review for a course that doesn't appear in the
               list? No problem.
             </h1>
           </center>
@@ -226,7 +226,7 @@ const LandingPage = () => {
             marginBottom: "50px",
             fontFamily: "Poppins",
           }}
-          onClick={() => setDirectToDashboard(true)}
+          onClick={() => setDirectToCoursesPage(true)}
         >
           check out reviews
         </Button>

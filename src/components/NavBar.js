@@ -6,6 +6,7 @@ import { connect } from "react-redux";
 import { Redirect } from "react-router-dom";
 import LoginPage from "./LoginPage";
 import SignupPage from "./SignupPage";
+import { isMobileOnly } from "react-device-detect";
 
 const NavBar = ({
   isLoggingOut,
@@ -67,12 +68,21 @@ const NavBar = ({
       {title && (
         <div style={{ marginLeft: "auto" }}>
           <h1
-            style={{
-              marginTop: "5px",
-              marginBottom: "0px",
-              marginLeft: isLoggedIn ? "3vw" : "8.5vw",
-              marginRight: hover ? "11vw" : "0vw",
-            }}
+            style={
+              isMobileOnly
+                ? {
+                    marginTop: "5px",
+                    marginBottom: "0px",
+
+                    marginRight: hover ? "11vw" : "0vw",
+                  }
+                : {
+                    marginTop: "5px",
+                    marginBottom: "0px",
+                    marginLeft: isLoggedIn ? "3vw" : "8.5vw",
+                    marginRight: hover ? "11vw" : "0vw",
+                  }
+            }
           >
             {title}
           </h1>

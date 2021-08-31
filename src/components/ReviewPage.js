@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { makeStyles } from "@material-ui/styles";
-import { ArrowBackIos, ExpandMore } from "@material-ui/icons";
+import { ArrowBackIos, ExpandMore, ExpandLess } from "@material-ui/icons";
 import CoursesPage from "./CoursesPage";
 import { db } from "../firebase/firebase";
 import { isMobileOnly } from "react-device-detect";
@@ -22,20 +22,30 @@ import AddReview from "./AddReview";
 import Stars from "./Stars";
 
 const useStyles = makeStyles((theme) => ({
+  hideBorder: {
+    "&.MuiAccordion-root:before": {
+      display: "none",
+    },
+  },
   summaryCard: {
-    backgroundColor: "#fb9263",
-    width: isMobileOnly ? "90vw" : "65vw",
+    backgroundColor: "#FF7F50",
+    width: isMobileOnly ? "85vw" : "65vw",
     padding: "25px",
     marginLeft: "auto",
     marginRight: "auto",
     borderRadius: 25,
   },
   addReviewButton: {
-    width: isMobileOnly ? "80vw" : "40vw",
+    width: isMobileOnly ? "50vw" : "20vw",
     height: "2rem",
     borderRadius: 25,
     backgroundColor: "#bdf4ff",
     marginTop: "25px",
+  },
+  expandReviewsButton: {
+    borderRadius: 25,
+    backgroundColor: "#FF7F50",
+    width: isMobileOnly ? "50vw" : "16vw",
   },
 }));
 
@@ -45,11 +55,13 @@ const ReviewPage = ({ selectedCourse }) => {
   const [reviewList, setReviewList] = useState([]); // list of reviews
   const [selectedProf, setSelectedProf] = useState("All Professors");
   const [profList, setProfList] = useState([]);
+  const [redditLinks, setRedditLinks] = useState([]);
   const [avgWorkload, setAvgWorkload] = useState(0);
   const [avgDiff, setAvgDiff] = useState(0);
   const [avgTeach, setAvgTeach] = useState(0);
   const [avgOverall, setAvgOverall] = useState(0); // avgRating of all reviews for course
   const [buttonPopup, setButtonPopup] = useState(false);
+  const [expandAllReviews, setExpandAllReviews] = useState(true);
 
   const popUpAddReview = () => {
     setButtonPopup(true);
@@ -71,10 +83,15 @@ const ReviewPage = ({ selectedCourse }) => {
       .then((doc) => {
         if (doc.exists) {
           const profs = [];
+          const redditLinks = [];
           for (let i = 0; i < doc.data().profs.length; i++) {
             profs.push(doc.data().profs[i]);
           }
+          for (let i = 0; i < doc.data().redditLinks.length; i++) {
+            redditLinks.push(doc.data().redditLinks[i]);
+          }
           setProfList(profs);
+          setRedditLinks(redditLinks);
         } else {
           // doc.data() will be undefined in this case
           console.log("No such document!");
@@ -126,7 +143,7 @@ const ReviewPage = ({ selectedCourse }) => {
     return <CoursesPage />;
   } else {
     return (
-      <div>
+      <div style={{ overflowX: "hidden" }}>
         <Grid container style={{ backgroundColor: "#69b4cf" }}>
           <IconButton onClick={handleReturnToCoursesPage}>
             <ArrowBackIos style={{ color: "white" }} />
@@ -150,7 +167,27 @@ const ReviewPage = ({ selectedCourse }) => {
           <Grid container alignItems="center">
             <div id="left">
               <h2>{selectedCourse.name}</h2>
-              <h3>{selectedCourse.code}</h3>
+              <Grid container style={{ alignItems: "center" }}>
+                <Typography style={{ fontSize: 20 }}>
+                  {selectedCourse.code}
+                </Typography>
+                <Card
+                  style={{
+                    backgroundColor: "white",
+                    borderRadius: 25,
+                    height: "30px",
+                    width: "150px",
+                    marginLeft: "10px",
+                  }}
+                >
+                  <center>
+                    <h5 style={{ marginTop: "5px" }}>
+                      SIRS Rating: {selectedCourse.sirsRating} / 5
+                    </h5>
+                  </center>
+                </Card>
+              </Grid>
+              <br />
               <Grid container>
                 {isMobileOnly ? (
                   <h4>Showing averages for</h4>
@@ -160,11 +197,12 @@ const ReviewPage = ({ selectedCourse }) => {
 
                 <FormControl
                   style={{
-                    backgroundColor: "#bdf4ff",
+                    backgroundColor: "white",
                     marginLeft: "10px",
-                    marginTop: "10px",
+                    marginTop: "15px",
                     height: 30,
                     padding: "5px",
+                    borderRadius: 25,
                   }}
                 >
                   <Select
@@ -218,9 +256,13 @@ const ReviewPage = ({ selectedCourse }) => {
             </div>
 
             <div id="right" style={{ marginLeft: "auto" }}>
-              <h3>Overall Rating:</h3>
-              <h1>{(Math.round(avgOverall * 100) / 100).toFixed(2)} / 5</h1>
-              <h3>{reviewList.length} reviews</h3>
+              <center>
+                <h1 style={{ marginBottom: "0px" }}>
+                  {(Math.round(avgOverall * 100) / 100).toFixed(2)} / 5
+                </h1>
+                <h3 style={{ marginTop: "0px" }}>overall rating</h3>
+                <h3>{reviewList.length} reviews</h3>
+              </center>
             </div>
           </Grid>
         </Card>
@@ -242,14 +284,33 @@ const ReviewPage = ({ selectedCourse }) => {
           />
         </div>
 
-        <Grid container justify="center" alignItems="center">
-          <Grid item xs={8}>
+        <Grid
+          container
+          justify="center"
+          alignItems="center"
+          style={{ marginBottom: "15px" }}
+        >
+          <Grid item xs={isMobileOnly ? 5 : 6}>
             <h1>Reviews</h1>
           </Grid>
-          {reviewList.map((review) => (
+          <Grid item xs={isMobileOnly ? 6 : 2}>
+            <Button
+              variant="contained"
+              className={classes.expandReviewsButton}
+              onClick={() => {
+                setExpandAllReviews(!expandAllReviews);
+              }}
+            >
+              {expandAllReviews ? "collapse all reviews" : "expand all reviews"}
+              {expandAllReviews ? <ExpandLess /> : <ExpandMore />}
+            </Button>
+          </Grid>
+          {reviewList.map((review, i) => (
             <Accordion
-              key={"accordian" + review.user}
+              key={"accordian" + i}
               defaultExpanded
+              expanded={expandAllReviews}
+              className={classes.hideBorder}
               style={{
                 backgroundColor: "#69b4cf",
                 borderRadius: 25,
@@ -259,13 +320,12 @@ const ReviewPage = ({ selectedCourse }) => {
               }}
             >
               <AccordionSummary
-                key={"accordianSummary" + review.user}
-                expandIcon={<ExpandMore />}
+                key={"accordianSummary" + i}
                 aria-controls="panel1a-content"
                 id="panel1a-header"
               >
                 <Typography
-                  key={"prof" + review.user}
+                  key={"prof" + i}
                   style={{ color: "white", marginRight: "auto" }}
                 >
                   Professor: {review.prof}
@@ -304,7 +364,7 @@ const ReviewPage = ({ selectedCourse }) => {
                   // if NOT on mobile, shows grade received for review in accordianSummary
                   !isMobileOnly && (
                     <Typography
-                      key={"grade" + review.user}
+                      key={"grade" + i}
                       style={{ marginLeft: "auto" }}
                     >
                       Grade Received: {review.grade}
@@ -314,26 +374,29 @@ const ReviewPage = ({ selectedCourse }) => {
 
                 {!review.anon && (
                   <Typography
-                    key={review.user}
+                    key={review.user + i}
                     style={{ color: "white", marginLeft: "auto" }}
                   >
                     {review.user}
                   </Typography>
                 )}
                 {review.anon && (
-                  <Typography key={review.user} style={{ marginLeft: "auto" }}>
+                  <Typography
+                    key={review.user + i}
+                    style={{ marginLeft: "auto" }}
+                  >
                     anonymous
                   </Typography>
                 )}
               </AccordionSummary>
 
-              <AccordionDetails key={"accordionDetails" + review.user}>
+              <AccordionDetails key={"accordionDetails" + i}>
                 <Grid container direction="column">
                   {
                     // if ON mobile, shows grade received for review in accordianDetails
                     isMobileOnly && (
                       <Typography
-                        key={"grade" + review.user}
+                        key={"grade" + i}
                         style={{ marginBottom: "10px" }}
                       >
                         Grade Received: {review.grade}
@@ -345,7 +408,7 @@ const ReviewPage = ({ selectedCourse }) => {
                       <Grid container direction="row">
                         <Typography
                           style={{ marginRight: "5px" }}
-                          key={review.user + "workload"}
+                          key={"workload" + i}
                         >
                           Workload:
                         </Typography>
@@ -365,7 +428,7 @@ const ReviewPage = ({ selectedCourse }) => {
                       <Grid container direction="row">
                         <Typography
                           style={{ marginRight: "5px" }}
-                          key={review.user + "diff"}
+                          key={"diff" + i}
                         >
                           Difficulty Of Content:
                         </Typography>
@@ -382,7 +445,7 @@ const ReviewPage = ({ selectedCourse }) => {
                       <Grid container direction="row">
                         <Typography
                           style={{ marginRight: "5px" }}
-                          key={"teach" + review.user}
+                          key={"teach" + i}
                         >
                           Teaching:
                         </Typography>
@@ -392,12 +455,12 @@ const ReviewPage = ({ selectedCourse }) => {
                   </Grid>
 
                   <Grid container direction="row" style={{ marginTop: "20px" }}>
-                    <Typography key={"description" + review.user}>
+                    <Typography key={"description" + i}>
                       {review.description}
                     </Typography>
                     {review.tookOnline && (
                       <Typography
-                        key={"tookOnline" + review.user}
+                        key={"tookOnline" + i}
                         style={{ color: "white", marginLeft: "auto" }}
                       >
                         * online class *
@@ -408,6 +471,30 @@ const ReviewPage = ({ selectedCourse }) => {
               </AccordionDetails>
             </Accordion>
           ))}
+        </Grid>
+
+        <Grid
+          container
+          justify="center"
+          alignItems="center"
+          style={{ marginBottom: "100px" }}
+        >
+          <Grid item xs={isMobileOnly ? 11 : 8}>
+            <h1>Useful Reddit Threads</h1>
+            {redditLinks.map((link, index) => (
+              <div key={"redditDiv" + index}>
+                {isMobileOnly ? (
+                  <a href={link} key={"redditLink" + index} target="blank">
+                    {link.substring(0, 33) + ". . ."}
+                  </a>
+                ) : (
+                  <a href={link} key={"redditLink" + index} target="blank">
+                    {link}
+                  </a>
+                )}
+              </div>
+            ))}
+          </Grid>
         </Grid>
       </div>
     );

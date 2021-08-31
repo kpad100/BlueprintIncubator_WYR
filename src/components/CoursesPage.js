@@ -28,9 +28,9 @@ const styles = () => ({
     padding: "10px",
   },
   courseCard: {
-    backgroundColor: "#fb9263",
+    backgroundColor: "#FF7F50",
     borderRadius: 25,
-    padding: "20px",
+    padding: "15px",
     height: "100px",
   },
   gridList: {
@@ -39,7 +39,7 @@ const styles = () => ({
     padding: "15px",
   },
   addReviewButton: {
-    width: isMobileOnly ? "40vw" : "20vw",
+    width: isMobileOnly ? "75vw" : "20vw",
     height: "3rem",
     borderRadius: 25,
     backgroundColor: "#fb9263",
@@ -167,10 +167,10 @@ const CoursesPage = (props) => {
                       key={"card" + course.code}
                       className={classes.courseCard}
                       onMouseOver={(e) => {
-                        e.currentTarget.style.backgroundColor = "#d67d56";
+                        e.currentTarget.style.backgroundColor = "#ffc1ab";
                       }}
                       onMouseOut={(e) => {
-                        e.currentTarget.style.backgroundColor = "#fb9263";
+                        e.currentTarget.style.backgroundColor = "#FF7F50";
                       }}
                       onClick={onCourseClick}
                     >
@@ -181,8 +181,26 @@ const CoursesPage = (props) => {
                         alignItems="center"
                         justify="center"
                       >
-                        <h3 key={course.code}>{course.code}</h3>
-                        <Typography key={course.name}>{course.name}</Typography>
+                        <center>
+                          <Typography
+                            key={course.code}
+                            style={{
+                              marginBottom: "10px",
+                              fontWeight: "bold",
+                            }}
+                          >
+                            {course.code}
+                          </Typography>
+                          <Typography
+                            key={course.name}
+                            style={{
+                              fontFamily: "Poppins",
+                              fontWeight: "bold",
+                            }}
+                          >
+                            {course.name}
+                          </Typography>
+                        </center>
                       </Grid>
                     </Card>
                   </GridListTile>

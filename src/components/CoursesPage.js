@@ -42,7 +42,7 @@ const styles = () => ({
     width: isMobileOnly ? "75vw" : "20vw",
     height: "3rem",
     borderRadius: 25,
-    backgroundColor: "#fb9263",
+    backgroundColor: "#FF7F50",
     marginBottom: "25px",
     fontSize: 16,
   },
@@ -186,6 +186,7 @@ const CoursesPage = (props) => {
                             key={course.code}
                             style={{
                               marginBottom: "10px",
+                              fontFamily: "sans-serif",
                               fontWeight: "bold",
                             }}
                           >

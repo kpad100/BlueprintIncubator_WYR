@@ -208,7 +208,7 @@ const AddReview = (props) => {
           <form onSubmit={handleSubmit}>
             <div>
               {/* for spacing on the top */}
-              <Typography>
+              <Typography style={{ fontFamily: "Poppins", fontWeight: "bold" }}>
                 Workload (1 is the MOST work, 5 is the LEAST work): *
               </Typography>
               {[...Array(5)].map((star, i) => {
@@ -251,7 +251,7 @@ const AddReview = (props) => {
             </div>
 
             <div style={{ marginTop: "10px" }}>
-              <Typography>
+              <Typography style={{ fontFamily: "Poppins", fontWeight: "bold" }}>
                 Difficulty of Content (1 is the HARDEST, 5 is the EASIEST): *
               </Typography>
               {[...Array(5)].map((star, i) => {
@@ -293,7 +293,7 @@ const AddReview = (props) => {
             </div>
 
             <div style={{ marginTop: "10px" }}>
-              <Typography>
+              <Typography style={{ fontFamily: "Poppins", fontWeight: "bold" }}>
                 Teaching (1 is the WORST, 5 is the BEST): *
               </Typography>
               {[...Array(5)].map((star, i) => {
@@ -485,7 +485,7 @@ const AddReview = (props) => {
       </div>
     );
   } else {
-    return <LoginPage trigger={trigger} />;
+    return <LoginPage trigger={trigger} closed={closed} />;
   }
 };
 

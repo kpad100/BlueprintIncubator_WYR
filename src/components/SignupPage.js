@@ -7,6 +7,8 @@ import {
   FormControl,
   Card,
 } from "@material-ui/core";
+import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
+import CancelIcon from "@material-ui/icons/Cancel";
 import { signupWithEmailPassword } from "../actions/auth";
 import { db, myFirebase } from "../firebase/firebase";
 import { makeStyles } from "@material-ui/styles";
@@ -220,7 +222,38 @@ const SignupPage = (props) => {
             alignItems="center"
             justify="center"
           >
-            <h1 style={{ marginBottom: "0px" }}>Sign Up</h1>
+            <Grid container alignItems="center" justify="center">
+              <Button
+                disabled={props.backToLogin !== undefined ? false : true}
+                onClick={props.backToLogin}
+                style={{
+                  marginTop: "5px",
+                }}
+              >
+                {props.backToLogin !== undefined && <ArrowBackIosIcon />}
+              </Button>
+              <h1
+                style={{
+                  marginBottom: "0px",
+                  marginTop: "5px",
+                  marginLeft: "auto",
+                }}
+              >
+                Sign Up
+              </h1>
+              <Button
+                onClick={() => {
+                  props.backToLogin !== undefined && props.backToLogin();
+                  props.closed();
+                }}
+                style={{
+                  marginTop: "5px",
+                  marginLeft: "auto",
+                }}
+              >
+                <CancelIcon />
+              </Button>
+            </Grid>
             <form onSubmit={handleSubmit}>
               <FormControl style={{ minWidth: "25vw", padding: "15px" }}>
                 <FormHelperText
@@ -428,7 +461,7 @@ const SignupPage = (props) => {
                 )}
                 <Button
                   variant="contained"
-                  style={{ backgroundColor: "#fb9263" }}
+                  style={{ backgroundColor: "#FF7F50" }}
                   type="submit"
                 >
                   Create

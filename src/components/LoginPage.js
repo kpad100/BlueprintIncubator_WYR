@@ -10,6 +10,7 @@ import {
   FormControl,
   Card,
 } from "@material-ui/core";
+import CancelIcon from "@material-ui/icons/Cancel";
 import { makeStyles } from "@material-ui/styles";
 import SignupPage from "./SignupPage";
 
@@ -29,7 +30,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Login = ({ dispatch, loginError, trigger }) => {
+const Login = ({ dispatch, loginError, trigger, closed }) => {
   const classes = useStyles();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -49,7 +50,15 @@ const Login = ({ dispatch, loginError, trigger }) => {
   };
 
   if (goToSignup) {
-    return <SignupPage trigger={trigger} />;
+    return (
+      <SignupPage
+        trigger={trigger}
+        closed={closed}
+        backToLogin={() => {
+          setGoToSignup(false);
+        }}
+      />
+    );
   } else {
     return (
       trigger && (
@@ -61,6 +70,15 @@ const Login = ({ dispatch, loginError, trigger }) => {
               alignItems="center"
               justify="center"
             >
+              <Button
+                onClick={closed}
+                style={{
+                  marginLeft: "auto",
+                  marginTop: "5px",
+                }}
+              >
+                <CancelIcon />
+              </Button>
               <img
                 src="https://cdn.discordapp.com/attachments/812822571094900746/837106499863969812/wyr_transparent.png"
                 height="80"
@@ -103,7 +121,7 @@ const Login = ({ dispatch, loginError, trigger }) => {
                   <Button
                     variant="contained"
                     type="submit"
-                    style={{ backgroundColor: "#fb9263" }}
+                    style={{ backgroundColor: "#FF7F50" }}
                   >
                     Sign In
                   </Button>
@@ -117,7 +135,7 @@ const Login = ({ dispatch, loginError, trigger }) => {
                   style={{
                     borderRadius: 25,
                     maxHeight: "25px",
-                    backgroundColor: "#fb9263",
+                    backgroundColor: "#FF7F50",
                   }}
                   onClick={() => {
                     setGoToSignup(true);

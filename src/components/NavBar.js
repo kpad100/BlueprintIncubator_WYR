@@ -73,14 +73,11 @@ const NavBar = ({
                 ? {
                     marginTop: "5px",
                     marginBottom: "0px",
-
-                    marginRight: hover ? "11vw" : "0vw",
                   }
                 : {
                     marginTop: "5px",
                     marginBottom: "0px",
-                    marginLeft: isLoggedIn ? "3vw" : "8.5vw",
-                    marginRight: hover ? "11vw" : "0vw",
+                    marginLeft: isLoggedIn ? "16%" : "45%",
                   }
             }
           >
@@ -123,7 +120,12 @@ const NavBar = ({
           >
             Login
           </Button>
-          <LoginPage trigger={loginPopup} />
+          <LoginPage
+            trigger={loginPopup}
+            closed={() => {
+              setLoginPopup(false);
+            }}
+          />
           <Button
             variant="contained"
             disableElevation
@@ -132,7 +134,12 @@ const NavBar = ({
           >
             Sign Up
           </Button>
-          <SignupPage trigger={signupPopup} />
+          <SignupPage
+            trigger={signupPopup}
+            closed={() => {
+              setSignupPopup(false);
+            }}
+          />
         </div>
       )}
 

@@ -301,7 +301,7 @@ const ReviewPage = ({ selectedCourse }) => {
                 setExpandAllReviews(!expandAllReviews);
               }}
             >
-              {expandAllReviews ? "collapse all reviews" : "expand all reviews"}
+              {expandAllReviews ? "minimize all reviews" : "expand all reviews"}
               {expandAllReviews ? <ExpandLess /> : <ExpandMore />}
             </Button>
           </Grid>

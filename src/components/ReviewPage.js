@@ -84,16 +84,21 @@ const ReviewPage = ({ selectedCourse }) => {
         if (doc.exists) {
           const profs = [];
           const redditLinks = [];
-          for (let i = 0; i < doc.data().profs.length; i++) {
-            profs.push(doc.data().profs[i]);
+          if (doc.data().profs !== undefined && doc.data().profs.length > 0) {
+            for (let i = 0; i < doc.data().profs.length; i++) {
+              profs.push(doc.data().profs[i]);
+            }
           }
-          if (redditLinks.length > 0) {
+          if (
+            doc.data().redditLinks !== undefined &&
+            doc.data().redditLinks.length > 0
+          ) {
             for (let i = 0; i < doc.data().redditLinks.length; i++) {
               redditLinks.push(doc.data().redditLinks[i]);
             }
-            setRedditLinks(redditLinks);
           }
           setProfList(profs);
+          setRedditLinks(redditLinks);
         } else {
           // doc.data() will be undefined in this case
           console.log("No such document!");
@@ -483,19 +488,20 @@ const ReviewPage = ({ selectedCourse }) => {
         >
           <Grid item xs={isMobileOnly ? 11 : 8}>
             <h1>Useful Reddit Threads</h1>
-            {redditLinks.map((link, index) => (
-              <div key={"redditDiv" + index}>
-                {isMobileOnly ? (
-                  <a href={link} key={"redditLink" + index} target="blank">
-                    {link.substring(0, 33) + ". . ."}
-                  </a>
-                ) : (
-                  <a href={link} key={"redditLink" + index} target="blank">
-                    {link}
-                  </a>
-                )}
-              </div>
-            ))}
+            {redditLinks.length > 0 &&
+              redditLinks.map((link, index) => (
+                <div key={"redditDiv" + index}>
+                  {isMobileOnly ? (
+                    <a href={link} key={"redditLink" + index} target="blank">
+                      {link.substring(0, 33) + ". . ."}
+                    </a>
+                  ) : (
+                    <a href={link} key={"redditLink" + index} target="blank">
+                      {link}
+                    </a>
+                  )}
+                </div>
+              ))}
           </Grid>
         </Grid>
       </div>

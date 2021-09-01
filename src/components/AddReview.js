@@ -76,9 +76,7 @@ const AddReview = (props) => {
     else if (fromCourse !== undefined) {
       if (otherProf) {
         profList.push(prof);
-        db.collection("courses").doc(fromCourse.code).set({
-          name: fromCourse.name,
-          code: fromCourse.code,
+        db.collection("courses").doc(fromCourse.code).update({
           profs: profList,
         });
       }
@@ -335,6 +333,7 @@ const AddReview = (props) => {
               <TextField
                 id="courseName"
                 required
+                variant="outlined"
                 style={{ width: "60%" }}
                 label="Course:"
                 disabled={fromCourse !== undefined ? true : false}
@@ -344,6 +343,7 @@ const AddReview = (props) => {
               <TextField
                 id="courseCode"
                 required
+                variant="outlined"
                 style={{ width: "30%", marginLeft: "10px" }}
                 label="Code:"
                 disabled={fromCourse !== undefined ? true : false}
@@ -359,6 +359,7 @@ const AddReview = (props) => {
                 <TextField
                   id="professor"
                   required
+                  variant="outlined"
                   style={{ width: "50%" }}
                   label="Professor"
                   value={prof}
@@ -401,8 +402,10 @@ const AddReview = (props) => {
                   <MenuItem value={"B"}>B</MenuItem>
                   <MenuItem value={"C+"}>C+</MenuItem>
                   <MenuItem value={"C"}>C</MenuItem>
+                  <MenuItem value={"PA"}>PA</MenuItem>
                   <MenuItem value={"D"}>D</MenuItem>
                   <MenuItem value={"F"}>F</MenuItem>
+                  <MenuItem value={"N/A"}>N/A</MenuItem>
                 </Select>
               </FormControl>
             </div>

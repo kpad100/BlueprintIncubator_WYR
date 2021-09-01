@@ -13,7 +13,7 @@ import { useState, useEffect } from "react";
 import { connect } from "react-redux";
 import { isMobileOnly } from "react-device-detect";
 import { logoutUser } from "../actions";
-import AddReview from "./AddReview";
+import AddCourse from "./AddCourse";
 import ReviewPage from "./ReviewPage";
 import NavBar from "./NavBar";
 import { db } from "../firebase/firebase";
@@ -38,7 +38,7 @@ const styles = () => ({
     height: "auto",
     padding: "15px",
   },
-  addReviewButton: {
+  addCourseButton: {
     width: isMobileOnly ? "75vw" : "20vw",
     height: "3rem",
     borderRadius: 25,
@@ -56,14 +56,6 @@ const CoursesPage = (props) => {
   const [buttonPopup, setButtonPopup] = useState(false);
   const [isTimeout, setIsTimeout] = useState(false);
   const { classes, isLoggingOut, logoutError, dispatch } = props;
-
-  const popUpAddReview = () => {
-    setButtonPopup(true);
-  };
-
-  const closePopUp = () => {
-    setButtonPopup(false);
-  };
 
   // handles when a course is clicked on
   const onCourseClick = (e) => {
@@ -212,12 +204,19 @@ const CoursesPage = (props) => {
           <div align="center">
             <h1>Can't Find the Course You're Looking For?</h1>
             <Button
-              className={classes.addReviewButton}
-              onClick={popUpAddReview}
+              className={classes.addCourseButton}
+              onClick={() => {
+                setButtonPopup(true);
+              }}
             >
-              Add Review for New Course
+              Add Course
             </Button>
-            <AddReview trigger={buttonPopup} closed={closePopUp} />
+            <AddCourse
+              trigger={buttonPopup}
+              closed={() => {
+                setButtonPopup(false);
+              }}
+            />
           </div>
         </Grid>
 

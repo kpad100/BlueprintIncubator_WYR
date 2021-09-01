@@ -48,9 +48,9 @@ const innerBlock = {
 
 const AddReview = (props) => {
   const { trigger, closed, fromCourse, profList } = props;
-  const [diffRating, setDiffRating] = useState(null);
-  const [workloadRating, setWorkloadRating] = useState(null);
-  const [teachRating, setTeachRating] = useState(null);
+  const [diffRating, setDiffRating] = useState(0);
+  const [workloadRating, setWorkloadRating] = useState(0);
+  const [teachRating, setTeachRating] = useState(0);
   const [diffHover, setDiffHover] = useState(null);
   const [workloadHover, setWorkloadHover] = useState(null);
   const [teachHover, setTeachHover] = useState(null);
@@ -69,11 +69,7 @@ const AddReview = (props) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (
-      diffRating === null ||
-      workloadRating === null ||
-      teachRating === null
-    ) {
+    if (diffRating === 0 || workloadRating === 0 || teachRating === 0) {
       alert("Fill out all fields and star ratings!");
     }
     // if AddReview clicked on from ReviewPage, adds review to "reviews" subcollection for course

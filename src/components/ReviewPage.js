@@ -87,11 +87,13 @@ const ReviewPage = ({ selectedCourse }) => {
           for (let i = 0; i < doc.data().profs.length; i++) {
             profs.push(doc.data().profs[i]);
           }
-          for (let i = 0; i < doc.data().redditLinks.length; i++) {
-            redditLinks.push(doc.data().redditLinks[i]);
+          if (redditLinks.length > 0) {
+            for (let i = 0; i < doc.data().redditLinks.length; i++) {
+              redditLinks.push(doc.data().redditLinks[i]);
+            }
+            setRedditLinks(redditLinks);
           }
           setProfList(profs);
-          setRedditLinks(redditLinks);
         } else {
           // doc.data() will be undefined in this case
           console.log("No such document!");

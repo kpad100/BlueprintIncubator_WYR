@@ -41,8 +41,7 @@ const NavBar = ({
     };
   });
 
-  if (backToLanding && !fromLandingPage)
-    return <Redirect to="/BlueprintIncubatorGeneral" />;
+  if (backToLanding && !fromLandingPage) return <Redirect to="/" />;
 
   return (
     <Grid container style={{ backgroundColor: backgroundColor }}>

@@ -13,7 +13,7 @@ import { useState, useEffect } from "react";
 import { connect } from "react-redux";
 import { isMobileOnly } from "react-device-detect";
 import { logoutUser } from "../actions";
-import AddCourse from "./AddCourse";
+import AddReview from "./AddReview";
 import ReviewPage from "./ReviewPage";
 import NavBar from "./NavBar";
 import { db } from "../firebase/firebase";
@@ -209,9 +209,9 @@ const CoursesPage = (props) => {
                 setButtonPopup(true);
               }}
             >
-              Add Course
+              Add Review for new Course
             </Button>
-            <AddCourse
+            <AddReview
               trigger={buttonPopup}
               closed={() => {
                 setButtonPopup(false);

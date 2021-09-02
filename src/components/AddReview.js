@@ -199,7 +199,7 @@ const AddReview = (props) => {
     return (
       <div style={background}>
         <Card style={innerBlock}>
-          <form onSubmit={handleSubmit}>
+          <form style={{ width: "100%" }} onSubmit={handleSubmit}>
             <div>
               {/* for spacing on the top */}
               <Typography style={{ fontFamily: "Poppins", fontWeight: "bold" }}>
@@ -333,7 +333,7 @@ const AddReview = (props) => {
               <TextField
                 id="courseName"
                 required
-                variant="outlined"
+                variant={isMobileOnly ? "standard" : "outlined"}
                 style={{ width: "60%" }}
                 label="Course:"
                 disabled={fromCourse !== undefined ? true : false}
@@ -343,7 +343,7 @@ const AddReview = (props) => {
               <TextField
                 id="courseCode"
                 required
-                variant="outlined"
+                variant={isMobileOnly ? "standard" : "outlined"}
                 style={{ width: "30%", marginLeft: "10px" }}
                 label="Code:"
                 disabled={fromCourse !== undefined ? true : false}
@@ -359,20 +359,23 @@ const AddReview = (props) => {
                 <TextField
                   id="professor"
                   required
-                  variant="outlined"
+                  variant={isMobileOnly ? "standard" : "outlined"}
                   style={{ width: "50%" }}
                   label="Professor"
                   value={prof}
                   onChange={(e) => setProf(e.target.value)}
                 />
               ) : (
-                <FormControl required style={{ width: "50%" }}>
-                  <InputLabel>Professor</InputLabel>
+                <FormControl required style={{ width: "45%" }}>
+                  <InputLabel style={{ marginLeft: !isMobileOnly && "5px" }}>
+                    Professor
+                  </InputLabel>
                   <Select
                     value={prof}
                     onChange={(e) => {
                       setProf(e.target.value);
                     }}
+                    variant={isMobileOnly ? "standard" : "outlined"}
                   >
                     {profList.map((prof) => {
                       return (
@@ -390,12 +393,15 @@ const AddReview = (props) => {
 
               <FormControl
                 required
-                style={{ width: "40%", marginLeft: "10px" }}
+                style={{ width: "45%", marginLeft: "10px" }}
               >
-                <InputLabel>Grade Received</InputLabel>
+                <InputLabel style={{ marginLeft: !isMobileOnly && "5px" }}>
+                  Grade Received
+                </InputLabel>
                 <Select
                   value={grade}
                   onChange={(e) => setGrade(e.target.value)}
+                  variant={isMobileOnly ? "standard" : "outlined"}
                 >
                   <MenuItem value={"A"}>A</MenuItem>
                   <MenuItem value={"B+"}>B+</MenuItem>

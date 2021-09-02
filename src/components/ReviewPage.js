@@ -29,7 +29,7 @@ const useStyles = makeStyles((theme) => ({
   },
   summaryCard: {
     backgroundColor: "#FF7F50",
-    width: isMobileOnly ? "85vw" : "65vw",
+    width: isMobileOnly ? "85vw" : "75vw",
     padding: "25px",
     marginLeft: "auto",
     marginRight: "auto",
@@ -321,7 +321,7 @@ const ReviewPage = ({ selectedCourse }) => {
               style={{
                 backgroundColor: "#69b4cf",
                 borderRadius: 25,
-                width: isMobileOnly ? "90vw" : "65vw",
+                width: isMobileOnly ? "90vw" : "75vw",
                 marginBottom: "5px",
                 padding: "10px",
               }}

@@ -294,21 +294,23 @@ const LandingPage = () => {
         <br />
         <Grid item xs={6}>
           <center>
-            <h1>New things are coming soon, sign up to stay in the loop</h1>
-            {!isLoggedIn && (
-              <div>
-                <Button
-                  variant="contained"
-                  style={{
-                    borderRadius: 25,
-                  }}
-                  onClick={() => setSignupPopup(true)}
-                >
-                  Sign Up
-                </Button>
-                <SignupPage trigger={signupPopup} />
-              </div>
-            )}
+            <h1>
+              New features and more data coming soon! We’re currently adding
+              SIRS for specific professors - check out your professors on
+              <a
+                href="https://docs.google.com/spreadsheets/d/1NT5k5e4twy-S8Af1J6XHb7024OgSaXm7u4WH7IB1jvw/edit#gid=140412152"
+                target="blank"
+                style={{
+                  marginLeft: "1vw",
+                  marginRight: "1vw",
+                  textDecoration: "none",
+                  color: "#69b4cf",
+                }}
+              >
+                this
+              </a>
+              database for now!
+            </h1>
           </center>
         </Grid>
         <br />

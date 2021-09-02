@@ -208,6 +208,7 @@ const CoursesPage = (props) => {
               onClick={() => {
                 setButtonPopup(true);
               }}
+              style={{ width: "40vw" }}
             >
               Add Review for new Course
             </Button>

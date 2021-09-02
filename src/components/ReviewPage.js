@@ -29,7 +29,7 @@ const useStyles = makeStyles((theme) => ({
   },
   summaryCard: {
     backgroundColor: "#FF7F50",
-    width: isMobileOnly ? "85vw" : "75vw",
+    width: isMobileOnly ? "85vw" : "70vw",
     padding: "25px",
     marginLeft: "auto",
     marginRight: "auto",
@@ -264,10 +264,10 @@ const ReviewPage = ({ selectedCourse }) => {
 
             <div id="right" style={{ marginLeft: "auto" }}>
               <center>
-                <h1 style={{ marginBottom: "0px" }}>
+                {/* <h1 style={{ marginBottom: "0px" }}>
                   {(Math.round(avgOverall * 100) / 100).toFixed(2)} / 5
                 </h1>
-                <h3 style={{ marginTop: "0px" }}>overall rating</h3>
+                <h3 style={{ marginTop: "0px" }}>overall rating</h3> */}
                 <h3>{reviewList.length} reviews</h3>
               </center>
             </div>

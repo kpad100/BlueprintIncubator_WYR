@@ -9,7 +9,7 @@ function App(props) {
 
   return (
     <Switch>
-      <Route path="/" component={LandingPage} />
+      <Route exact path="/" component={LandingPage} />
       <Route
         exact
         path="/courses"

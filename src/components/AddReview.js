@@ -201,12 +201,8 @@ const AddReview = (props) => {
         <Card style={innerBlock}>
           <form style={{ width: "100%" }} onSubmit={handleSubmit}>
             <div>
-              {/* for spacing on the top */}
-              {/* <Typography style={{ fontFamily: "Poppins", fontWeight: "bold" }}>
-                Workload (1 is the MOST work, 5 is the LEAST work): *
-              </Typography> */}
               <Typography style={{ fontFamily: "Poppins", fontWeight: "bold" }}>
-                Workload: *
+                Workload (1 is the MOST work, 5 is the LEAST work): *
               </Typography>
               {[...Array(5)].map((star, i) => {
                 const ratingValue = i + 1;
@@ -248,11 +244,8 @@ const AddReview = (props) => {
             </div>
 
             <div style={{ marginTop: "10px" }}>
-              {/* <Typography style={{ fontFamily: "Poppins", fontWeight: "bold" }}>
-                Difficulty of Content (1 is the HARDEST, 5 is the EASIEST): *
-              </Typography> */}
               <Typography style={{ fontFamily: "Poppins", fontWeight: "bold" }}>
-                Difficulty of Content: *
+                Difficulty of Content (1 is the HARDEST, 5 is the EASIEST): *
               </Typography>
               {[...Array(5)].map((star, i) => {
                 const ratingValue = i + 1;
@@ -293,11 +286,8 @@ const AddReview = (props) => {
             </div>
 
             <div style={{ marginTop: "10px" }}>
-              {/* <Typography style={{ fontFamily: "Poppins", fontWeight: "bold" }}>
-                Teaching (1 is the WORST, 5 is the BEST): *
-              </Typography> */}
               <Typography style={{ fontFamily: "Poppins", fontWeight: "bold" }}>
-                Teaching: *
+                Teaching (1 is the WORST, 5 is the BEST): *
               </Typography>
               {[...Array(5)].map((star, i) => {
                 const ratingValue = i + 1;

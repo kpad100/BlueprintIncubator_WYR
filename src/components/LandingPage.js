@@ -7,8 +7,6 @@ import Aos from "aos";
 import "aos/dist/aos.css";
 import Typewriter from "../actions/Typewriter.js";
 import NavBar from "./NavBar.js";
-import SignupPage from "./SignupPage";
-import { myFirebase } from "../firebase/firebase";
 import { isMobileOnly } from "react-device-detect";
 
 const useStyles = makeStyles({
@@ -24,27 +22,14 @@ const useStyles = makeStyles({
 const LandingPage = () => {
   useEffect(() => {
     Aos.init({ duration: 1500 });
-
-    const unsubscribe = myFirebase.auth().onAuthStateChanged(function (user) {
-      if (user) {
-        setIsLoggedIn(true);
-      }
-    });
-
-    return () => {
-      unsubscribe();
-    };
   }, []);
 
   const classes = useStyles();
   const [directToCoursesPage, setDirectToCoursesPage] = useState(false);
-  const [signupPopup, setSignupPopup] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   if (directToCoursesPage === true) return <Redirect to="/courses" />;
 
   return (
-    // The top bar with logo and sign up and login
     <div className={classes.root}>
       <NavBar fromLandingPage={true} />
 
